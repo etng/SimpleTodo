@@ -39,7 +39,7 @@ class Todo
         $start_ts = strtotime($todo['start_date']);
         $end_ts = strtotime($todo['end_date']);
         $db->update('todo', array(
-           'url' => 'event.php?act=view&id=' . $todo['id'],
+           'url' => 'todo.php?act=view&id=' . $todo['id'],
            'description' => sprintf('从%s到%s,共计%d天', date('Y-m-d', $start_ts), date('Y-m-d', $end_ts),ceil(($end_ts-$start_ts)/86400)+1)
         ), array('id'=>$todo['id']));
     }
