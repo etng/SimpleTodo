@@ -14,10 +14,12 @@ switch(@$_GET['act'])
             'all_day' => (bool)$_POST['all_day'],
             'start_date' => $_POST['start'],
             'end_date' =>$_POST['end'],
+            'text_color' =>$_POST['text_color'],
+            'background_color' =>$_POST['background_color'],
             'confirmed' => false,
         ));
         $status = $id?'success':'fail';
-        $todo = $db->find('todo', $id);
+        $todo = todo2fullcalendar($db->find('todo', $id));
         echo json_encode(compact('status', 'todo'));
         break;
     case 'update':
@@ -32,7 +34,7 @@ switch(@$_GET['act'])
             $updates['end_date'] = $_POST['end'];
         }
         $status = Todo::update($updates, array('id'=>$id))?'success':'fail';
-        $todo = $db->find('todo', $id);
+        $todo = todo2fullcalendar($db->find('todo', $id));
         echo json_encode(compact('status', 'todo'));
         break;
     case 'list':
@@ -45,19 +47,24 @@ switch(@$_GET['act'])
         foreach($db->fetchAll(sprintf($sql, date('Y-m-d H:i:s', $start), date('Y-m-d H:i:s', $end))) as $i=>$todo)
         {
             $ci = $i%count($colors);
-            $todos []= array(
-                'id' => intval($todo['id']),
-                'all_day' => (bool)$todo['all_day'],
-                'editable' => !$todo['confirmed'],
-                'title' => $todo['title'],
-                'description' => $todo['description'],
-                'url' => $todo['url'],
-                'start' => date('Y-m-d H:i:s', strtotime($todo['start_date'])),
-                'end' => date('Y-m-d H:i:s', strtotime($todo['end_date'])),
-                'textColor' => $todo['text_color']?$todo['text_color']:$colors[$ci]['textColor'],
-                'color' => $todo['background_color']?$todo['background_color']:$colors[$ci]['color'],
-            );
+            $todos []= todo2fullcalendar($todo, $ci);
         }
         echo json_encode($todos);
         break;
+}
+function todo2fullcalendar($todo, $ci=0)
+{
+    global $colors;
+    return array(
+        'id' => intval($todo['id']),
+        'allDay' => (bool)$todo['all_day'],
+        'editable' => !$todo['confirmed'],
+        'title' => $todo['title'],
+        'description' => $todo['description'],
+        'url' => $todo['url'],
+        'start' => $todo['start_date'],
+        'end' => $todo['end_date'],
+        'textColor' => $todo['text_color']?$todo['text_color']:$colors[$ci]['textColor'],
+        'backgroundColor' => $todo['background_color']?$todo['background_color']:$colors[$ci]['color'],
+        );
 }

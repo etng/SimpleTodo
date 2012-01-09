@@ -12,7 +12,7 @@ class Todo
         }
         return $data;
      }
-   public static function create($data)
+    public static function create($data)
     {
         global $db;
         $data = self::preSave($data);

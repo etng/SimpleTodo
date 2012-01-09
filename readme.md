@@ -12,3 +12,4 @@
 
 * fullcalendar http://arshaw.com/fullcalendar/docs/
 * qtip2 http://craigsworks.com/projects/qtip2/docs/
+* color picker https://github.com/vanderlee/colorpicker

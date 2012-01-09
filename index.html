@@ -4,19 +4,41 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 <link rel="stylesheet" type="text/css" href="scripts/jquery.qtip.css" />
 <link rel="stylesheet" type="text/css" href="scripts/fullcalendar.css" />
+<link href="scripts/jquery.colorpicker.css" rel="stylesheet" type="text/css"/>
 <link rel="stylesheet" type="text/css" href="scripts/fullcalendar.print.css" media="print" />
 <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css" type="text/css" media="all" />
+
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js" type="text/javascript"></script>
 <script src="http://jquery-ui.googlecode.com/svn/tags/latest/external/jquery.bgiframe-2.1.2.js" type="text/javascript"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery-ui-i18n.min.js" type="text/javascript"></script> 
+<script src="http://jqueryui.com/themeroller/themeswitchertool/"></script>
 <script type="text/javascript" src="scripts/fullcalendar.min.js"></script>
 <script type="text/javascript" src="scripts/jquery.qtip.js"></script>
+<script src="scripts/jquery.colorpicker.js"></script>
 <title>日历演示</title>
 <script type='text/javascript'>
 
 	$(document).ready(function() {
 	
+		$('#background_color, #text_color').colorpicker({
+			title:				'请选择颜色',
+			buttonText:			'颜色',	// Text on the button and/or title of button image.
+			doneText: '确认',
+			buttonImage:		'scripts/images/ui-colorpicker.png',
+			hsv: false,
+			limit: 'websafe',
+			parts: 'popup',
+			alpha: false,
+					
+					showOn: 'both',
+					showHeader: true,
+					showSwatches: true,
+					buttonColorize: true,
+			showButtonPanel: true
+		});
+
+
 		var calendar = $('#calendar').fullCalendar({
 			titleFormat: {
 				month: 'yyyy年M月',
@@ -61,8 +83,21 @@
 						title: title,
 						start: start.getTime()/1000,
 						end: end.getTime()/1000,
-						all_day: allDay?1:0
-					}, calendar);
+						all_day: allDay?1:0,
+						text_color: '#'+$('#text_color').val(),
+						background_color: '#'+$('#background_color').val()
+					}, calendar, function(response) 
+					{
+						if(response.status=='success')
+						{
+							var todo = response.todo;
+							calendar.fullCalendar('renderEvent', todo, true);
+						}
+						else
+						{
+							alert('add todo fail');
+						}
+					});
 				}
 				calendar.fullCalendar('unselect');				
 			},
@@ -116,39 +151,15 @@
 	});
 var Todo =
 {
-	create: function(data, calendar)
+	create: function(data, calendar, successCallback)
 	{
 		$.ajax({
 			type: "post",
 			url: "todo.php?act=create",
 			dataType: "json",
 			data: data,
-			success: function(response) 
-			{
-				if(response.status=='success')
-				{
-					var todo = response.todo;
-					calendar.fullCalendar('renderEvent', Todo.convert(todo), true);
-					
-				}
-				else
-				{
-					alert('add todo fail');
-				}
-			}
+			success: successCallback
 		});		
-	}
-	,convert: function(todo)
-	{
-		return {
-			id: todo.id,
-			title: todo.title,
-			description: todo.description,
-			url: todo.url,
-			start: todo.start_date,
-			end: todo.end_date,
-			allDay: todo.all_day,
-		};
 	}
 	,update: function(data, calendar, revertCallback)
 	{
@@ -163,7 +174,7 @@ var Todo =
 				{
 					var todo = response.todo;
 					calendar.fullCalendar('removeEvents', todo.id)
-					calendar.fullCalendar('renderEvent', Todo.convert(todo), true);
+					calendar.fullCalendar('renderEvent', todo, true);
 				}
 				else
 				{
@@ -172,7 +183,7 @@ var Todo =
 			}
 		});			
 	}
-}
+};
 </script>
 <style type='text/css'>
 
@@ -181,24 +192,32 @@ var Todo =
 		text-align: center;
 		font-size: 14px;
 		font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
-		}
-		
+	}
+	#switcher {
+		float: 			right;
+		display: 		inline-block;
+	}		
 	#loading {
 		position: absolute;
 		top: 5px;
 		right: 5px;
-		}
+	}
 
 	#calendar {
 		width: 900px;
 		margin: 0 auto;
-		}
-
+	}
 </style>
 </head>
 <body>
 <h3>日历演示</h3>
+<div id="switcher"></div>
 <div id="loading" style="display:none">loading...</div>
 <div id="calendar"></div>
+<h3>默认颜色</h3>
+<div>
+<label>前景色：<input type="color" id="text_color" value="ff9900"/></label>
+<label>背景色：<input type="color" id="background_color" value="99ff00"/></label>
+</div>
 </body>
 </html>
