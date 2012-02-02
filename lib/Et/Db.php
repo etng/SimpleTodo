@@ -97,12 +97,81 @@ class Et_Db
             $this->msg($sql, $msg);
         }
     }
+    function getMeta($table)
+    {
+        $result = $this->fetchAll("DESCRIBE `{$table}`", MYSQL_NUM);
+        $field   = 0;
+        $type    = 1;
+        $null    = 2;
+        $key     = 3;
+        $default = 4;
+        $extra   = 5;
 
+        $desc = array();
+        $i = 1;
+        $p = 1;
+        foreach ($result as $row) {
+            list($length, $scale, $precision, $unsigned, $primary, $primaryPosition, $identity)
+                = array(null, null, null, null, false, null, false);
+            if (preg_match('/unsigned/', $row[$type])) {
+                $unsigned = true;
+            }
+            if (preg_match('/^((?:var)?char)\((\d+)\)/', $row[$type], $matches)) {
+                $row[$type] = $matches[1];
+                $length = $matches[2];
+            } else if (preg_match('/^decimal\((\d+),(\d+)\)/', $row[$type], $matches)) {
+                $row[$type] = 'decimal';
+                $precision = $matches[1];
+                $scale = $matches[2];
+            } else if (preg_match('/^float\((\d+),(\d+)\)/', $row[$type], $matches)) {
+                $row[$type] = 'float';
+                $precision = $matches[1];
+                $scale = $matches[2];
+            } else if (preg_match('/^((?:big|medium|small|tiny)?int)\((\d+)\)/', $row[$type], $matches)) {
+                $row[$type] = $matches[1];
+                // The optional argument of a MySQL int type is not precision
+                // or length; it is only a hint for display width.
+            }
+            if (strtoupper($row[$key]) == 'PRI') {
+                $primary = true;
+                $primaryPosition = $p;
+                if ($row[$extra] == 'auto_increment') {
+                    $identity = true;
+                } else {
+                    $identity = false;
+                }
+                ++$p;
+            }
+            $desc[$row[$field]] = (object)array(
+                'schema_name'      => null, // @todo
+                'table_name'       => $table,
+                'column_name'      => $row[$field],
+                'column_position'  => $i,
+                'data_type'        => $row[$type],
+                'default'          => $row[$default],
+                'nullable'         => (bool) ($row[$null] == 'YES'),
+                'length'           => $length,
+                'scale'            => $scale,
+                'precision'        => $precision,
+                'unsigned'         => $unsigned,
+                'primary'          => $primary,
+                'primary_position' => $primaryPosition,
+                'identity'         => $identity
+            );
+            ++$i;
+        }
+        return $desc;
+    }
     function insert($table, $data)
     {
+        $table_meta = $this->getMeta($table);
         $set_fields = array();
         foreach($data as $k => $v)
         {
+            if(!isset($table_meta[$k]))
+            {
+                continue;
+            }
             $set_fields[] = sprintf('`%s`="%s"', $k, $this->escape($v));
         }
         $sql = sprintf('INSERT INTO %s SET %s', $table, implode(',', $set_fields));
@@ -111,11 +180,23 @@ class Et_Db
 
     function update($table, $data, $where = array())
     {
+        $table_meta = $this->getMeta($table);
         $set_fields = array();
 
         foreach($data as $k => $v)
         {
-            $set_fields[] = sprintf('`%s`="%s"', $k, $this->escape($v));
+            if(!isset($table_meta[$k]))
+            {
+                continue;
+            }
+            if(!in_array($table_meta[$k]->data_type, array('char', 'varchar', 'text', 'datetime')) && in_array($v{0}, array('*','+','-','/')))
+            {
+                $set_fields[] = sprintf('`%s`=`%s`%s"%s"', $k, $k, $v{0}, intval(substr($v, 1)));
+            }
+            else
+            {
+                $set_fields[] = sprintf('`%s`="%s"', $k, $this->escape($v));
+            }
         }
         $cases = $this->buildWhere($where);
         $sql = sprintf('UPDATE %s SET %s WHERE %s', $table, implode(',', $set_fields), implode(' AND ', $cases));
@@ -277,13 +358,14 @@ class Et_Db
         {
             if($sql)
             {
-                $res = 'SQL:' . $sql . PHP_EOL;
+                $res .= 'SQL:' . $sql . PHP_EOL;
             }
             if($msg)
             {
-                $res = PHP_EOL . $msg . PHP_EOL;
+                $res .= PHP_EOL . $msg . PHP_EOL;
             }
         }
+        echo $res;
         $halt && die();
     }
 }
