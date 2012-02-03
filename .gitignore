@@ -1,0 +1,8 @@
+files/*
+data/log/*.log
+data/tmp/*
+data/config/*.local.ini
+.buildpath
+.project
+.settings/
+sitemap*.xml.gz

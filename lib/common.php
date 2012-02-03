@@ -9,7 +9,8 @@ if(!spl_autoload_register('todo_autoload'))
 }
 $config = parse_ini_file(APP_ROOT . '/data/config.ini', true);
 $config['colors'] = array_values($config['colors']);
-$db = Et_Db::instance($config['db']);
+$db_config = parse_ini_file(APP_ROOT . '/data/database.ini', true);
+$db = Et_Db::instance($db_config);
 if(!$db->fetchCol('show tables like "todo"'))
 {
     foreach(loadSqlFile(APP_ROOT . '/data/schema.sql') as $sql)
@@ -17,7 +18,7 @@ if(!$db->fetchCol('show tables like "todo"'))
         $db->query($sql);
     }
 }
-if($config['mock_data'] && !$db->fetchOne('select count(1) as cnt from todo'))
+if($db_config['mock_data'] && !$db->fetchOne('select count(1) as cnt from todo'))
 {
     $colors = $config['colors'];
     $destinations = $config['destinations'];
@@ -37,7 +38,7 @@ if($config['mock_data'] && !$db->fetchOne('select count(1) as cnt from todo'))
         $i++;
     }
 }
-if($config['mock_data'] && !$db->fetchOne('select count(1) as cnt from tour'))
+if($db_config['mock_data'] && !$db->fetchOne('select count(1) as cnt from tour'))
 {
     $destinations = $config['destinations'];
     $i=0;
@@ -51,7 +52,7 @@ if($config['mock_data'] && !$db->fetchOne('select count(1) as cnt from tour'))
         $id = $db->insert('tour', $tour);
     }
 }
-if($config['mock_data'] && !$db->fetchOne('select count(1) as cnt from article'))
+if($db_config['mock_data'] && !$db->fetchOne('select count(1) as cnt from article'))
 {
     foreach(explode(',', 'aboutus,contact,hr,tos') as $slug)
     {
@@ -62,7 +63,7 @@ if($config['mock_data'] && !$db->fetchOne('select count(1) as cnt from article')
         $id = $db->insert('article', compact('slug', 'title', 'content', 'hits', 'created'));
     }
 }
-if($config['mock_data'] && !$db->fetchOne('select count(1) as cnt from staff'))
+if($db_config['mock_data'] && !$db->fetchOne('select count(1) as cnt from staff'))
 {
     foreach(explode(',', 'demo,contact,hr,tos') as $username)
     {
