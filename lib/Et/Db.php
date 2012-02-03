@@ -258,7 +258,7 @@ class Et_Db
             $sql = "select * from {$table} where " . implode(' and ', $where);
             return $this->fetchAll($sql);
         }
-        elseif(is_int($id))
+        elseif(is_numeric($id))
         {
             $sql = "select * from {$table} where id=" . $id;
             return $this->fetchRow($sql);
@@ -352,7 +352,7 @@ class Et_Db
         $res = '';
         if(ini_get('html_errors'))
         {
-            $res = "<p>error sql : " . nl2br($sql) . "<br/>error msg:" . nl2br($msg) . "</p>";
+            $res .= "<p>error sql : " . nl2br($sql) . "<br/>error msg:" . nl2br($msg) . "</p>";
         }
         else
         {

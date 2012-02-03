@@ -37,6 +37,47 @@ if($config['mock_data'] && !$db->fetchOne('select count(1) as cnt from todo'))
         $i++;
     }
 }
+if($config['mock_data'] && !$db->fetchOne('select count(1) as cnt from tour'))
+{
+    $destinations = $config['destinations'];
+    $i=0;
+    while($i++<10)
+    {
+        shuffle($destinations);
+        $tour = array();
+        $tour['name'] = $tour['description'] = implode(' - ', array_slice($destinations, 0, rand(3,5)));
+        $tour['market_price'] = rand(10, 50) * 10;
+        $tour['price'] = ceil($tour['market_price']*0.8/10)*10;
+        $id = $db->insert('tour', $tour);
+    }
+}
+if($config['mock_data'] && !$db->fetchOne('select count(1) as cnt from article'))
+{
+    foreach(explode(',', 'aboutus,contact,hr,tos') as $slug)
+    {
+        $title = ucfirst($slug);
+        $content = "please add it";
+        $hits = rand(1, 1000)* 23;
+        $created = now();
+        $id = $db->insert('article', compact('slug', 'title', 'content', 'hits', 'created'));
+    }
+}
+if($config['mock_data'] && !$db->fetchOne('select count(1) as cnt from staff'))
+{
+    foreach(explode(',', 'demo,contact,hr,tos') as $username)
+    {
+        $name = ucfirst($username);
+        $password = $username."123";
+        $created = now();
+        $password = md5(md5($username.$password).$username);
+        $id = $db->insert('staff', compact('username', 'name', 'password', 'created'));
+    }
+}
+
+
+@session_start();
+$_SESSION['last_notice'] = @$_SESSION['notice'];unset($_SESSION['notice']);
+
 
 function todo_autoload($klass)
 {

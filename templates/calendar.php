@@ -1,26 +1,13 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html>
-<head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-<link rel="stylesheet" type="text/css" href="scripts/jquery.qtip.css" />
-<link rel="stylesheet" type="text/css" href="scripts/fullcalendar.css" />
-<link href="scripts/jquery.colorpicker.css" rel="stylesheet" type="text/css"/>
-<link rel="stylesheet" type="text/css" href="scripts/fullcalendar.print.css" media="print" />
-<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css" type="text/css" media="all" />
-
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js" type="text/javascript"></script>
-<script src="http://jquery-ui.googlecode.com/svn/tags/latest/external/jquery.bgiframe-2.1.2.js" type="text/javascript"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery-ui-i18n.min.js" type="text/javascript"></script> 
-<script src="http://jqueryui.com/themeroller/themeswitchertool/"></script>
-<script type="text/javascript" src="scripts/fullcalendar.min.js"></script>
-<script type="text/javascript" src="scripts/jquery.qtip.js"></script>
-<script src="scripts/jquery.colorpicker.js"></script>
-<title>日历演示</title>
+<div id="calendar"></div>
+<h3>默认颜色</h3>
+<div>
+<label>前景色：<input type="color" id="text_color" value="ff9900"/></label>
+<label>背景色：<input type="color" id="background_color" value="99ff00"/></label>
+</div>
 <script type='text/javascript'>
 
 	$(document).ready(function() {
-	
+
 		$('#background_color, #text_color').colorpicker({
 			title:				'请选择颜色',
 			buttonText:			'颜色',	// Text on the button and/or title of button image.
@@ -30,7 +17,7 @@
 			limit: 'websafe',
 			parts: 'popup',
 			alpha: false,
-					
+
 					showOn: 'both',
 					showHeader: true,
 					showSwatches: true,
@@ -53,7 +40,7 @@
 			timeFormat: { // for event elements
 				'': 'HH(:mm)' // default
 			},
-			
+
 			firstDay: 1,
 			monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
 			monthNamesShort: ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'],
@@ -73,7 +60,7 @@
 				left: 'prev,next today',
 				center: 'title',
 				right: 'month,basicWeek'/*',agendaWeek,agendaDay'*/
-			},	
+			},
 			selectable: true,
 			selectHelper: true,
 			select: function(start, end, allDay) {
@@ -86,7 +73,7 @@
 						all_day: allDay?1:0,
 						text_color: '#'+$('#text_color').val(),
 						background_color: '#'+$('#background_color').val()
-					}, calendar, function(response) 
+					}, calendar, function(response)
 					{
 						if(response.status=='success')
 						{
@@ -99,7 +86,7 @@
 						}
 					});
 				}
-				calendar.fullCalendar('unselect');				
+				calendar.fullCalendar('unselect');
 			},
 			editable: true,
 			events:
@@ -107,10 +94,10 @@
 				url: "todo.php?act=list",
 				cache: true
 			},
-			eventRender: function(event, element) 
+			eventRender: function(event, element)
 			{
-				$(element).qtip({					
-					content: 
+				$(element).qtip({
+					content:
 					{
 						title:event.title,
 						text: event.description
@@ -121,7 +108,7 @@
 					}
 				});
 			},
-			eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc, jsEvent, ui, view) 
+			eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc, jsEvent, ui, view)
 			{
 				Todo.update({
 					id: event.id,
@@ -130,7 +117,7 @@
 					all_day: allDay?1:0
 				}, calendar, revertFunc);
 			},
-			eventResize: function(event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, view) 
+			eventResize: function(event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, view)
 			{
 				Todo.update({
 					id: event.id,
@@ -138,7 +125,7 @@
 				}, calendar, revertFunc);
 			},
 			loading: function(bool) {
-				if (bool) 
+				if (bool)
 				{
 					$('#loading').show();
 				}
@@ -159,7 +146,7 @@ var Todo =
 			dataType: "json",
 			data: data,
 			success: successCallback
-		});		
+		});
 	}
 	,update: function(data, calendar, revertCallback)
 	{
@@ -168,7 +155,7 @@ var Todo =
 			url: "todo.php?act=update",
 			dataType: "json",
 			data: data,
-			success: function(response) 
+			success: function(response)
 			{
 				if(response.status=='success')
 				{
@@ -181,43 +168,7 @@ var Todo =
 					revertCallback();
 				}
 			}
-		});			
+		});
 	}
 };
 </script>
-<style type='text/css'>
-
-	body {
-		margin-top: 40px;
-		text-align: center;
-		font-size: 14px;
-		font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
-	}
-	#switcher {
-		float: 			right;
-		display: 		inline-block;
-	}		
-	#loading {
-		position: absolute;
-		top: 5px;
-		right: 5px;
-	}
-
-	#calendar {
-		width: 900px;
-		margin: 0 auto;
-	}
-</style>
-</head>
-<body>
-<h3>日历演示</h3>
-<div id="switcher"></div>
-<div id="loading" style="display:none">loading...</div>
-<div id="calendar"></div>
-<h3>默认颜色</h3>
-<div>
-<label>前景色：<input type="color" id="text_color" value="ff9900"/></label>
-<label>背景色：<input type="color" id="background_color" value="99ff00"/></label>
-</div>
-</body>
-</html>
