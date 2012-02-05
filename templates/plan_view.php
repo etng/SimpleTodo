@@ -20,7 +20,9 @@
     <dt>日程安排</dt>
     <dd><table>
     <tr>
+        <td>日期</td>
         <td>线路</td>
+        <td>路程</td>
         <td>金额</td>
         <td>人数</td>
         <td>安排车辆</td>
@@ -30,11 +32,14 @@
     <?php if(!empty($plan['tours'])):?>
     <?php foreach($plan['tours'] as $i=>$plan_tour):?>
     <tr>
+        <td><?php echo $plan_tour['the_date'];?></td>
         <td><?php echo $plan_tour['name'];?></td>
+        <td><?php echo $plan_tour['distance'];?></td>
         <td><?php echo $plan_tour['price'];?></td>
         <td><?php echo $plan_tour['tourist_cnt'];?></td>
         <td><?php echo $plan_tour['car_cnt'];?></td>
-        <td><?php echo $plan_tour['room_cnt'];?></td>
+        <td><?php echo $plan_tour['room_cnt'];?> <input data-plan_tour_id="<?php echo $plan_tour['id'];?>" type="button" value="安排" class="btn_assign_room"/>
+</td>
         <td><?php echo $plan_tour['price_sum'];?>/<?php echo $plan_tour['market_price_sum'];?></td>
     </tr>
     <?php endforeach;?>
@@ -59,7 +64,7 @@
     </tr>
     <?php endforeach;?>
 </table> </dd>
-
+<dt>订单状态</dt><dd><dl>
 <dt>当前状态</dt>
     <dd>
     <?php echo $statuss[$plan['status']]['text'];?>
@@ -73,6 +78,39 @@
 
     </dd>
 <?php endif;?>
+</dl></dd>
+<dt>房间状态</dt><dd><dl>
+<dt>当前状态</dt>
+    <dd>
+    <?php echo $room_statuss[$plan['room_status']]['text'];?>
+   </dd>
+<?php if($next_room_statuss = $room_statuss[$plan['room_status']]['next']):?>
+    <dt>操作</dt>
+    <dd>
+   <?php foreach(explode(',', $next_room_statuss) as $next_room_status):$next_room_status_info = $room_statuss[$next_room_status];?>
+    <a href="plan.php?act=set-status&status=<?php echo $next_room_status;?>&id=<?php echo $plan['id']?>"><?php echo $next_room_status_info['action_text']?></a>
+    <?php endforeach;?>
+
+    </dd>
+<?php endif;?>
+</dl></dd>
+
+<dt>车辆状态</dt><dd><dl>
+<dt>当前状态</dt>
+    <dd>
+    <?php echo $car_statuss[$plan['car_status']]['text'];?>
+   </dd>
+<?php if($next_car_statuss = $car_statuss[$plan['car_status']]['next']):?>
+    <dt>操作</dt>
+    <dd>
+   <?php foreach(explode(',', $next_car_statuss) as $next_car_status):$next_car_status_info = $car_statuss[$next_car_status];?>
+    <a href="plan.php?act=set-status&status=<?php echo $next_car_status;?>&id=<?php echo $plan['id']?>"><?php echo $next_car_status_info['action_text']?></a>
+    <?php endforeach;?>
+
+    </dd>
+<?php endif;?>
+</dl></dd>
+
     <dt>费用相关</dt>
 
     <dd>
@@ -137,3 +175,42 @@
     </dd>
 
 </dl>
+
+ <div id="room_assign_form" style="display:none">
+<form method="post" action="plan.php?act=add-room">
+<input type="hidden" name="room[plan_id]" value="<?php echo $plan['id']?>" />
+<input type="hidden" name="room[plan_tour_id]" id="room_plan_tour_id" value="" />
+<dl>
+    <dt>酒店</dt><dd><select name="room[via]" id="room_hotel_id">
+        <option value="alipay" selected="selected">假日酒店</option>
+        <option value="cash">希尔顿</option>
+    </select></dd>
+    <dt>房型</dt><dd><select name="room[room_type_id]" id="room_type_id">
+        <option value="std" selected="selected">标间</option>
+        <option value="tao">套间</option>
+        <option value="single">单人间</option>
+    </select></dd>
+    <dt>住宿人数</dt><dd><input type="text" name="room[touris_cnt]" id="room_touris_cnt" value="2" /></dd>
+    <dt>金额</dt><dd><input type="text" name="room[price]" id="room_price" value="" /></dd>
+     <dt>备注</dt>
+        <dd><textarea name="room[memo]" id="room_memo" rows="3" cols="70"></textarea></dd>
+        </dl><input type="submit" value="提交" />
+    </form>
+ </div>
+<script type='text/javascript'>
+function refreshRoomPrice()
+{
+    return parseInt(Math.random(1)*10)*20
+}
+$(document).ready(function(){
+    $('input.btn_assign_room').live('click', function(){
+        $('#room_plan_tour_id').val($(this).data('plan_tour_id'));
+        jQuery.facebox({ div: '#room_assign_form' });
+    });
+    $('#room_hotel_id, #room_type_id').live('change', function(){
+        var price = refreshRoomPrice();
+        console.log(price);
+        $('#facebox #room_price').val(price);
+    });
+});
+</script>

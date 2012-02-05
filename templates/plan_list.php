@@ -1,4 +1,17 @@
 <h3><?php echo $title_for_layout;?></h3>
+
+<dl>
+    <dt>状态</dt>
+    <dd><ul> <li>
+    <a href="plan.php?act=list">所有</a>
+    </li>
+    <?php foreach($statuss as $status=>$status_info):?>
+    <li>
+    <a href="plan.php?act=list&st=<?php echo $status;?>"><?php echo $status_info['text']?></a>
+    </li><?php endforeach;?>
+</ul></dd>
+</dl>
+
 <table>
     <tr>
         <td>编号</td>

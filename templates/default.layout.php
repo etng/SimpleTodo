@@ -6,6 +6,7 @@
 <link rel="stylesheet" type="text/css" href="scripts/facebox.css" />
 <link rel="stylesheet" type="text/css" href="scripts/fullcalendar.css" />
 <link href="scripts/jquery.colorpicker.css" rel="stylesheet" type="text/css"/>
+<link href="scripts/fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css"/>
 <link rel="stylesheet" type="text/css" href="scripts/fullcalendar.print.css" media="print" />
 <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css" type="text/css" media="all" />
 <style type='text/css'>
@@ -31,11 +32,13 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery-ui-i18n.js" type="text/javascript"></script>
 <script src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js" type="text/javascript"></script>
 <script src="scripts/jquery.autogrow.js" type="text/javascript"></script>
-<script src="http://jqueryui.com/themeroller/themeswitchertool/"></script>
-<script type="text/javascript" src="scripts/jshash/md5-min.js"></script>
+<!-- <script src="http://jqueryui.com/themeroller/themeswitchertool/"></script>
+ --><script type="text/javascript" src="scripts/jshash/md5-min.js"></script>
 <script type="text/javascript" src="scripts/fullcalendar.min.js"></script>
 <script type="text/javascript" src="scripts/facebox.js"></script>
 <script type="text/javascript" src="scripts/jquery.qtip.js"></script>
+<script type="text/javascript" src="scripts/jquery.mousewheel-3.0.6.pack.js"></script>
+<script type="text/javascript" src="scripts/fancybox/jquery.fancybox.js"></script>
 <script src="scripts/jquery.colorpicker.js"></script>
 <script type="text/javascript" src="scripts/global.js"></script>
 <title><?php echo $title_for_layout;?> - <?php echo $config['site']['name'];?></title>
@@ -49,6 +52,8 @@
         <a href="calendar.php">我的日程</a>
         <a href="plan.php">我的计划</a>
         <a href="plan.php?act=add">添加计划</a>
+        <a href="hotel.php?act=add">添加酒店</a>
+        <a href="hotel.php">酒店管理</a>
     </div><!--mainMenu-->
 </div><!--header-->
 <?php if(!empty($_SESSION['staff']['name'])):?>

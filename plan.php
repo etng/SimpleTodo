@@ -1,8 +1,12 @@
 <?php
 require "lib/common.php";
 $statuss = parse_ini_file(APP_ROOT . '/data/status.ini', true);
+$car_statuss = parse_ini_file(APP_ROOT . '/data/car_status.ini', true);
+$room_statuss = parse_ini_file(APP_ROOT . '/data/room_status.ini', true);
 $contacts = parse_ini_file(APP_ROOT . '/data/contact.ini', true);
 $default_status = key($statuss);
+$default_room_status = key($room_statuss);
+$default_car_status = key($car_statuss);
 ob_start();
 $tours = $db->fetchAll('select * from tour');
 switch(@$_GET['act'])
@@ -85,6 +89,20 @@ switch(@$_GET['act'])
          header('location:plan.php?act=view&id='.$plan_id);
          die();
         break;
+    case 'add-room':
+        var_dump($_POST);
+        die();
+        $created = now();
+        $plan_id = intval($_POST['payment']['plan_id']);
+        $plan = $db->find('plan', $plan_id);
+        $payment = $_POST['payment'];
+        $db->insert('plan_payment', array_merge($payment, compact('created')));
+        $paid = $db->fetchOne('select sum(amount) from plan_payment where plan_id=' . $plan_id);
+        $balance = $paid-$plan['price'];
+        $db->update('plan', compact('paid', 'balance'), array('id'=>$plan_id));
+         header('location:plan.php?act=view&id='.$plan_id);
+         die();
+        break;
     case 'set-status':
         $operator = '5号操作员'; $created = now();
         $plan_id = intval($_GET['id']);
@@ -103,7 +121,13 @@ switch(@$_GET['act'])
     case 'list':
     default:
         $title_for_layout = "我的计划";
-        $plans = $db->fetchAll('select * from plan order by id desc');
+        $where = array();
+        if(!empty($_GET['st']))
+        {
+            $where []='status="'.$_GET['st'] . '"';
+        }
+        $s_where = $where?' where '.implode(' and ', $where):'';
+        $plans = $db->fetchAll('select * from plan '.$s_where.' order by id desc');
         include('templates/plan_list.php');
         break;
 }
