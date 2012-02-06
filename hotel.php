@@ -20,46 +20,18 @@ switch(@$_GET['act'])
         $hotel = $db->find('hotel', $id);
         include('templates/hotel_view.php');
         break;
-    case 'add-payment':
-        $created = now();
-        $plan_id = intval($_POST['payment']['plan_id']);
-        $plan = $db->find('plan', $plan_id);
-        $payment = $_POST['payment'];
-        $db->insert('plan_payment', array_merge($payment, compact('created')));
-        $paid = $db->fetchOne('select sum(amount) from plan_payment where plan_id=' . $plan_id);
-        $balance = $paid-$plan['price'];
-        $db->update('plan', compact('paid', 'balance'), array('id'=>$plan_id));
-         header('location:plan.php?act=view&id='.$plan_id);
-         die();
-        break;
-    case 'add-room':
-        var_dump($_POST);
-        die();
-        $created = now();
-        $plan_id = intval($_POST['payment']['plan_id']);
-        $plan = $db->find('plan', $plan_id);
-        $payment = $_POST['payment'];
-        $db->insert('plan_payment', array_merge($payment, compact('created')));
-        $paid = $db->fetchOne('select sum(amount) from plan_payment where plan_id=' . $plan_id);
-        $balance = $paid-$plan['price'];
-        $db->update('plan', compact('paid', 'balance'), array('id'=>$plan_id));
-         header('location:plan.php?act=view&id='.$plan_id);
-         die();
-        break;
-    case 'set-status':
-        $operator = '5号操作员'; $created = now();
-        $plan_id = intval($_GET['id']);
-        $plan = $db->find('plan', $plan_id);
-        $status = $_GET['status'];
-        $msg = $statuss[$status]['text'];
-        $db->insert('plan_history', array_merge(array(
-                'operation'=>$msg,
-            ), compact('plan_id', 'created', 'operator')));
-
-
-        $db->update('plan', compact('status'), array('id'=>$plan_id));
-         header('location:plan.php?act=view&id='.$plan_id);
-         die();
+    case 'add-price':
+        $updated = now();
+        $record = $_POST['price'];
+        $the_date_ts = $start_date_ts = strtotime($_POST['start_date']);
+        $end_date_ts = strtotime($_POST['end_date']);
+        while($the_date_ts<=$end_date_ts)
+        {
+            $the_date = date('Y-m-d H:i:s', $the_date_ts);
+            $db->insert('room_daily_price', $record = array_merge($record, compact('the_date', 'updated')));
+            $the_date_ts+=86400;
+        }
+        header('location:hotel.php?act=view&id='.$record['hotel_id']);
         break;
     case 'list':
     default:

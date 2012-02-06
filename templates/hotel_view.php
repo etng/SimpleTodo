@@ -27,8 +27,8 @@
             <form method="post" action="hotel.php?act=add-price"><input type="hidden" name="price[hotel_id]" value="<?php echo $hotel['id']?>" />
             <dl>
                 <dt>起止日期</dt><dd>
-                <label><input type="text" name="price[start_date]" id="price_start_date" value="" size="10" /></label> 至
-                <label><input type="text" name="price[end_date]" id="price_end_date" value="" size="10" /></label>
+                <label><input type="text" name="start_date" id="price_start_date" value="" size="10" /></label> 至
+                <label><input type="text" name="end_date" id="price_end_date" value="" size="10" /></label>
                 </dd>
                 <dt>供应价</dt><dd>
                 <label>对外价<input type="text" name="price[public_price]" id="price_public_price" value="" size="5" /></label>
@@ -55,13 +55,50 @@
 $(document).ready(function(){
     $('input.btn_add_price').live('click', function(){
         jQuery.facebox({ div: '#price_add_form' });
-        $( "#price_start_date" ).datepicker({
+        var ts=+new Date();
+        $.each(['price_start_date', 'price_end_date', 'price_public_price', 'price_cost', 'price_min_price', 'price_default_price', 'price_max_price'], function(i, id){
+            console.log(id);
+            $( "#facebox #"+id).attr('id', id+'_'+ts);
+        });
+        $( "#price_start_date"+'_'+ts).datepicker({
+            onSelect: function( selectedDate ) {
+				var instance = $( this ).data( "datepicker" ),
+					date = $.datepicker.parseDate(
+						instance.settings.dateFormat ||
+						$.datepicker._defaults.dateFormat,
+						selectedDate, instance.settings );
+				$( "#price_end_date"+'_'+ts).datepicker( "option", 'minDate', date );
+			},
             minDate: "+1d",
             maxDate: "+1Y"
         });
-        $( "#price_end_date" ).datepicker({
+        $( "#price_end_date"+'_'+ts).datepicker({
+            onSelect: function( selectedDate ) {
+				var instance = $( this ).data( "datepicker" ),
+					date = $.datepicker.parseDate(
+						instance.settings.dateFormat ||
+						$.datepicker._defaults.dateFormat,
+						selectedDate, instance.settings );
+				$( "#price_start_date"+'_'+ts).datepicker( "option", 'maxDate', date );
+			},
             minDate: "+1d",
             maxDate: "+1Y"
+        });
+        var ratio_setting = {
+//            'price_public_price': 1,
+            'price_cost': 0.5,
+            'price_min_price': 0.75,
+            'price_default_price': 0.8,
+            'price_max_price': 0.9
+        };
+        $( "#price_public_price"+'_'+ts).change(function(){
+            var public_price = $(this).val();
+            $.each(ratio_setting, function(field, ratio)
+            {
+                var new_price = Math.ceil(public_price*ratio/10)*10;
+                console.log(field, ratio, new_price, $('#'+field+'_'+ts));
+                $('#'+field+'_'+ts).val(new_price);
+            });
         });
     });
 });
