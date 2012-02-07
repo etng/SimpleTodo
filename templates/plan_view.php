@@ -37,7 +37,7 @@
         <td><?php echo $plan_tour['distance'];?></td>
         <td><?php echo $plan_tour['price'];?></td>
         <td><?php echo $plan_tour['tourist_cnt'];?></td>
-        <td><?php echo $plan_tour['car_cnt'];?></td>
+        <td><?php echo $plan_tour['car_cnt'];?> <input data-plan_tour_id="<?php echo $plan_tour['id'];?>" type="button" value="安排" class="btn_assign_car"/></td>
         <td><?php echo $plan_tour['room_cnt'];?> <input data-plan_tour_id="<?php echo $plan_tour['id'];?>" type="button" value="安排" class="btn_assign_room"/>
 </td>
         <td><?php echo $plan_tour['price_sum'];?>/<?php echo $plan_tour['market_price_sum'];?></td>
@@ -181,14 +181,16 @@
 <input type="hidden" name="room[plan_id]" value="<?php echo $plan['id']?>" />
 <input type="hidden" name="room[plan_tour_id]" id="room_plan_tour_id" value="" />
 <dl>
-    <dt>酒店</dt><dd><select name="room[via]" id="room_hotel_id">
-        <option value="alipay" selected="selected">假日酒店</option>
-        <option value="cash">希尔顿</option>
+    <dt>酒店</dt><dd><select name="room[hotel_id]" id="room_hotel_id">
+        <option value="" selected="selected">--请选择--</option>
+        <option value="holiday">假日酒店</option>
+        <option value="hilton">希尔顿</option>
     </select></dd>
-    <dt>房型</dt><dd><select name="room[room_type_id]" id="room_type_id">
-        <option value="std" selected="selected">标间</option>
-        <option value="tao">套间</option>
-        <option value="single">单人间</option>
+    <dt>房型</dt><dd><select name="room[type]" id="room_type">
+        <option value="" selected="selected">--请选择--</option>
+        <option value="1">单人间</option>
+        <option value="2">标间</option>
+        <option value="3">套间</option>
     </select></dd>
     <dt>住宿人数</dt><dd><input type="text" name="room[touris_cnt]" id="room_touris_cnt" value="2" /></dd>
     <dt>金额</dt><dd><input type="text" name="room[price]" id="room_price" value="" /></dd>
@@ -197,20 +199,75 @@
         </dl><input type="submit" value="提交" />
     </form>
  </div>
+
+ <div id="car_assign_form" style="display:none">
+<form method="post" action="plan.php?act=add-car">
+<input type="hidden" name="car[plan_id]" value="<?php echo $plan['id']?>" />
+<input type="hidden" name="car[plan_tour_id]" id="car_plan_tour_id" value="" />
+<dl>
+    <dt>司机</dt><dd><select name="car[driver_id]" id="car_driver_id">
+        <option value="" selected="selected">--请选择--</option>
+        <option value="holiday">黄司机</option>
+        <option value="hilton">张师傅</option>
+    </select></dd>
+    <dt>车型</dt><dd><select name="car[type]" id="car_type">
+        <option value="" selected="selected">--请选择--</option>
+        <option value="1">吉普</option>
+        <option value="2">桑塔纳</option>
+        <option value="3">越野</option>
+    </select></dd>
+    <dt>容纳人数</dt><dd><input type="text" name="car[touris_cnt]" id="car_touris_cnt" value="2" /></dd>
+    <dt>金额</dt><dd><input type="text" name="car[price]" id="car_price" value="" /></dd>
+     <dt>备注</dt>
+        <dd><textarea name="car[memo]" id="car_memo" rows="3" cols="70"></textarea></dd>
+        </dl><input type="submit" value="提交" />
+    </form>
+ </div>
 <script type='text/javascript'>
-function refreshRoomPrice()
+function refreshRoomPrice(plan_tour_id, hotel_id, room_type)
 {
-    return parseInt(Math.random(1)*10)*20
+    //@todo ajax get room price on that day
+    return parseInt(Math.random(1)*10)*20*room_type;
+}
+function refreshCarPrice(plan_tour_id, driver_id, car_type)
+{
+    //@todo ajax get room price on that day
+    return parseInt(Math.random(1)*10)*20*car_type;
 }
 $(document).ready(function(){
+
     $('input.btn_assign_room').live('click', function(){
-        $('#room_plan_tour_id').val($(this).data('plan_tour_id'));
         jQuery.facebox({ div: '#room_assign_form' });
+        var ts=+new Date();
+        $.each(['room_plan_tour_id', 'room_hotel_id', 'room_type', 'touris_cnt', 'room_price', 'room_memo'], function(i, id){
+            $( "#facebox #"+id).attr('id', id+'_'+ts);
+        });
+        $('#room_plan_tour_id'+'_'+ts).val($(this).data('plan_tour_id'));
+        $('#room_hotel_id'+'_'+ts+', #room_type'+'_'+ts).change(function(){
+            var hotel_id = $('#room_hotel_id'+'_'+ts).val();
+            var room_type = $('#room_type'+'_'+ts).val();
+            var plan_tour_id = $('#room_plan_tour_id'+'_'+ts).val();
+            var price = refreshRoomPrice(plan_tour_id, hotel_id, room_type);
+            console.log($(this), price);
+            $('#room_price'+'_'+ts).val(price);
+        });
     });
-    $('#room_hotel_id, #room_type_id').live('change', function(){
-        var price = refreshRoomPrice();
-        console.log(price);
-        $('#facebox #room_price').val(price);
+    $('input.btn_assign_car').live('click', function(){
+        jQuery.facebox({ div: '#car_assign_form' });
+        var ts=+new Date();
+        $.each(['car_plan_tour_id', 'car_driver_id', 'car_type', 'touris_cnt', 'car_price', 'car_memo'], function(i, id){
+            $( "#facebox #"+id).attr('id', id+'_'+ts);
+        });
+        $('#car_plan_tour_id'+'_'+ts).val($(this).data('plan_tour_id'));
+        $('#car_driver_id'+'_'+ts+', #car_type'+'_'+ts).change(function(){
+            var driver_id = $('#car_driver_id'+'_'+ts).val();
+            var car_type = $('#car_type'+'_'+ts).val();
+            var plan_tour_id = $('#car_plan_tour_id'+'_'+ts).val();
+            var price = refreshCarPrice(plan_tour_id, driver_id, car_type);
+            console.log($(this), price);
+            $('#car_price'+'_'+ts).val(price);
+        });
     });
+
 });
 </script>

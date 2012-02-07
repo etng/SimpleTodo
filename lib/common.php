@@ -47,6 +47,7 @@ if($db_config['mock_data'] && !$db->fetchOne('select count(1) as cnt from tour')
         shuffle($destinations);
         $tour = array();
         $tour['name'] = $tour['description'] = implode(' - ', array_slice($destinations, 0, rand(3,5)));
+        $tour['distance'] = rand(10, 50) * 10;
         $tour['market_price'] = rand(10, 50) * 10;
         $tour['price'] = ceil($tour['market_price']*0.8/10)*10;
         $id = $db->insert('tour', $tour);

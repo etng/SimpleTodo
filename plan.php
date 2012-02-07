@@ -34,8 +34,10 @@ switch(@$_GET['act'])
             }
             $created = now();
             $status = $default_status;
+            $car_status = $default_car_status;
+            $room_status = $default_room_status;
 
-            $plan_id = $db->insert('plan', array_merge($plan, compact('status', 'user_id', 'contact_id', 'created')));
+            $plan_id = $db->insert('plan', array_merge($plan, compact('status', 'car_status', 'room_status', 'user_id', 'contact_id', 'created')));
             $price=0;
             foreach($plan_tours as $plan_tour)
             {
@@ -88,6 +90,10 @@ switch(@$_GET['act'])
         $db->update('plan', compact('paid', 'balance'), array('id'=>$plan_id));
          header('location:plan.php?act=view&id='.$plan_id);
          die();
+        break;
+    case 'add-car':
+        var_dump($_POST);
+        die();
         break;
     case 'add-room':
         var_dump($_POST);
