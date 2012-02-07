@@ -54,6 +54,12 @@
         <a href="plan.php?act=add">添加计划</a>
         <a href="hotel.php?act=add">添加酒店</a>
         <a href="hotel.php">酒店管理</a>
+        <a href="article.php?act=add">添加文章</a>
+        <a href="article.php">文章管理</a>
+        <a href="destination.php?act=add">添加目的地</a>
+        <a href="destination.php">目的地管理</a>
+        <a href="tour.php?act=add">添加线路</a>
+        <a href="tour.php">线路管理</a>
     </div><!--mainMenu-->
 </div><!--header-->
 <?php if(!empty($_SESSION['staff']['name'])):?>

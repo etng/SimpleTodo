@@ -18,6 +18,19 @@ switch(@$_GET['act'])
         $title_for_layout = "酒店详情";
         $id = intval($_GET['id']);
         $hotel = $db->find('hotel', $id);
+        $price_trends = array();
+        $today = date('Y-m-d');
+        $later = date('Y-m-d',strtotime('+10 days'));
+        $sql = "
+        SELECT *
+        FROM `room_daily_price`
+        WHERE `hotel_id`=1 AND the_date>='{$today}' AND the_date <='{$later}'
+        ";
+        $price_fields = array('cost'=>'成本', 'public_price'=>'市场价', 'min_price'=>'最低价', 'default_price'=>'默认价', 'max_price'=>'最高价');
+        foreach($db->fetchAll($sql) as $row)
+        {
+            $price_trends[$row['the_date']][$row['room_type']] = sub_array($row, array_keys($price_fields));
+        }
         include('templates/hotel_view.php');
         break;
     case 'add-price':
@@ -28,10 +41,13 @@ switch(@$_GET['act'])
         while($the_date_ts<=$end_date_ts)
         {
             $the_date = date('Y-m-d H:i:s', $the_date_ts);
+            $room_type = $record['room_type'];
+            $db->delete('room_daily_price', compact('the_date', 'room_type'));
             $db->insert('room_daily_price', $record = array_merge($record, compact('the_date', 'updated')));
             $the_date_ts+=86400;
         }
         header('location:hotel.php?act=view&id='.$record['hotel_id']);
+        die();
         break;
     case 'list':
     default:

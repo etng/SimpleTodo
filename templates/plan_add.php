@@ -28,7 +28,7 @@ $contact = $contacts[array_rand($contacts)];
     <dt>日程安排</dt>
     <dd><ul id="sortable">
     <?php foreach($old_tours as $i=>$tour):?>
-        <li class="ui-state-default tour" id="item_<?php echo $i;?>"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span><div class="tour_name"><?php echo $tour['name'];?></div>(<span class="tour_distance"><?php echo $tour['distance'];?>公里</span>)<input type="hidden" id="item_<?php echo $i;?>_tour_id" name="plan[item_tour_id][<?php echo $i;?>]" value="<?php echo $tour['id'];?>" />
+        <li class="ui-state-default tour" id="item_<?php echo $i;?>"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span><div class="tour_name"><?php echo $tour['name'];?></div>(<span class="tour_distance"><?php echo $tour['distance'];?>公里</span> 住<span class="tour_destination"><?php echo $tour['destination'];?>公里</span>)<input type="hidden" id="item_<?php echo $i;?>_tour_id" name="plan[item_tour_id][<?php echo $i;?>]" value="<?php echo $tour['id'];?>" />
         第<input type="text" id="item_<?php echo $i;?>_num" name="plan[item_the_num][<?php echo $i;?>]" value="<?php echo $i+1;?>" size="3"/>天，
         <input type="text" id="item_<?php echo $i;?>_date" name="plan[item_the_date][<?php echo $i;?>]" value="<?php echo date("Y-m-d", strtotime(sprintf("+%d days", $i), $start_date))?>" size="8" />
 
@@ -39,7 +39,7 @@ $contact = $contacts[array_rand($contacts)];
         </li>
     <?php endforeach;?>
     <script id="tourTemplate" type="text/x-jquery-tmpl">
-        <li class="ui-state-default tour" id="item_${i}"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span><div class="tour_name">${name}</div>(<span class="tour_distance">${distance}公里</span>)<input type="hidden" id="item_${i}_tour_id" name="plan[item_tour_id][${i}]" value="${id}" />
+        <li class="ui-state-default tour" id="item_${i}"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span><div class="tour_name">${name}</div>(<span class="tour_distance">${distance}公里</span> 住 <span class="tour_destination">${destination}公里</span>)<input type="hidden" id="item_${i}_tour_id" name="plan[item_tour_id][${i}]" value="${id}" />
         第<input type="text" id="item_${i}_num" name="plan[item_the_num][${i}]" value="" size="3"/>天，
         <input type="text" id="item_${i}_date" name="plan[item_the_date][${i}]" value="" size="8" />
 
@@ -87,7 +87,7 @@ $(document).ready(function(){
         var container = $("#sortable");
         var idx = container.find( "li" ).length;
         var li =
-        $("#tourTemplate").tmpl({i: idx, id: tour.id, name: tour.name, distance: tour.distance});
+        $("#tourTemplate").tmpl({i: idx, id: tour.id, name: tour.name, distance: tour.distance, destination: tour.destination});
         li.appendTo(container);
         updatetourDates();
 

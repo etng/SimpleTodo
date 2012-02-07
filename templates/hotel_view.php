@@ -2,29 +2,48 @@
 
 <dl>
     <dt>名称</dt>
-    <dd><?php echo $hotel['name']?></dd>
+    <dd><?php echo $hotel['name'];?></dd>
     <dt>加入时间</dt>
-    <dd><?php echo $hotel['created']?></dd>
+    <dd><?php echo $hotel['created'];?></dd>
     <dt>所在地</dt>
-    <dd><?php echo $hotel['destination']?></dd>
+    <dd><?php echo $hotel['destination'];?></dd>
     <dt>地址</dt>
-    <dd><?php echo $hotel['address']?></dd>
+    <dd><?php echo $hotel['address'];?></dd>
      <dt>星级</dt>
-    <dd><?php echo $hotel['star']?></dd>
+    <dd><?php echo $hotel['star'];?></dd>
     <dt>电话</dt>
-    <dd><?php echo $hotel['phone']?></dd>
+    <dd><?php echo $hotel['phone'];?></dd>
     <dt>传真</dt>
-    <dd><?php echo $hotel['fax']?></dd>
+    <dd><?php echo $hotel['fax'];?></dd>
     <dt>网站</dt>
-    <dd><?php echo $hotel['website']?></dd>
+    <dd><?php echo $hotel['website'];?></dd>
     <dt>介绍</dt>
-    <dd><?php echo $hotel['description']?></dd>
+    <dd><?php echo $hotel['description'];?></dd>
     <dt>报价</dt>
     <dd>
-
+<table>
+    <tr>
+        <td>日期</td>
+        <td>房型</td>
+        <?php foreach($price_fields as $price_field=>$text):?>
+        <td><?php echo $text;?></td>
+         <?php endforeach;?>
+    </tr>
+    <?php foreach($price_trends as $the_date=>$room_type_prices):?>
+    <?php foreach($room_type_prices as $room_type=>$prices):?>
+    <tr>
+        <td><?php echo $the_date;?></td>
+        <td><?php echo $config['room_types'][$room_type];?></td>
+        <?php foreach($price_fields as $price_field=>$text):?>
+        <td><?php echo $prices[$price_field];?></td>
+         <?php endforeach;?>
+    </tr>
+    <?php endforeach;?>
+    <?php endforeach;?>
+</table>
             <input type="button" value="添加报价" class="btn_add_price"/>
              <div id="price_add_form" style="display:none">
-            <form method="post" action="hotel.php?act=add-price"><input type="hidden" name="price[hotel_id]" value="<?php echo $hotel['id']?>" />
+            <form method="post" action="hotel.php?act=add-price"><input type="hidden" name="price[hotel_id]" value="<?php echo $hotel['id'];?>" />
             <dl>
                 <dt>起止日期</dt><dd>
                 <label><input type="text" name="start_date" id="price_start_date" value="" size="10" /></label> 至
@@ -36,13 +55,13 @@
                 </dd>
                 <dt>销售价</dt><dd>
                 <label>最低价<input type="text" name="price[min_price]" id="price_min_price" value="" size="5" /></label>
-                <label>默认价<input type="text" name="price[min_default_price]" id="price_default_price" value="" size="5" /></label>
+                <label>默认价<input type="text" name="price[default_price]" id="price_default_price" value="" size="5" /></label>
                 <label>最高价<input type="text" name="price[max_price]" id="price_max_price" value="" size="5" /></label>
                 </dd>
                 <dt>房型</dt><dd><select name="price[room_type]" id="price_room_type">
-                    <option value="std" selected="selected">标间</option>
-                    <option value="tao">套间</option>
-                    <option value="single">单人间</option>
+                    <?php foreach($config['room_types'] as $room_type=>$text):?>
+                    <option value="<?php echo $room_type;?>"><?php echo $text;?></option>
+                    <?php endforeach;?>
                 </select></dd>
                  <dt>备注</dt>
                     <dd><textarea name="price[memo]" id="price_memo" rows="3" cols="70"></textarea></dd>
@@ -57,7 +76,6 @@ $(document).ready(function(){
         jQuery.facebox({ div: '#price_add_form' });
         var ts=+new Date();
         $.each(['price_start_date', 'price_end_date', 'price_public_price', 'price_cost', 'price_min_price', 'price_default_price', 'price_max_price'], function(i, id){
-            console.log(id);
             $( "#facebox #"+id).attr('id', id+'_'+ts);
         });
         $( "#price_start_date"+'_'+ts).datepicker({
@@ -96,7 +114,6 @@ $(document).ready(function(){
             $.each(ratio_setting, function(field, ratio)
             {
                 var new_price = Math.ceil(public_price*ratio/10)*10;
-                console.log(field, ratio, new_price, $('#'+field+'_'+ts));
                 $('#'+field+'_'+ts).val(new_price);
             });
         });

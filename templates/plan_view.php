@@ -22,6 +22,7 @@
     <tr>
         <td>日期</td>
         <td>线路</td>
+        <td>住宿</td>
         <td>路程</td>
         <td>金额</td>
         <td>人数</td>
@@ -34,12 +35,12 @@
     <tr>
         <td><?php echo $plan_tour['the_date'];?></td>
         <td><?php echo $plan_tour['name'];?></td>
+        <td><?php echo $plan_tour['destination'];?></td>
         <td><?php echo $plan_tour['distance'];?></td>
         <td><?php echo $plan_tour['price'];?></td>
         <td><?php echo $plan_tour['tourist_cnt'];?></td>
         <td><?php echo $plan_tour['car_cnt'];?> <input data-plan_tour_id="<?php echo $plan_tour['id'];?>" type="button" value="安排" class="btn_assign_car"/></td>
-        <td><?php echo $plan_tour['room_cnt'];?> <input data-plan_tour_id="<?php echo $plan_tour['id'];?>" type="button" value="安排" class="btn_assign_room"/>
-</td>
+        <td><?php echo $plan_tour['room_cnt'];?> <input data-plan_tour_id="<?php echo $plan_tour['id'];?>" type="button" value="安排" class="btn_assign_room"/></td>
         <td><?php echo $plan_tour['price_sum'];?>/<?php echo $plan_tour['market_price_sum'];?></td>
     </tr>
     <?php endforeach;?>
@@ -188,9 +189,9 @@
     </select></dd>
     <dt>房型</dt><dd><select name="room[type]" id="room_type">
         <option value="" selected="selected">--请选择--</option>
-        <option value="1">单人间</option>
-        <option value="2">标间</option>
-        <option value="3">套间</option>
+        <?php foreach($config['room_types'] as $room_type=>$text):?>
+        <option value="<?php echo $room_type;?>"><?php echo $text;?></option>
+        <?php endforeach;?>
     </select></dd>
     <dt>住宿人数</dt><dd><input type="text" name="room[touris_cnt]" id="room_touris_cnt" value="2" /></dd>
     <dt>金额</dt><dd><input type="text" name="room[price]" id="room_price" value="" /></dd>
@@ -207,8 +208,8 @@
 <dl>
     <dt>司机</dt><dd><select name="car[driver_id]" id="car_driver_id">
         <option value="" selected="selected">--请选择--</option>
-        <option value="holiday">黄司机</option>
-        <option value="hilton">张师傅</option>
+        <option value="huangshifu">黄司机</option>
+        <option value="zhangshifu">张师傅</option>
     </select></dd>
     <dt>车型</dt><dd><select name="car[type]" id="car_type">
         <option value="" selected="selected">--请选择--</option>
@@ -227,12 +228,12 @@
 function refreshRoomPrice(plan_tour_id, hotel_id, room_type)
 {
     //@todo ajax get room price on that day
-    return parseInt(Math.random(1)*10)*20*room_type;
+    return parseInt(Math.random(1)*10)*20;
 }
 function refreshCarPrice(plan_tour_id, driver_id, car_type)
 {
     //@todo ajax get room price on that day
-    return parseInt(Math.random(1)*10)*20*car_type;
+    return parseInt(Math.random(1)*10)*20;
 }
 $(document).ready(function(){
 

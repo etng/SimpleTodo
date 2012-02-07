@@ -42,11 +42,13 @@ if($db_config['mock_data'] && !$db->fetchOne('select count(1) as cnt from tour')
 {
     $destinations = $config['destinations'];
     $i=0;
+    $updated=$created = now();
     while($i++<10)
     {
         shuffle($destinations);
-        $tour = array();
-        $tour['name'] = $tour['description'] = implode(' - ', array_slice($destinations, 0, rand(3,5)));
+        $tour = compact('created', 'updated');
+        $tour['name'] = $tour['description'] = implode(' - ', $tour_destinations = array_slice($destinations, 0, rand(3,5)));
+        $tour['destination'] = end($tour_destinations);
         $tour['distance'] = rand(10, 50) * 10;
         $tour['market_price'] = rand(10, 50) * 10;
         $tour['price'] = ceil($tour['market_price']*0.8/10)*10;
@@ -121,4 +123,14 @@ function loadSqlFile($filename)
     }
     fclose($fp);
     return $sqls;
+}
+
+function sub_array($arr, $keys)
+{
+    $sub_array = array();
+    foreach($keys as $key)
+    {
+        $sub_array[$key] = empty($arr[$key])?'':$arr[$key];
+    }
+    return $sub_array;
 }

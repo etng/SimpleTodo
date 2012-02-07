@@ -92,22 +92,16 @@ switch(@$_GET['act'])
          die();
         break;
     case 'add-car':
-        var_dump($_POST);
+        $plan_id = intval($_POST['car']['plan_id']);
+        $db->insert('plan_tour_car', $_POST['car']);
+        header('location:plan.php?act=view&id='.$plan_id);
         die();
         break;
     case 'add-room':
-        var_dump($_POST);
+        $plan_id = intval($_POST['room']['plan_id']);
+        $db->insert('plan_tour_room', $_POST['room']);
+        header('location:plan.php?act=view&id='.$plan_id);
         die();
-        $created = now();
-        $plan_id = intval($_POST['payment']['plan_id']);
-        $plan = $db->find('plan', $plan_id);
-        $payment = $_POST['payment'];
-        $db->insert('plan_payment', array_merge($payment, compact('created')));
-        $paid = $db->fetchOne('select sum(amount) from plan_payment where plan_id=' . $plan_id);
-        $balance = $paid-$plan['price'];
-        $db->update('plan', compact('paid', 'balance'), array('id'=>$plan_id));
-         header('location:plan.php?act=view&id='.$plan_id);
-         die();
         break;
     case 'set-status':
         $operator = '5号操作员'; $created = now();

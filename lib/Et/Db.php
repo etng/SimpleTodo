@@ -177,7 +177,12 @@ class Et_Db
         $sql = sprintf('INSERT INTO %s SET %s', $table, implode(',', $set_fields));
         return $this->execute($sql);
     }
-
+    function delete($table, $where=array())
+    {
+        $cases = $this->buildWhere($where);
+        $sql = sprintf('DELETE FROM %s WHERE %s', $table, implode(' AND ', $cases));
+        return $this->execute($sql);
+    }
     function update($table, $data, $where = array())
     {
         $table_meta = $this->getMeta($table);
