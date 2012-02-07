@@ -1,7 +1,7 @@
 files/*
 data/log/*.log
 data/tmp/*
-data/config/*.local.ini
+data/*.local.ini
 .buildpath
 .project
 .settings/

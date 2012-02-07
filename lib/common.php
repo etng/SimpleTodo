@@ -9,7 +9,7 @@ if(!spl_autoload_register('todo_autoload'))
 }
 $config = parse_ini_file(APP_ROOT . '/data/config.ini', true);
 $config['colors'] = array_values($config['colors']);
-$db_config = parse_ini_file(APP_ROOT . '/data/database.ini', true);
+$db_config = parse_ini_file(APP_ROOT . '/data/database.local.ini', true);
 $db = Et_Db::instance($db_config);
 if(!$db->fetchCol('show tables like "todo"'))
 {
