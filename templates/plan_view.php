@@ -178,6 +178,27 @@
 </dl>
 
  <div id="room_assign_form" style="display:none">
+<h4>已安排酒店情况</h4>
+ <table class="plan_tour_rooms">
+     <thead><tr>
+        <td>酒店</td>
+        <td>房型</td>
+        <td>容纳人数</td>
+        <td>价格</td>
+        <td>备注</td>
+    </tr></thead>
+    <tbody></tbody>
+</table>
+
+<script id="planTourRoomTemplate" type="text/x-jquery-tmpl">
+    <tr>
+        <td>${hotel_id}</td>
+        <td>${type}</td>
+        <td>${touris_cnt}</td>
+        <td>${price}</td>
+        <td>${memo}</td>
+    </tr>
+</script>
 <form method="post" action="plan.php?act=add-room">
 <input type="hidden" name="room[plan_id]" value="<?php echo $plan['id']?>" />
 <input type="hidden" name="room[plan_tour_id]" id="room_plan_tour_id" value="" />
@@ -202,6 +223,28 @@
  </div>
 
  <div id="car_assign_form" style="display:none">
+ <h4>已安排车辆情况</h4>
+ <table class="plan_tour_cars">
+     <thead><tr>
+        <td>司机</td>
+        <td>车型</td>
+        <td>容纳人数</td>
+        <td>价格</td>
+        <td>备注</td>
+    </tr></thead>
+    <tbody></tbody>
+</table>
+
+<script id="planTourCarTemplate" type="text/x-jquery-tmpl">
+    <tr>
+        <td>${driver_id}</td>
+        <td>${type}</td>
+        <td>${touris_cnt}</td>
+        <td>${price}</td>
+        <td>${memo}</td>
+    </tr>
+</script>
+
 <form method="post" action="plan.php?act=add-car">
 <input type="hidden" name="car[plan_id]" value="<?php echo $plan['id']?>" />
 <input type="hidden" name="car[plan_tour_id]" id="car_plan_tour_id" value="" />
@@ -224,6 +267,8 @@
         </dl><input type="submit" value="提交" />
     </form>
  </div>
+
+
 <script type='text/javascript'>
 function refreshRoomPrice(plan_tour_id, hotel_id, room_type)
 {
@@ -243,14 +288,26 @@ $(document).ready(function(){
         $.each(['room_plan_tour_id', 'room_hotel_id', 'room_type', 'touris_cnt', 'room_price', 'room_memo'], function(i, id){
             $( "#facebox #"+id).attr('id', id+'_'+ts);
         });
-        $('#room_plan_tour_id'+'_'+ts).val($(this).data('plan_tour_id'));
+        var plan_tour_id = $(this).data('plan_tour_id');
+        $('#room_plan_tour_id'+'_'+ts).val(plan_tour_id);
+        $.get('plan.php?act=get-plan-tour_rooms&plan_tour_id='+plan_tour_id, function(data){
+            $('#facebox table.plan_tour_rooms tbody').empty().append($("#planTourRoomTemplate").tmpl(data));
+        }, 'json');
+         $.get('plan.php?act=get-destination-hotels&plan_tour_id='+plan_tour_id, function(hotels){
+            var hotel_selector = $('#room_hotel_id'+'_'+ts);
+            hotel_selector.empty();
+            $.each(hotels, function(i, hotel){
+                hotel_selector.append(new Option(hotel.name, hotel.id));
+            });
+        }, 'json');
+
         $('#room_hotel_id'+'_'+ts+', #room_type'+'_'+ts).change(function(){
             var hotel_id = $('#room_hotel_id'+'_'+ts).val();
             var room_type = $('#room_type'+'_'+ts).val();
-            var plan_tour_id = $('#room_plan_tour_id'+'_'+ts).val();
             var price = refreshRoomPrice(plan_tour_id, hotel_id, room_type);
-            console.log($(this), price);
-            $('#room_price'+'_'+ts).val(price);
+            $.get('plan.php?act=get-room-price&plan_tour_id='+plan_tour_id+'&hotel_id='+hotel_id+'&room_type='+room_type, function(price_info){
+                $('#room_price'+'_'+ts).val(price_info.default_price);
+            }, 'json');
         });
     });
     $('input.btn_assign_car').live('click', function(){
@@ -259,13 +316,16 @@ $(document).ready(function(){
         $.each(['car_plan_tour_id', 'car_driver_id', 'car_type', 'touris_cnt', 'car_price', 'car_memo'], function(i, id){
             $( "#facebox #"+id).attr('id', id+'_'+ts);
         });
+        var plan_tour_id = $(this).data('plan_tour_id');
+        $('#room_plan_tour_id'+'_'+ts).val(plan_tour_id);
+        $.get('plan.php?act=get-plan-tour_cars&plan_tour_id='+plan_tour_id, function(data){
+            $('#facebox table.plan_tour_cars tbody').empty().append($("#planTourCarTemplate").tmpl(data));
+        }, 'json');
         $('#car_plan_tour_id'+'_'+ts).val($(this).data('plan_tour_id'));
         $('#car_driver_id'+'_'+ts+', #car_type'+'_'+ts).change(function(){
             var driver_id = $('#car_driver_id'+'_'+ts).val();
             var car_type = $('#car_type'+'_'+ts).val();
-            var plan_tour_id = $('#car_plan_tour_id'+'_'+ts).val();
             var price = refreshCarPrice(plan_tour_id, driver_id, car_type);
-            console.log($(this), price);
             $('#car_price'+'_'+ts).val(price);
         });
     });

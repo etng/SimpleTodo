@@ -54,7 +54,7 @@ $contact = $contacts[array_rand($contacts)];
     <div id="tour_selector" style="display:none;">
     <h4>可选线路</h4><ul>
     <?php foreach($tours as $i=>$tour):?>
-    <li class="tour"><?php echo $tour['name'];?>(<?php echo $tour['price'];?>/<?php echo $tour['market_price'];?>)<input data-tour_id=<?php echo $tour['id'];?> type="button" value="添加" class="btn_add_tour" /></li>
+    <li class="tour"><?php echo $tour['name'];?>(<?php echo $tour['price'];?>/<?php echo $tour['market_price'];?>)<input data-tour_id=<?php echo $i;?> type="button" value="添加" class="btn_add_tour" /></li>
     <?php endforeach;?> </ul>
     </div>
     </dd>

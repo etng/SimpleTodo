@@ -55,6 +55,7 @@ switch(@$_GET['act'])
                 $plan_tour['price_sum'] =  $tour['price'] * $plan_tour['tourist_cnt'];
                 $plan_tour['market_price_sum'] =  $tour['market_price'] * $plan_tour['tourist_cnt'];
                 $price += $plan_tour['price_sum'];
+                $plan_tour['destination'] = $tour['destination'];
                 $db->insert('plan_tour', $plan_tour = array_merge($plan_tour, compact('plan_id')));
             }
             $paid = 0;
@@ -90,6 +91,32 @@ switch(@$_GET['act'])
         $db->update('plan', compact('paid', 'balance'), array('id'=>$plan_id));
          header('location:plan.php?act=view&id='.$plan_id);
          die();
+        break;
+    case 'get-plan-tour_rooms':
+        $plan_tour_id = intval($_GET['plan_tour_id']);
+        echo json_encode($db->fetchAll('select * from plan_tour_room where plan_tour_id='.$plan_tour_id));
+        die();
+        break;
+    case 'get-plan-tour_cars':
+        $plan_tour_id = intval($_GET['plan_tour_id']);
+        echo json_encode($db->fetchAll('select * from plan_tour_car where plan_tour_id='.$plan_tour_id));
+        die();
+        break;
+    case 'get-destination-hotels':
+        $plan_tour_id = intval($_GET['plan_tour_id']);
+        $tour_id =  $db->fetchOne('select tour_id from plan_tour where id='.$plan_tour_id);
+        $destination_id =  $db->fetchOne('select destination_id from tour where id='.$tour_id);
+        echo json_encode($db->fetchAll('select id,name from hotel where destination_id='.$destination_id));
+        die();
+        break;
+    case 'get-room-price':
+        $plan_tour_id = intval($_GET['plan_tour_id']);
+        $the_date = $db->fetchOne('select the_date from plan_tour where id='.$plan_tour_id);
+        $hotel_id = intval($_GET['hotel_id']);
+        $room_type = $_GET['room_type'];
+        echo json_encode($db->fetchRow($sql='select * from room_daily_price where the_date="'.$the_date.'" and hotel_id="'.$hotel_id.'" and room_type="'.$room_type.'"'));
+        echo $sql;
+        die();
         break;
     case 'add-car':
         $plan_id = intval($_POST['car']['plan_id']);

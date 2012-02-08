@@ -38,9 +38,27 @@ if($db_config['mock_data'] && !$db->fetchOne('select count(1) as cnt from todo')
         $i++;
     }
 }
+
+if($db_config['mock_data'] && !$db->fetchOne('select count(1) as cnt from destination'))
+{
+    $updated=$created = now();
+    foreach($config['destinations'] as $destination)
+    {
+
+        $name = $description = $slug= $destination;
+        $destination_id = $db->insert('destination', compact('name', 'description', 'created', 'updated','slug'));
+        foreach(array('有间客栈', '希尔顿', '无名招待所') as $name)
+        {
+            $star = rand(1, 5);
+            $description = $name;
+            $db->insert('hotel', compact('destination_id', 'name', 'description', 'created', 'destination','star'));
+        }
+    }
+}
+$destinations = $config['destinations'];
 if($db_config['mock_data'] && !$db->fetchOne('select count(1) as cnt from tour'))
 {
-    $destinations = $config['destinations'];
+
     $i=0;
     $updated=$created = now();
     while($i++<10)
@@ -49,6 +67,7 @@ if($db_config['mock_data'] && !$db->fetchOne('select count(1) as cnt from tour')
         $tour = compact('created', 'updated');
         $tour['name'] = $tour['description'] = implode(' - ', $tour_destinations = array_slice($destinations, 0, rand(3,5)));
         $tour['destination'] = end($tour_destinations);
+        $tour['destination_id'] = $db->fetchOne('select id from destination where name="'.$tour['destination'].'"');
         $tour['distance'] = rand(10, 50) * 10;
         $tour['market_price'] = rand(10, 50) * 10;
         $tour['price'] = ceil($tour['market_price']*0.8/10)*10;
