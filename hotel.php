@@ -17,7 +17,7 @@ switch(@$_GET['act'])
     case 'view':
         $title_for_layout = "酒店详情";
         $id = intval($_GET['id']);
-        $hotel = $db->find('hotel', $id);
+        $hotel = $db->fetchRow('select hotel.*,destination.name as destination_name from hotel  left join destination on destination.id=hotel.destination_id where hotel.id=' . $id);
         $price_trends = array();
         $today = date('Y-m-d');
         $later = date('Y-m-d',strtotime('+10 days'));

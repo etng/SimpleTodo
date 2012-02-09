@@ -39,8 +39,16 @@
         <td><?php echo $plan_tour['distance'];?></td>
         <td><?php echo $plan_tour['price'];?></td>
         <td><?php echo $plan_tour['tourist_cnt'];?></td>
-        <td><?php echo $plan_tour['car_cnt'];?> <input data-plan_tour_id="<?php echo $plan_tour['id'];?>" type="button" value="安排" class="btn_assign_car"/></td>
-        <td><?php echo $plan_tour['room_cnt'];?> <input data-plan_tour_id="<?php echo $plan_tour['id'];?>" type="button" value="安排" class="btn_assign_room"/></td>
+        <td><?php echo $plan_tour['car_tourist_cnt'];?>
+        <?php if($plan['car_status']=='assignning'):?>
+        <input data-plan_tour_id="<?php echo $plan_tour['id'];?>" type="button" value="安排" class="btn_assign_car"/>
+        <?php endif;?>
+        </td>
+        <td><?php echo $plan_tour['room_tourist_cnt'];?>
+        <?php if($plan['room_status']=='assignning'):?>
+        <input data-plan_tour_id="<?php echo $plan_tour['id'];?>" type="button" value="安排" class="btn_assign_room"/>
+        <?php endif;?>
+        </td>
         <td><?php echo $plan_tour['price_sum'];?>/<?php echo $plan_tour['market_price_sum'];?></td>
     </tr>
     <?php endforeach;?>
@@ -89,7 +97,7 @@
     <dt>操作</dt>
     <dd>
    <?php foreach(explode(',', $next_room_statuss) as $next_room_status):$next_room_status_info = $room_statuss[$next_room_status];?>
-    <a href="plan.php?act=set-status&status=<?php echo $next_room_status;?>&id=<?php echo $plan['id']?>"><?php echo $next_room_status_info['action_text']?></a>
+    <a href="plan.php?act=set-room-status&status=<?php echo $next_room_status;?>&id=<?php echo $plan['id']?>"><?php echo $next_room_status_info['action_text']?></a>
     <?php endforeach;?>
 
     </dd>
@@ -105,7 +113,7 @@
     <dt>操作</dt>
     <dd>
    <?php foreach(explode(',', $next_car_statuss) as $next_car_status):$next_car_status_info = $car_statuss[$next_car_status];?>
-    <a href="plan.php?act=set-status&status=<?php echo $next_car_status;?>&id=<?php echo $plan['id']?>"><?php echo $next_car_status_info['action_text']?></a>
+    <a href="plan.php?act=set-car-status&status=<?php echo $next_car_status;?>&id=<?php echo $plan['id']?>"><?php echo $next_car_status_info['action_text']?></a>
     <?php endforeach;?>
 
     </dd>
@@ -189,8 +197,7 @@
     </tr></thead>
     <tbody></tbody>
     <tfoot>
-        <td> </td>
-        <td> </td>
+        <td colspan="2">合计</td>
         <td class="tourist_capacity"></td>
         <td class="sum_price"></td>
         <td></td>
@@ -212,8 +219,6 @@
 <dl>
     <dt>酒店</dt><dd><select name="room[hotel_id]" id="room_hotel_id">
         <option value="" selected="selected">--请选择--</option>
-        <option value="holiday">假日酒店</option>
-        <option value="hilton">希尔顿</option>
     </select></dd>
     <dt>房型</dt><dd><select name="room[type]" id="room_type">
         <option value="" selected="selected">--请选择--</option>
@@ -241,8 +246,7 @@
     </tr></thead>
     <tbody></tbody>
     <tfoot>
-        <td> </td>
-        <td> </td>
+        <td colspan="2"> </td>
         <td class="tourist_capacity"></td>
         <td class="sum_price"></td>
         <td></td>
@@ -252,7 +256,7 @@
 <script id="planTourCarTemplate" type="text/x-jquery-tmpl">
     <tr>
         <td><a href="driver.php?act=view&id=${driver_id}">${driver_name}</a></td>
-        <td>${type}</td>
+        <td class="car_type_${type}">${type_name}</td>
         <td>${tourist_cnt}</td>
         <td>${price}</td>
         <td>${memo}</td>
@@ -263,16 +267,14 @@
 <input type="hidden" name="car[plan_id]" value="<?php echo $plan['id']?>" />
 <input type="hidden" name="car[plan_tour_id]" id="car_plan_tour_id" value="" />
 <dl>
-    <dt>司机</dt><dd><select name="car[driver_id]" id="car_driver_id">
-        <option value="" selected="selected">--请选择--</option>
-        <option value="huangshifu">黄司机</option>
-        <option value="zhangshifu">张师傅</option>
-    </select></dd>
     <dt>车型</dt><dd><select name="car[type]" id="car_type">
         <option value="" selected="selected">--请选择--</option>
-        <option value="1">吉普</option>
-        <option value="2">桑塔纳</option>
-        <option value="3">越野</option>
+        <?php foreach($config['car_types'] as $car_type=>$text):?>
+        <option value="<?php echo $car_type;?>"><?php echo $text;?></option>
+        <?php endforeach;?>
+    </select></dd>
+    <dt>司机</dt><dd><select name="car[driver_id]" id="car_driver_id">
+        <option value="" selected="selected">--请选择--</option>
     </select></dd>
     <dt>容纳人数</dt><dd><input type="text" name="car[tourist_cnt]" id="car_tourist_cnt" value="2" /></dd>
     <dt>金额</dt><dd><input type="text" name="car[price]" id="car_price" value="" /></dd>
@@ -292,6 +294,7 @@ function refreshCarPrice(plan_tour_id, driver_id, car_type)
 $(document).ready(function(){
 
     window.room_types = <?php echo json_encode($config['room_types']);?>;
+    window.car_types = <?php echo json_encode($config['car_types']);?>;
     $('input.btn_assign_room').live('click', function(){
         jQuery.facebox({ div: '#room_assign_form' });
         var ts=+new Date();
@@ -342,7 +345,7 @@ $(document).ready(function(){
             $.each(data, function(idx, row){
                 sum_price+=parseInt(row.price);
                 tourist_capacity+=parseInt(row.tourist_cnt);
-                data[idx]['type_name']=room_types[row.type];
+                data[idx]['type_name']=car_types[row.type];
             });
             $('#facebox table.plan_tour_cars tbody').empty().append($("#planTourCarTemplate").tmpl(data));
             $('#facebox table.plan_tour_cars tfoot td.sum_price').html(sum_price);

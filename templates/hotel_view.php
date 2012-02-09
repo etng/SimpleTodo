@@ -6,7 +6,7 @@
     <dt>加入时间</dt>
     <dd><?php echo $hotel['created'];?></dd>
     <dt>所在地</dt>
-    <dd><?php echo $hotel['destination'];?></dd>
+    <dd><a href="destination.php?act=view&id=<?php echo $hotel['destination_id'];?>"><?php echo $hotel['destination_name'];?></a></dd>
     <dt>地址</dt>
     <dd><?php echo $hotel['address'];?></dd>
      <dt>星级</dt>

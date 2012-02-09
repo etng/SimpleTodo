@@ -43,12 +43,12 @@ switch(@$_GET['act'])
             {
                 if(!empty($plan_tour['need_car']))
                 {
-                    $plan_tour['car_cnt'] = 1;
+                    $plan_tour['car_tourist_cnt'] = $plan_tour['tourist_cnt'];
                     unset($plan_tour['need_car']);
                 }
                 if(!empty($plan_tour['need_room']))
                 {
-                    $plan_tour['room_cnt'] = 1;
+                    $plan_tour['room_tourist_cnt'] = $plan_tour['tourist_cnt'];
                     unset($plan_tour['need_room']);
                 }
                 $tour = $db->fetchRow('select * from tour where id=' . $plan_tour['tour_id']);
@@ -99,7 +99,7 @@ switch(@$_GET['act'])
         break;
     case 'get-plan-tour_cars':
         $plan_tour_id = intval($_GET['plan_tour_id']);
-        echo json_encode($db->fetchAll('select * from plan_tour_car where plan_tour_id='.$plan_tour_id));
+        echo json_encode($db->fetchAll('select plan_tour_car.*,driver.name as driver_name from plan_tour_car left join driver on driver.id=plan_tour_car.driver_id where plan_tour_id='.$plan_tour_id));
         die();
         break;
     case 'get-destination-hotels':
@@ -137,7 +137,8 @@ switch(@$_GET['act'])
         die();
         break;
     case 'set-status':
-        $operator = '5号操作员'; $created = now();
+        $operator = '5号操作员';
+        $created = now();
         $plan_id = intval($_GET['id']);
         $plan = $db->find('plan', $plan_id);
         $status = $_GET['status'];
@@ -145,11 +146,54 @@ switch(@$_GET['act'])
         $db->insert('plan_history', array_merge(array(
                 'operation'=>$msg,
             ), compact('plan_id', 'created', 'operator')));
-
-
-        $db->update('plan', compact('status'), array('id'=>$plan_id));
-         header('location:plan.php?act=view&id='.$plan_id);
-         die();
+        $extra= array();
+        if(!empty($statuss[$status]['unlock_car']))
+        {
+            $extra['car_status'] = 'pending';
+        }
+        if(!empty($statuss[$status]['unlock_room']))
+        {
+            $extra['room_status'] = 'pending';
+        }
+        if(!empty($statuss[$status]['lock_car']))
+        {
+            $extra['car_status'] = 'locked';
+        }
+        if(!empty($statuss[$status]['lock_room']))
+        {
+            $extra['room_status'] = 'pending';
+        }
+        $db->update('plan', array_merge(compact('status'), $extra), array('id'=>$plan_id));
+        header('location:plan.php?act=view&id='.$plan_id);
+        die();
+        break;
+    case 'set-car-status':
+        $operator = '5号操作员';
+        $created = now();
+        $plan_id = intval($_GET['id']);
+        $plan = $db->find('plan', $plan_id);
+        $car_status = $_GET['status'];
+        $msg = '车辆状态调整为：'. $car_statuss[$car_status]['text'];
+        $db->insert('plan_history', array_merge(array(
+                'operation'=>$msg,
+            ), compact('plan_id', 'created', 'operator')));
+        $db->update('plan', compact('car_status'), array('id'=>$plan_id));
+        header('location:plan.php?act=view&id='.$plan_id);
+        die();
+        break;
+    case 'set-room-status':
+        $operator = '5号操作员';
+        $created = now();
+        $plan_id = intval($_GET['id']);
+        $plan = $db->find('plan', $plan_id);
+        $room_status = $_GET['status'];
+        $msg = '酒店状态调整为：'. $room_statuss[$room_status]['text'];
+        $db->insert('plan_history', array_merge(array(
+                'operation'=>$msg,
+            ), compact('plan_id', 'created', 'operator')));
+        $db->update('plan', compact('room_status'), array('id'=>$plan_id));
+        header('location:plan.php?act=view&id='.$plan_id);
+        die();
         break;
     case 'list':
     default:

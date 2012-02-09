@@ -33,23 +33,23 @@ $contact = $contacts[array_rand($contacts)];
         <input type="text" id="item_<?php echo $i;?>_date" name="plan[item_the_date][<?php echo $i;?>]" value="<?php echo date("Y-m-d", strtotime(sprintf("+%d days", $i), $start_date))?>" size="8" />
 
         <input type="text" id="item_<?php echo $i;?>_tourist_cnt" name="plan[item_tourist_cnt][<?php echo $i;?>]" value="<?php echo $tourist_cnt;?>" size="3"/>人
-        <label>安排住宿：<input type="hidden" name="plan[item_need_hotel][<?php echo $i;?>]" value="0" /><input type="checkbox" id="item_<?php echo $i;?>_need_hotel" name="plan[item_need_hotel][<?php echo $i;?>]" value="1" /></label>
-        <label>安排车辆：<input type="hidden" name="plan[item_need_car][<?php echo $i;?>]" value="0" /><input type="checkbox" id="item_<?php echo $i;?>_need_car" name="plan[item_need_car][<?php echo $i;?>]" value="1" /></label>
+        <label>安排住宿：<input type="hidden" name="plan[item_need_room][<?php echo $i;?>]" value="0" /><input type="checkbox" id="item_<?php echo $i;?>_need_room" name="plan[item_need_room][<?php echo $i;?>]" value="1" checked="true" /></label>
+        <label>安排车辆：<input type="hidden" name="plan[item_need_car][<?php echo $i;?>]" value="0" /><input type="checkbox" id="item_<?php echo $i;?>_need_car" name="plan[item_need_car][<?php echo $i;?>]" value="1" checked="true" /></label>
         <input type="button" value="取消" class="btn_cancel_tour" />
         </li>
     <?php endforeach;?>
-    <script id="tourTemplate" type="text/x-jquery-tmpl">
+
+    </ul>  <script id="tourTemplate" type="text/x-jquery-tmpl">
         <li class="ui-state-default tour" id="item_${i}"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span><div class="tour_name">${name}</div>(<span class="tour_distance">${distance}公里</span> 住 <span class="tour_destination">${destination}公里</span>)<input type="hidden" id="item_${i}_tour_id" name="plan[item_tour_id][${i}]" value="${id}" />
         第<input type="text" id="item_${i}_num" name="plan[item_the_num][${i}]" value="" size="3"/>天，
         <input type="text" id="item_${i}_date" name="plan[item_the_date][${i}]" value="" size="8" />
 
         <input type="text" id="item_${i}_tourist_cnt" name="plan[item_tourist_cnt][${i}]" value="<?php echo $tourist_cnt;?>" size="3"/>人
-        <label>安排住宿：<input type="hidden" name="plan[item_need_hotel][${i}]" value="0" /> <input type="checkbox" id="item_${i}_need_hotel" name="plan[item_need_hotel][${i}]" value="1" /></label>
-        <label>安排车辆：<input type="hidden" name="plan[item_need_car][${i}]" value="0" /><input type="checkbox" id="item_${i}_need_car" name="plan[item_need_car][${i}]" value="1" /></label>
+        <label>安排住宿：<input type="hidden" name="plan[item_need_room][${i}]" value="0" /> <input type="checkbox" id="item_${i}_need_room" name="plan[item_need_room][${i}]" value="1" checked="true" /></label>
+        <label>安排车辆：<input type="hidden" name="plan[item_need_car][${i}]" value="0" /><input type="checkbox" id="item_${i}_need_car" name="plan[item_need_car][${i}]" value="1" checked="true" /></label>
         <input type="button" value="取消" class="btn_cancel_tour" />
         </li>
 </script>
-    </ul>
     <input type="button" value="添加日程" class="btn_select_tour"/>
     <div id="tour_selector" style="display:none;">
     <h4>可选线路</h4><ul>
