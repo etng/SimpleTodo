@@ -188,13 +188,20 @@
         <td>备注</td>
     </tr></thead>
     <tbody></tbody>
+    <tfoot>
+        <td> </td>
+        <td> </td>
+        <td class="tourist_capacity"></td>
+        <td class="sum_price"></td>
+        <td></td>
+    </tfoot>
 </table>
 
 <script id="planTourRoomTemplate" type="text/x-jquery-tmpl">
     <tr>
-        <td>${hotel_id}</td>
-        <td>${type}</td>
-        <td>${touris_cnt}</td>
+        <td><a href="hotel.php?act=view&id=${hotel_id}">${hotel_name}</a></td>
+        <td class="room_type_${type}">${type_name}</td>
+        <td>${tourist_cnt}</td>
         <td>${price}</td>
         <td>${memo}</td>
     </tr>
@@ -214,7 +221,7 @@
         <option value="<?php echo $room_type;?>"><?php echo $text;?></option>
         <?php endforeach;?>
     </select></dd>
-    <dt>住宿人数</dt><dd><input type="text" name="room[touris_cnt]" id="room_touris_cnt" value="2" /></dd>
+    <dt>住宿人数</dt><dd><input type="text" name="room[tourist_cnt]" id="room_tourist_cnt" value="2" /></dd>
     <dt>金额</dt><dd><input type="text" name="room[price]" id="room_price" value="" /></dd>
      <dt>备注</dt>
         <dd><textarea name="room[memo]" id="room_memo" rows="3" cols="70"></textarea></dd>
@@ -233,13 +240,20 @@
         <td>备注</td>
     </tr></thead>
     <tbody></tbody>
+    <tfoot>
+        <td> </td>
+        <td> </td>
+        <td class="tourist_capacity"></td>
+        <td class="sum_price"></td>
+        <td></td>
+    </tfoot>
 </table>
 
 <script id="planTourCarTemplate" type="text/x-jquery-tmpl">
     <tr>
-        <td>${driver_id}</td>
+        <td><a href="driver.php?act=view&id=${driver_id}">${driver_name}</a></td>
         <td>${type}</td>
-        <td>${touris_cnt}</td>
+        <td>${tourist_cnt}</td>
         <td>${price}</td>
         <td>${memo}</td>
     </tr>
@@ -260,7 +274,7 @@
         <option value="2">桑塔纳</option>
         <option value="3">越野</option>
     </select></dd>
-    <dt>容纳人数</dt><dd><input type="text" name="car[touris_cnt]" id="car_touris_cnt" value="2" /></dd>
+    <dt>容纳人数</dt><dd><input type="text" name="car[tourist_cnt]" id="car_tourist_cnt" value="2" /></dd>
     <dt>金额</dt><dd><input type="text" name="car[price]" id="car_price" value="" /></dd>
      <dt>备注</dt>
         <dd><textarea name="car[memo]" id="car_memo" rows="3" cols="70"></textarea></dd>
@@ -270,11 +284,6 @@
 
 
 <script type='text/javascript'>
-function refreshRoomPrice(plan_tour_id, hotel_id, room_type)
-{
-    //@todo ajax get room price on that day
-    return parseInt(Math.random(1)*10)*20;
-}
 function refreshCarPrice(plan_tour_id, driver_id, car_type)
 {
     //@todo ajax get room price on that day
@@ -282,16 +291,26 @@ function refreshCarPrice(plan_tour_id, driver_id, car_type)
 }
 $(document).ready(function(){
 
+    window.room_types = <?php echo json_encode($config['room_types']);?>;
     $('input.btn_assign_room').live('click', function(){
         jQuery.facebox({ div: '#room_assign_form' });
         var ts=+new Date();
-        $.each(['room_plan_tour_id', 'room_hotel_id', 'room_type', 'touris_cnt', 'room_price', 'room_memo'], function(i, id){
+        $.each(['room_plan_tour_id', 'room_hotel_id', 'room_type', 'tourist_cnt', 'room_price', 'room_memo'], function(i, id){
             $( "#facebox #"+id).attr('id', id+'_'+ts);
         });
         var plan_tour_id = $(this).data('plan_tour_id');
         $('#room_plan_tour_id'+'_'+ts).val(plan_tour_id);
         $.get('plan.php?act=get-plan-tour_rooms&plan_tour_id='+plan_tour_id, function(data){
+            var tourist_capacity = 0;
+            var sum_price = 0;
+            $.each(data, function(idx, row){
+                sum_price+=parseInt(row.price);
+                tourist_capacity+=parseInt(row.tourist_cnt);
+                data[idx]['type_name']=room_types[row.type];
+            });
             $('#facebox table.plan_tour_rooms tbody').empty().append($("#planTourRoomTemplate").tmpl(data));
+            $('#facebox table.plan_tour_rooms tfoot td.sum_price').html(sum_price);
+            $('#facebox table.plan_tour_rooms tfoot td.tourist_capacity').html(tourist_capacity);
         }, 'json');
          $.get('plan.php?act=get-destination-hotels&plan_tour_id='+plan_tour_id, function(hotels){
             var hotel_selector = $('#room_hotel_id'+'_'+ts);
@@ -304,7 +323,6 @@ $(document).ready(function(){
         $('#room_hotel_id'+'_'+ts+', #room_type'+'_'+ts).change(function(){
             var hotel_id = $('#room_hotel_id'+'_'+ts).val();
             var room_type = $('#room_type'+'_'+ts).val();
-            var price = refreshRoomPrice(plan_tour_id, hotel_id, room_type);
             $.get('plan.php?act=get-room-price&plan_tour_id='+plan_tour_id+'&hotel_id='+hotel_id+'&room_type='+room_type, function(price_info){
                 $('#room_price'+'_'+ts).val(price_info.default_price);
             }, 'json');
@@ -313,13 +331,29 @@ $(document).ready(function(){
     $('input.btn_assign_car').live('click', function(){
         jQuery.facebox({ div: '#car_assign_form' });
         var ts=+new Date();
-        $.each(['car_plan_tour_id', 'car_driver_id', 'car_type', 'touris_cnt', 'car_price', 'car_memo'], function(i, id){
+        $.each(['car_plan_tour_id', 'car_driver_id', 'car_type', 'tourist_cnt', 'car_price', 'car_memo'], function(i, id){
             $( "#facebox #"+id).attr('id', id+'_'+ts);
         });
         var plan_tour_id = $(this).data('plan_tour_id');
         $('#room_plan_tour_id'+'_'+ts).val(plan_tour_id);
         $.get('plan.php?act=get-plan-tour_cars&plan_tour_id='+plan_tour_id, function(data){
+            var tourist_capacity = 0;
+            var sum_price = 0;
+            $.each(data, function(idx, row){
+                sum_price+=parseInt(row.price);
+                tourist_capacity+=parseInt(row.tourist_cnt);
+                data[idx]['type_name']=room_types[row.type];
+            });
             $('#facebox table.plan_tour_cars tbody').empty().append($("#planTourCarTemplate").tmpl(data));
+            $('#facebox table.plan_tour_cars tfoot td.sum_price').html(sum_price);
+            $('#facebox table.plan_tour_cars tfoot td.tourist_capacity').html(tourist_capacity);
+        }, 'json');
+         $.get('plan.php?act=get-destination-drivers&plan_tour_id='+plan_tour_id, function(drivers){
+            var driver_selector = $('#car_driver_id'+'_'+ts);
+            driver_selector.empty();
+            $.each(drivers, function(i, driver){
+                driver_selector.append(new Option(driver.name, driver.id));
+            });
         }, 'json');
         $('#car_plan_tour_id'+'_'+ts).val($(this).data('plan_tour_id'));
         $('#car_driver_id'+'_'+ts+', #car_type'+'_'+ts).change(function(){

@@ -60,6 +60,8 @@
         <a href="destination.php">目的地管理</a>
         <a href="tour.php?act=add">添加线路</a>
         <a href="tour.php">线路管理</a>
+        <a href="driver.php?act=add">添加司机</a>
+        <a href="driver.php">司机管理</a>
     </div><!--mainMenu-->
 </div><!--header-->
 <?php if(!empty($_SESSION['staff']['name'])):?>

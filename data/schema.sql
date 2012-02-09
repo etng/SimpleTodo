@@ -3,7 +3,7 @@
 -- Server version:               5.5.20-log - MySQL Community Server (GPL)
 -- Server OS:                    Win32
 -- HeidiSQL version:             6.0.0.4010
--- Date/time:                    2012-02-08 07:59:45
+-- Date/time:                    2012-02-09 08:07:41
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -58,13 +58,34 @@ CREATE TABLE IF NOT EXISTS `destination` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table aiyouwei.driver
+DROP TABLE IF EXISTS `driver`;
+CREATE TABLE IF NOT EXISTS `driver` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `destination_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `name` varchar(55) COLLATE utf8_unicode_ci NOT NULL,
+  `nationality` varchar(55) COLLATE utf8_unicode_ci NOT NULL,
+  `age` int(10) unsigned NOT NULL,
+  `car_model` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `car_capacity` int(10) unsigned NOT NULL,
+  `car_plate_num` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `phone` varchar(55) COLLATE utf8_unicode_ci NOT NULL,
+  `star` tinyint(1) unsigned NOT NULL DEFAULT '3',
+  `description` text COLLATE utf8_unicode_ci NOT NULL,
+  `created` datetime NOT NULL,
+  `updated` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table aiyouwei.hotel
 DROP TABLE IF EXISTS `hotel`;
 CREATE TABLE IF NOT EXISTS `hotel` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `destination_id` int(10) unsigned NOT NULL,
   `name` varchar(55) COLLATE utf8_unicode_ci NOT NULL,
-  `destination` varchar(55) COLLATE utf8_unicode_ci NOT NULL,
   `description` text COLLATE utf8_unicode_ci NOT NULL,
   `phone` varchar(55) COLLATE utf8_unicode_ci NOT NULL,
   `fax` varchar(55) COLLATE utf8_unicode_ci NOT NULL,
@@ -175,7 +196,7 @@ CREATE TABLE IF NOT EXISTS `plan_tour_car` (
   `plan_id` int(10) unsigned NOT NULL,
   `type` varchar(50) NOT NULL,
   `driver_id` varchar(10) NOT NULL,
-  `touris_cnt` int(10) unsigned NOT NULL DEFAULT '1',
+  `tourist_cnt` int(10) unsigned NOT NULL DEFAULT '1',
   `price` int(10) unsigned NOT NULL DEFAULT '0',
   `memo` varchar(512) NOT NULL,
   PRIMARY KEY (`id`)
@@ -191,8 +212,8 @@ CREATE TABLE IF NOT EXISTS `plan_tour_room` (
   `plan_tour_id` int(10) unsigned NOT NULL,
   `type` varchar(50) NOT NULL,
   `room_cnt` int(10) unsigned NOT NULL DEFAULT '1',
-  `hotel_id` varchar(55) NOT NULL,
-  `touris_cnt` int(10) unsigned NOT NULL DEFAULT '0',
+  `hotel_id` int(10) unsigned NOT NULL,
+  `tourist_cnt` int(10) unsigned NOT NULL DEFAULT '0',
   `price` int(10) unsigned NOT NULL DEFAULT '0',
   `memo` varchar(512) NOT NULL,
   PRIMARY KEY (`id`)

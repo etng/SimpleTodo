@@ -14,7 +14,7 @@
     <tr>
         <td><?php echo $hotel['id'];?></td>
         <td><?php echo $hotel['name'];?></td>
-        <td><?php echo $hotel['destination'];?></td>
+        <td><a href="destination.php?act=view&id=<?php echo $hotel['destination_id'];?>"><?php echo $hotel['destination_name'];?></a></td>
         <td><?php echo $hotel['phone'];?></td>
         <td><?php echo $hotel['created'];?></td>
         <td>

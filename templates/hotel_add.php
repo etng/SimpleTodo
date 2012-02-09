@@ -2,9 +2,9 @@
 <form method="post" action="">
 <dl>
     <dt>所在地</dt>
-    <dd><select name="hotel[destination]" id="hotel_destination">
-        <?php foreach($config['destinations'] as $destination):?>
-            <option value="<?php echo $destination;?>"><?php echo $destination;?></option>
+    <dd><select name="hotel[destination_id]" id="hotel_destination_id">
+        <?php foreach($destination_options as $id=>$destination):?>
+            <option value="<?php echo $id;?>"><?php echo $destination;?></option>
         <?php endforeach;?>
     </select></dd>
     <dt>名称</dt>

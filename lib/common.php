@@ -74,6 +74,7 @@ if($db_config['mock_data'] && !$db->fetchOne('select count(1) as cnt from tour')
         $id = $db->insert('tour', $tour);
     }
 }
+$destination_options = $db->fetchOptions('select id,name from destination', 'name');
 if($db_config['mock_data'] && !$db->fetchOne('select count(1) as cnt from article'))
 {
     foreach(explode(',', 'aboutus,contact,hr,tos') as $slug)

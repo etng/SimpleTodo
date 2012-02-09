@@ -94,7 +94,7 @@ switch(@$_GET['act'])
         break;
     case 'get-plan-tour_rooms':
         $plan_tour_id = intval($_GET['plan_tour_id']);
-        echo json_encode($db->fetchAll('select * from plan_tour_room where plan_tour_id='.$plan_tour_id));
+        echo json_encode($db->fetchAll('select plan_tour_room.*,hotel.name as hotel_name from plan_tour_room left join hotel on hotel.id=plan_tour_room.hotel_id where plan_tour_id='.$plan_tour_id));
         die();
         break;
     case 'get-plan-tour_cars':
@@ -109,13 +109,19 @@ switch(@$_GET['act'])
         echo json_encode($db->fetchAll('select id,name from hotel where destination_id='.$destination_id));
         die();
         break;
+    case 'get-destination-drivers':
+        $plan_tour_id = intval($_GET['plan_tour_id']);
+        $tour_id =  $db->fetchOne('select tour_id from plan_tour where id='.$plan_tour_id);
+        $destination_id =  $db->fetchOne('select destination_id from tour where id='.$tour_id);
+        echo json_encode($db->fetchAll('select id,name from driver'));
+        die();
+        break;
     case 'get-room-price':
         $plan_tour_id = intval($_GET['plan_tour_id']);
         $the_date = $db->fetchOne('select the_date from plan_tour where id='.$plan_tour_id);
         $hotel_id = intval($_GET['hotel_id']);
         $room_type = $_GET['room_type'];
         echo json_encode($db->fetchRow($sql='select * from room_daily_price where the_date="'.$the_date.'" and hotel_id="'.$hotel_id.'" and room_type="'.$room_type.'"'));
-        echo $sql;
         die();
         break;
     case 'add-car':

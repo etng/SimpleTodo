@@ -54,7 +54,7 @@ switch(@$_GET['act'])
         $title_for_layout = "酒店";
         $where = array();
         $s_where = $where?' where '.implode(' and ', $where):'';
-        $hotels = $db->fetchAll('select * from hotel '.$s_where.' order by id desc');
+        $hotels = $db->fetchAll('select hotel.*,destination.name as destination_name from hotel  left join destination on destination.id=hotel.destination_id  '.$s_where.' order by hotel.id desc');
         include('templates/hotel_list.php');
         break;
 }
