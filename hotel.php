@@ -4,6 +4,7 @@ ob_start();
 switch(@$_GET['act'])
 {
     case 'add':
+        checkPrivilege();
         $title_for_layout = "添加酒店";
         if($_SERVER['REQUEST_METHOD']=='POST')
         {
@@ -15,6 +16,7 @@ switch(@$_GET['act'])
         include('templates/hotel_add.php');
         break;
     case 'view':
+        checkPrivilege();
         $title_for_layout = "酒店详情";
         $id = intval($_GET['id']);
         $hotel = $db->fetchRow('select hotel.*,destination.name as destination_name from hotel  left join destination on destination.id=hotel.destination_id where hotel.id=' . $id);
@@ -34,6 +36,7 @@ switch(@$_GET['act'])
         include('templates/hotel_view.php');
         break;
     case 'add-price':
+        checkPrivilege();
         $updated = now();
         $record = $_POST['price'];
         $the_date_ts = $start_date_ts = strtotime($_POST['start_date']);
@@ -51,6 +54,8 @@ switch(@$_GET['act'])
         break;
     case 'list':
     default:
+        $_GET['act']='list';
+        checkPrivilege();
         $title_for_layout = "酒店";
         $where = array();
         $s_where = $where?' where '.implode(' and ', $where):'';

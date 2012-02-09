@@ -4,6 +4,7 @@ ob_start();
 switch(@$_GET['act'])
 {
     case 'add':
+        checkPrivilege();
         $title_for_layout = "添加司机";
         if($_SERVER['REQUEST_METHOD']=='POST')
         {
@@ -15,6 +16,7 @@ switch(@$_GET['act'])
         include('templates/driver_add.php');
         break;
     case 'view':
+        checkPrivilege();
         $title_for_layout = "司机详情";
         $id = intval($_GET['id']);
         $driver = $db->find('driver', $id);
@@ -22,6 +24,8 @@ switch(@$_GET['act'])
         break;
     case 'list':
     default:
+        $_GET['act']='list';
+        checkPrivilege();
         $title_for_layout = "司机";
         $where = array();
         $s_where = $where?' where '.implode(' and ', $where):'';

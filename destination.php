@@ -4,6 +4,7 @@ ob_start();
 switch(@$_GET['act'])
 {
     case 'add':
+        checkPrivilege();
         $title_for_layout = "添加目的地";
         if($_SERVER['REQUEST_METHOD']=='POST')
         {
@@ -15,6 +16,7 @@ switch(@$_GET['act'])
         include('templates/destination_add.php');
         break;
     case 'edit':
+        checkPrivilege();
         $title_for_layout = "编辑目的地";
         $id = intval($_GET['id']);
         $destination = $db->find('destination', $id);
@@ -28,12 +30,14 @@ switch(@$_GET['act'])
         include('templates/destination_edit.php');
         break;
     case 'view':
+        checkPrivilege();
         $title_for_layout = "目的地详情";
         $id = intval($_GET['id']);
         $destination = $db->find('destination', $id);
         include('templates/destination_view.php');
         break;
     case 'delete':
+        checkPrivilege();
         $id = intval($_GET['id']);
         $destination = $db->delete('destination', compact('id'));
         header('location:destination.php');
@@ -41,6 +45,8 @@ switch(@$_GET['act'])
         break;
     case 'list':
     default:
+        $_GET['act']='list';
+        checkPrivilege();
         $title_for_layout = "目的地";
         $where = array();
         $s_where = $where?' where '.implode(' and ', $where):'';

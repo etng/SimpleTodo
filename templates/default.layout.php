@@ -50,19 +50,21 @@
     <div id="mainMenu">
         <a href="/" title="<?php echo $config['site']['name'];?> 首页">首页</a>
         <a href="calendar.php">我的日程</a>
-        <a href="plan.php">我的计划</a>
-        <a href="plan.php?act=add">添加计划</a>
-        <a href="hotel.php?act=add">添加酒店</a>
-        <a href="hotel.php">酒店管理</a>
-        <a href="article.php?act=add">添加文章</a>
-        <a href="article.php">文章管理</a>
-        <a href="destination.php?act=add">添加目的地</a>
-        <a href="destination.php">目的地管理</a>
-        <a href="tour.php?act=add">添加线路</a>
-        <a href="tour.php">线路管理</a>
-        <a href="driver.php?act=add">添加司机</a>
-        <a href="driver.php">司机管理</a>
-    </div><!--mainMenu-->
+        <?php if(checkPrivilege('plan', 'list')):?><a href="plan.php">我的计划</a><?php endif;?>
+        <?php if(checkPrivilege('plan', 'add')):?><a href="plan.php?act=add">添加计划</a><?php endif;?>
+        <?php if(checkPrivilege('hotel', 'add')):?><a href="hotel.php?act=add">添加酒店</a><?php endif;?>
+        <?php if(checkPrivilege('hotel', 'list')):?><a href="hotel.php">酒店管理</a><?php endif;?>
+        <?php if(checkPrivilege('article', 'add')):?><a href="article.php?act=add">添加文章</a><?php endif;?>
+        <?php if(checkPrivilege('article', 'list')):?><a href="article.php">文章管理</a><?php endif;?>
+        <?php if(checkPrivilege('destination', 'add')):?><a href="destination.php?act=add">添加目的地</a><?php endif;?>
+        <?php if(checkPrivilege('destination', 'list')):?><a href="destination.php">目的地管理</a><?php endif;?>
+        <?php if(checkPrivilege('tour', 'add')):?><a href="tour.php?act=add">添加线路</a><?php endif;?>
+        <?php if(checkPrivilege('tour', 'list')):?><a href="tour.php">线路管理</a><?php endif;?>
+        <?php if(checkPrivilege('driver', 'add')):?><a href="driver.php?act=add">添加司机</a><?php endif;?>
+        <?php if(checkPrivilege('driver', 'list')):?><a href="driver.php">司机管理</a><?php endif;?>
+        <?php if(checkPrivilege('staff', 'add')):?><a href="staff.php?act=add">添加员工</a><?php endif;?>
+        <?php if(checkPrivilege('staff', 'list')):?><a href="staff.php">员工管理</a><?php endif;?>
+        </div><!--mainMenu-->
 </div><!--header-->
 <?php if(!empty($_SESSION['staff']['name'])):?>
 <div>欢迎：<?php echo $_SESSION['staff']['name'];?> <a href="auth.php?act=logout">退出登录</a></div>

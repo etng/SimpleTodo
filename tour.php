@@ -4,6 +4,7 @@ ob_start();
 switch(@$_GET['act'])
 {
     case 'add':
+        checkPrivilege();
         $title_for_layout = "添加线路";
         if($_SERVER['REQUEST_METHOD']=='POST')
         {
@@ -15,6 +16,7 @@ switch(@$_GET['act'])
         include('templates/tour_add.php');
         break;
     case 'edit':
+        checkPrivilege();
         $title_for_layout = "编辑线路";
         $id = intval($_GET['id']);
         $tour = $db->find('tour', $id);
@@ -28,12 +30,14 @@ switch(@$_GET['act'])
         include('templates/tour_edit.php');
         break;
     case 'view':
+        checkPrivilege();
         $title_for_layout = "线路详情";
         $id = intval($_GET['id']);
         $tour = $db->find('tour', $id);
         include('templates/tour_view.php');
         break;
     case 'delete':
+        checkPrivilege();
         $id = intval($_GET['id']);
         $tour = $db->delete('tour', compact('id'));
         header('location:tour.php');
@@ -41,6 +45,8 @@ switch(@$_GET['act'])
         break;
     case 'list':
     default:
+        $_GET['act']='list';
+        checkPrivilege();
         $title_for_layout = "线路";
         $where = array();
         $s_where = $where?' where '.implode(' and ', $where):'';

@@ -4,6 +4,7 @@ ob_start();
 switch(@$_GET['act'])
 {
     case 'add':
+        checkPrivilege();
         $title_for_layout = "添加文章";
         if($_SERVER['REQUEST_METHOD']=='POST')
         {
@@ -15,6 +16,7 @@ switch(@$_GET['act'])
         include('templates/article_add.php');
         break;
     case 'edit':
+        checkPrivilege();
         $title_for_layout = "编辑文章";
         $id = intval($_GET['id']);
         $article = $db->find('article', $id);
@@ -28,12 +30,14 @@ switch(@$_GET['act'])
         include('templates/article_edit.php');
         break;
     case 'view':
+        checkPrivilege();
         $title_for_layout = "文章详情";
         $id = intval($_GET['id']);
         $article = $db->find('article', $id);
         include('templates/article_view.php');
         break;
     case 'delete':
+        checkPrivilege();
         $id = intval($_GET['id']);
         $article = $db->delete('article', compact('id'));
         header('location:article.php');
@@ -41,6 +45,8 @@ switch(@$_GET['act'])
         break;
     case 'list':
     default:
+        $_GET['act']='list';
+        checkPrivilege();
         $title_for_layout = "文章";
         $where = array();
         $s_where = $where?' where '.implode(' and ', $where):'';

@@ -4,11 +4,13 @@ require "lib/common.php";
 switch(@$_GET['act'])
 {
     case 'view':
+        checkPrivilege();
         $id = intval($_GET['id']);
         $todo = $db->find('todo', $id);
         var_dump($todo);
         break;
     case 'create':
+        checkPrivilege();
         $id = Todo::create(array(
             'title' => $_POST['title'],
             'all_day' => (bool)$_POST['all_day'],
@@ -23,6 +25,7 @@ switch(@$_GET['act'])
         echo json_encode(compact('status', 'todo'));
         break;
     case 'update':
+        checkPrivilege();
         $updates = array();
         $id = intval($_POST['id']);
         if(isset($_POST['start']))
@@ -39,6 +42,8 @@ switch(@$_GET['act'])
         break;
     case 'list':
     default:
+        $_GET['act']='list';
+         checkPrivilege();
         $colors = $config['colors'];
         $todos = array();
         $start = $_GET['start'];

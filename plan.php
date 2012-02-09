@@ -12,6 +12,7 @@ $tours = $db->fetchAll('select * from tour');
 switch(@$_GET['act'])
 {
     case 'add':
+        checkPrivilege();
         $title_for_layout = "添加计划";
         $tours = $db->fetchAll('select * from tour');
         if($_SERVER['REQUEST_METHOD']=='POST')
@@ -71,6 +72,7 @@ switch(@$_GET['act'])
         include('templates/plan_add.php');
         break;
     case 'view':
+        checkPrivilege();
         $title_for_layout = "计划详情";
         $id = intval($_GET['id']);
         $plan = $db->find('plan', $id);
@@ -81,6 +83,7 @@ switch(@$_GET['act'])
         include('templates/plan_view.php');
         break;
     case 'add-payment':
+        checkPrivilege();
         $created = now();
         $plan_id = intval($_POST['payment']['plan_id']);
         $plan = $db->find('plan', $plan_id);
@@ -93,16 +96,19 @@ switch(@$_GET['act'])
          die();
         break;
     case 'get-plan-tour_rooms':
+        checkPrivilege();
         $plan_tour_id = intval($_GET['plan_tour_id']);
         echo json_encode($db->fetchAll('select plan_tour_room.*,hotel.name as hotel_name from plan_tour_room left join hotel on hotel.id=plan_tour_room.hotel_id where plan_tour_id='.$plan_tour_id));
         die();
         break;
     case 'get-plan-tour_cars':
+        checkPrivilege();
         $plan_tour_id = intval($_GET['plan_tour_id']);
         echo json_encode($db->fetchAll('select plan_tour_car.*,driver.name as driver_name from plan_tour_car left join driver on driver.id=plan_tour_car.driver_id where plan_tour_id='.$plan_tour_id));
         die();
         break;
     case 'get-destination-hotels':
+        checkPrivilege();
         $plan_tour_id = intval($_GET['plan_tour_id']);
         $tour_id =  $db->fetchOne('select tour_id from plan_tour where id='.$plan_tour_id);
         $destination_id =  $db->fetchOne('select destination_id from tour where id='.$tour_id);
@@ -110,6 +116,7 @@ switch(@$_GET['act'])
         die();
         break;
     case 'get-destination-drivers':
+        checkPrivilege();
         $plan_tour_id = intval($_GET['plan_tour_id']);
         $tour_id =  $db->fetchOne('select tour_id from plan_tour where id='.$plan_tour_id);
         $destination_id =  $db->fetchOne('select destination_id from tour where id='.$tour_id);
@@ -117,6 +124,7 @@ switch(@$_GET['act'])
         die();
         break;
     case 'get-room-price':
+        checkPrivilege();
         $plan_tour_id = intval($_GET['plan_tour_id']);
         $the_date = $db->fetchOne('select the_date from plan_tour where id='.$plan_tour_id);
         $hotel_id = intval($_GET['hotel_id']);
@@ -125,18 +133,21 @@ switch(@$_GET['act'])
         die();
         break;
     case 'add-car':
+        checkPrivilege();
         $plan_id = intval($_POST['car']['plan_id']);
         $db->insert('plan_tour_car', $_POST['car']);
         header('location:plan.php?act=view&id='.$plan_id);
         die();
         break;
     case 'add-room':
+        checkPrivilege();
         $plan_id = intval($_POST['room']['plan_id']);
         $db->insert('plan_tour_room', $_POST['room']);
         header('location:plan.php?act=view&id='.$plan_id);
         die();
         break;
     case 'set-status':
+        checkPrivilege();
         $operator = '5号操作员';
         $created = now();
         $plan_id = intval($_GET['id']);
@@ -168,6 +179,7 @@ switch(@$_GET['act'])
         die();
         break;
     case 'set-car-status':
+        checkPrivilege();
         $operator = '5号操作员';
         $created = now();
         $plan_id = intval($_GET['id']);
@@ -182,6 +194,7 @@ switch(@$_GET['act'])
         die();
         break;
     case 'set-room-status':
+        checkPrivilege();
         $operator = '5号操作员';
         $created = now();
         $plan_id = intval($_GET['id']);
@@ -197,6 +210,8 @@ switch(@$_GET['act'])
         break;
     case 'list':
     default:
+        $_GET['act']='list';
+        checkPrivilege();
         $title_for_layout = "我的计划";
         $where = array();
         if(!empty($_GET['st']))

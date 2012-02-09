@@ -101,8 +101,48 @@ if($db_config['mock_data'] && !$db->fetchOne('select count(1) as cnt from staff'
 
 @session_start();
 $_SESSION['last_notice'] = @$_SESSION['notice'];unset($_SESSION['notice']);
-
-
+function checkPrivilege($controller=null, $action=null)
+{
+    global $config;
+    if(@$_SESSION['staff']['id']==1)
+    {
+        return true;
+    }
+    $page_mode= false;
+    if(is_null($controller) && is_null($action))
+    {
+        $page_mode = true;
+    }
+    if(is_null($controller))
+    {
+        $controller = basename($_SERVER['SCRIPT_FILENAME'], '.php');
+    }
+    if(is_null($action))
+    {
+        $action = $_GET['act'];
+    }
+    $need_privilege =  $controller.'.'. $action;
+    if(isset($config['privileges'][$need_privilege]))
+    {
+        if(in_array($need_privilege, @(array)$_SESSION['staff']['privileges']))
+        {
+            return true;
+        }
+        else
+        {
+            if($page_mode)
+            {
+                $_SESSION['notice'] = '您的权限不够！';
+                header('location:index.php');
+                die('');
+            }
+            else{
+                return false;
+            }
+        }
+    }
+    return true;
+}
 function todo_autoload($klass)
 {
     if(substr($klass, 0, 2)=='Et')

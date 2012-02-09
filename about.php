@@ -8,13 +8,15 @@ $tours = $db->fetchAll('select * from tour');
 switch(@$_GET['act'])
 {
    case 'sitemap':
+       checkPrivilege();
         $title_for_layout = "我的计划";
         $plans = $db->fetchAll('select * from plan order by id desc');
         include('templates/plan_list.php');
         break;
    case 'hr':
    default:
-
+        $_GET['act']='hr';
+        checkPrivilege();
         $slug = trim(strip_tags(@$_GET['act']));
         if(!$slug)
         {
