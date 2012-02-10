@@ -18,89 +18,106 @@ if(!$db->fetchCol('show tables like "todo"'))
         $db->query($sql);
     }
 }
-if($db_config['mock_data'] && !$db->fetchOne('select count(1) as cnt from todo'))
+if($db_config['mock_data'])
 {
-    $colors = $config['colors'];
-    $destinations = $config['destinations'];
-    $i=0;
-    $start_time = time();
-    while($i<100)
-    {
-        $ci = $i%count($colors);
-        $days = rand(1, 10);
-        $destination= $destinations[array_rand($destinations)];
-        $id=Todo::create(array(
-            'title' => sprintf('%s', $destination),
-            'start_date' => $new_start_time = strtotime(sprintf('+%d days', rand(1, 3)), $start_time),
-            'end_date' => $start_time = strtotime(sprintf('+%d days', $days-1), $new_start_time),
-            'confirmed' => $i%2,
-        ));
-        $i++;
-    }
+     mock_data();
 }
 
-if($db_config['mock_data'] && !$db->fetchOne('select count(1) as cnt from destination'))
+$destination_options = $db->fetchOptions('select id,name from destination', 'name');
+$base_url = str_replace('\\', '/', substr(realpath(dirname(__file__) . '/..//'), strlen(realpath($_SERVER['DOCUMENT_ROOT']))));
+$base_url_full = "http://{$_SERVER['HTTP_HOST']}{$base_url}";
+@session_start();
+$_SESSION['last_notice'] = @$_SESSION['notice'];unset($_SESSION['notice']);
+
+/******************************************************************************************************************************/
+function mock_data()
 {
-    $updated=$created = now();
-    foreach($config['destinations'] as $destination)
+    global $db,$config;
+    if(!$db->fetchOne('select count(1) as cnt from todo'))
+    {
+        $colors = $config['colors'];
+        $destinations = $config['destinations'];
+        $i=0;
+        $start_time = time();
+        while($i<100)
+        {
+            $ci = $i%count($colors);
+            $days = rand(1, 10);
+            $destination= $destinations[array_rand($destinations)];
+            $id=Todo::create(array(
+                'title' => sprintf('%s', $destination),
+                'start_date' => $new_start_time = strtotime(sprintf('+%d days', rand(1, 3)), $start_time),
+                'end_date' => $start_time = strtotime(sprintf('+%d days', $days-1), $new_start_time),
+                'confirmed' => $i%2,
+            ));
+            $i++;
+        }
+    }
+
+    if(!$db->fetchOne('select count(1) as cnt from destination'))
+    {
+        $updated=$created = now();
+        foreach($config['destinations'] as $destination)
+        {
+
+            $name = $description = $slug= $destination;
+            $destination_id = $db->insert('destination', compact('name', 'description', 'created', 'updated','slug'));
+            foreach(array('有间客栈', '希尔顿', '无名招待所') as $name)
+            {
+                $star = rand(1, 5);
+                $description = $name;
+                $db->insert('hotel', compact('destination_id', 'name', 'description', 'created', 'destination','star'));
+            }
+        }
+    }
+    $destinations = $config['destinations'];
+    if(!$db->fetchOne('select count(1) as cnt from tour'))
     {
 
-        $name = $description = $slug= $destination;
-        $destination_id = $db->insert('destination', compact('name', 'description', 'created', 'updated','slug'));
-        foreach(array('有间客栈', '希尔顿', '无名招待所') as $name)
+        $i=0;
+        $updated=$created = now();
+        while($i++<10)
         {
-            $star = rand(1, 5);
-            $description = $name;
-            $db->insert('hotel', compact('destination_id', 'name', 'description', 'created', 'destination','star'));
+            shuffle($destinations);
+            $tour = compact('created', 'updated');
+            $tour['name'] = $tour['description'] = implode(' - ', $tour_destinations = array_slice($destinations, 0, rand(3,5)));
+            $tour['destination'] = end($tour_destinations);
+            $tour['destination_id'] = $db->fetchOne('select id from destination where name="'.$tour['destination'].'"');
+            $tour['distance'] = rand(10, 50) * 10;
+            $tour['market_price'] = rand(10, 50) * 10;
+            $tour['price'] = ceil($tour['market_price']*0.8/10)*10;
+            $id = $db->insert('tour', $tour);
+        }
+    }
+    if(!$db->fetchOne('select count(1) as cnt from article'))
+    {
+        foreach(explode(',', 'about_us,contact_us,hr,tos') as $slug)
+        {
+            $title = ucwords(str_replace('_', ' ', $slug));
+            $content = "please add it";
+            $hits = rand(1, 1000)* 23;
+            $updated=$created = now();
+            $id = $db->insert('article', compact('slug', 'title', 'content', 'hits', 'created', 'updated'));
+        }
+    }
+    if(!$db->fetchOne('select count(1) as cnt from staff'))
+    {
+        foreach($config['staffs'] as $username=>$privileges)
+        {
+            $name = ucwords(str_replace('_', ' ', $username));
+            $password = $username."123";
+            $created = now();
+            $password = md5(md5($username.$password).$username);
+            $id = $db->insert('staff', compact('username', 'name', 'password', 'privileges', 'created'));
         }
     }
 }
-$destinations = $config['destinations'];
-if($db_config['mock_data'] && !$db->fetchOne('select count(1) as cnt from tour'))
-{
-
-    $i=0;
-    $updated=$created = now();
-    while($i++<10)
-    {
-        shuffle($destinations);
-        $tour = compact('created', 'updated');
-        $tour['name'] = $tour['description'] = implode(' - ', $tour_destinations = array_slice($destinations, 0, rand(3,5)));
-        $tour['destination'] = end($tour_destinations);
-        $tour['destination_id'] = $db->fetchOne('select id from destination where name="'.$tour['destination'].'"');
-        $tour['distance'] = rand(10, 50) * 10;
-        $tour['market_price'] = rand(10, 50) * 10;
-        $tour['price'] = ceil($tour['market_price']*0.8/10)*10;
-        $id = $db->insert('tour', $tour);
-    }
-}
-$destination_options = $db->fetchOptions('select id,name from destination', 'name');
-if($db_config['mock_data'] && !$db->fetchOne('select count(1) as cnt from article'))
-{
-    foreach(explode(',', 'aboutus,contact,hr,tos') as $slug)
-    {
-        $title = ucfirst($slug);
-        $content = "please add it";
-        $hits = rand(1, 1000)* 23;
-        $created = now();
-        $id = $db->insert('article', compact('slug', 'title', 'content', 'hits', 'created'));
-    }
-}
-if($db_config['mock_data'] && !$db->fetchOne('select count(1) as cnt from staff'))
-{
-    foreach(explode(',', 'demo,contact,hr,tos') as $username)
-    {
-        $name = ucfirst($username);
-        $password = $username."123";
-        $created = now();
-        $password = md5(md5($username.$password).$username);
-        $id = $db->insert('staff', compact('username', 'name', 'password', 'created'));
-    }
-}
 
 
-@session_start();
-$_SESSION['last_notice'] = @$_SESSION['notice'];unset($_SESSION['notice']);
+function currrent_staff($field="name")
+{
+    return @$_SESSION['staff'][$field];
+}
 function checkPrivilege($controller=null, $action=null)
 {
     global $config;
@@ -121,27 +138,26 @@ function checkPrivilege($controller=null, $action=null)
     {
         $action = $_GET['act'];
     }
-    $need_privilege =  $controller.'.'. $action;
-    if(isset($config['privileges'][$need_privilege]))
+    $need_privileges =  array('*', $controller.'.'. $action, '*.'. $action, '*.'. $action);
+    $has_privilege = false;
+    foreach($need_privileges as $need_privilege)
     {
-        if(in_array($need_privilege, @(array)$_SESSION['staff']['privileges']))
+        if(isset($config['privileges'][$need_privilege]))
         {
-            return true;
-        }
-        else
-        {
-            if($page_mode)
+            if(in_array($need_privilege, @(array)$_SESSION['staff']['privileges']))
             {
-                $_SESSION['notice'] = '您的权限不够！';
-                header('location:index.php');
-                die('');
-            }
-            else{
-                return false;
+                $has_privilege = true;
+                break;
             }
         }
     }
-    return true;
+    if(!$has_privilege && $page_mode)
+    {
+        $_SESSION['notice'] = '您的权限不够！';
+        header('location:index.php');
+        die('');
+    }
+    return $has_privilege;
 }
 function todo_autoload($klass)
 {

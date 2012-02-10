@@ -48,7 +48,7 @@
 <div id="header">
     <h2><a href="/" class="logo"><span><?php echo $config['site']['name'];?><span></a></h2>
     <div id="mainMenu">
-        <a href="/" title="<?php echo $config['site']['name'];?> 首页">首页</a>
+        <a href="<?php echo $base_url;?>" title="<?php echo $config['site']['name'];?> 首页">首页</a>
         <a href="calendar.php">我的日程</a>
         <?php if(checkPrivilege('plan', 'list')):?><a href="plan.php">我的计划</a><?php endif;?>
         <?php if(checkPrivilege('plan', 'add')):?><a href="plan.php?act=add">添加计划</a><?php endif;?>

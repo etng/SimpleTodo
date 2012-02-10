@@ -11,7 +11,12 @@
     <dt>民族</dt><dd><input type="text" id="driver_nationality" name="driver[nationality]" value="" /></dd>
     <dt>年龄</dt><dd><input type="text" id="driver_age" name="driver[age]" value="" /></dd>
     <dt>电话</dt><dd><input type="text" id="driver_phone" name="driver[phone]" value="" /></dd>
-    <dt>车型</dt><dd><input type="text" id="driver_car_model" name="driver[car_model]" value="" /></dd>
+    <dt>车型</dt><dd><select name="driver[car_type]" id="driver_car_type">
+        <option value="" selected="selected">--请选择--</option>
+        <?php foreach($config['car_types'] as $car_type=>$text):?>
+        <option value="<?php echo $car_type;?>"><?php echo $text;?></option>
+        <?php endforeach;?>
+    </select></dd>
     <dt>容量</dt><dd><input type="text" id="driver_car_capacity" name="driver[car_capacity]" value="" /></dd>
     <dt>车牌号</dt><dd><input type="text" id="driver_car_plate_num" name="driver[car_plate_num]" value="" /></dd>
     <dt>星级</dt>

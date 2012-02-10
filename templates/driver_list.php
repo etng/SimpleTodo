@@ -23,7 +23,7 @@
         <td><?php echo $driver['nationality'];?></td>
         <td><?php echo $driver['age'];?></td>
         <td><?php echo $driver['phone'];?></td>
-        <td><?php echo $driver['car_model'];?></td>
+        <td><?php echo @$config['car_types'][$driver['car_type']];?></td>
         <td><?php echo $driver['car_plate_num'];?></td>
         <td><?php echo $driver['car_capacity'];?></td>
         <td>

@@ -23,6 +23,7 @@ switch(@$_GET['act'])
         $title_for_layout = "员工详情";
         $id = intval($_GET['id']);
         $staff = $db->find('staff', $id);
+        $staff['privileges'] = $staff['privileges']?explode(',', $staff['privileges']):array();
         include('templates/staff_view.php');
         break;
     case 'list':

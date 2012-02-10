@@ -6,10 +6,8 @@
     <dt>电话</dt><dd><?php echo $staff['phone'];?></dd>
     <dt>Email</dt><dd><?php echo $staff['email'];?></dd>
     <dt>权限</dt><dd> <ul>
-    <?php foreach(explode(',', $staff['privileges']) as $privilege):?>
-
+    <?php foreach($staff['privileges'] as $privilege):?>
         <li><?php echo $config['privileges'][$privilege];?></li>
-
     <?php endforeach;?>
      </ul>
     </dd>

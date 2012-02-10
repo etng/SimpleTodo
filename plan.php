@@ -63,8 +63,8 @@ switch(@$_GET['act'])
             $balance = $paid-$price;
             $db->update('plan', compact('price', 'paid', 'balance'), array('id'=>$plan_id));
             $db->insert('plan_history', array_merge(array(
-                'operation'=>'您提交了订单，请等待系统确认',
-                'operator'=>'客户',
+                'operation'=>'计划创建完毕，等待进一步确认',
+                'operator'=> currrent_staff(),
             ), compact('plan_id', 'created')));
             header('location:plan.php');
             die();
@@ -85,10 +85,11 @@ switch(@$_GET['act'])
     case 'add-payment':
         checkPrivilege();
         $created = now();
+        $operator = currrent_staff();
         $plan_id = intval($_POST['payment']['plan_id']);
         $plan = $db->find('plan', $plan_id);
         $payment = $_POST['payment'];
-        $db->insert('plan_payment', array_merge($payment, compact('created')));
+        $db->insert('plan_payment', array_merge($payment, compact('created', 'operator')));
         $paid = $db->fetchOne('select sum(amount) from plan_payment where plan_id=' . $plan_id);
         $balance = $paid-$plan['price'];
         $db->update('plan', compact('paid', 'balance'), array('id'=>$plan_id));
@@ -148,7 +149,7 @@ switch(@$_GET['act'])
         break;
     case 'set-status':
         checkPrivilege();
-        $operator = '5号操作员';
+        $operator = currrent_staff();
         $created = now();
         $plan_id = intval($_GET['id']);
         $plan = $db->find('plan', $plan_id);
@@ -180,7 +181,7 @@ switch(@$_GET['act'])
         break;
     case 'set-car-status':
         checkPrivilege();
-        $operator = '5号操作员';
+        $operator = currrent_staff();
         $created = now();
         $plan_id = intval($_GET['id']);
         $plan = $db->find('plan', $plan_id);
@@ -195,7 +196,7 @@ switch(@$_GET['act'])
         break;
     case 'set-room-status':
         checkPrivilege();
-        $operator = '5号操作员';
+        $operator = currrent_staff();
         $created = now();
         $plan_id = intval($_GET['id']);
         $plan = $db->find('plan', $plan_id);

@@ -7,7 +7,7 @@
     <dd><?php echo $driver['created'];?></dd>
      <dt>民族</dt><dd><?php echo $driver['nationality'];?></dd>
      <dt>年龄</dt><dd><?php echo $driver['age'];?></dd>
-     <dt>车型</dt><dd><?php echo $driver['car_model'];?></dd>
+     <dt>车型</dt><dd><?php echo @$config['car_types'][$driver['car_type']];?></dd>
      <dt>车牌</dt><dd><?php echo $driver['car_plate_num'];?></dd>
      <dt>容量</dt><dd><?php echo $driver['car_capacity'];?></dd>
     <dt>电话</dt>

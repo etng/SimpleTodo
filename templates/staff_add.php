@@ -7,7 +7,7 @@
     <dt>电话</dt><dd><input type="text" id="staff_phone" name="staff[phone]" value="" /></dd>
     <dt>Email</dt><dd><input type="text" id="staff_email" name="staff[email]" value="" /></dd>
     <dt>权限</dt><dd>
-    <?php $i=0;foreach($config['privileges'] as $privilege=>$text):$i++;?>
+    <?php $last_cate='';$i=0;foreach($config['privileges'] as $privilege=>$text):$cate=current(explode('.', $privilege));if($cate!=$last_cate){$last_cate=$cate;$i=0;echo "<br><br>";}$i++;?>
 <label><input type="checkbox" id="staff_privilege_<?php echo $privilege;?>" name="staff[privilege][]" value="<?php echo $privilege;?>" checked="true" /><?php echo $text;?></label>
     <?php if($i%4==0){echo "<br>";}endforeach;?>
 <input type="button" value="全选" class="btn_select_all_staff_privilege" />

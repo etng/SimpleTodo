@@ -161,6 +161,7 @@
     <dd><table>
     <tr>
         <td>时间</td>
+        <td>操作人</td>
         <td>金额</td>
         <td>备注</td>
     </tr>
@@ -169,6 +170,7 @@
     <?php foreach($plan['payments'] as $i=>$plan_payment):?>
     <tr>
         <td><?php echo $plan_payment['created'];?></td>
+        <td><?php echo $plan_payment['operator'];?></td>
         <td><?php echo $plan_payment['amount'];?></td>
         <td><?php echo $plan_payment['memo'];?></td>
     </tr>

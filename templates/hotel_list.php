@@ -7,6 +7,7 @@
         <td>名称</td>
         <td>所在地</td>
         <td>联系电话</td>
+        <td>加入时间</td>
         <td>操作</td>
     </tr> <?php if(!empty($hotels)):?>
 
