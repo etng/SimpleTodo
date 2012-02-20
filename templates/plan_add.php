@@ -7,7 +7,7 @@ shuffle($old_tours);
 $old_tours = array_splice($old_tours, 0, rand(1,3));
 $contact = $contacts[array_rand($contacts)];
 ?>
-<form method="post" action="">
+<form method="post" action="" enctype="multipart/form-data">
 <dl>
  <dt>联系人</dt>
     <dd>
@@ -18,7 +18,29 @@ $contact = $contacts[array_rand($contacts)];
     </dl>
     </dd>
     <dt>人数</dt>
-    <dd><input type="text" id="tourist_cnt" name="plan[tourist_cnt]" value="<?php echo $tourist_cnt;?>" size="3" /></dd>
+    <dd>
+    <input type="text" id="tourist_cnt" name="plan[tourist_cnt]" value="<?php echo $tourist_cnt;?>" size="3" />
+    <div id="tourists_tabs">
+    <?php $i=0;while($i++<$tourist_cnt):?><dl>
+ <dt>旅客<?php echo $i;?></dt><dd>
+        <dl>
+        <dt>旅客<?php echo $i;?>姓名</dt><dd><input type="text" id="tourist_name_<?php echo $i;?>" name="tourist[name][<?php echo $i;?>]" value="<?php echo @$tourist['name'];?>"/></dd>
+        <dt>电话</dt><dd><input type="text" id="tourist_phone_<?php echo $i;?>" name="tourist[phone][<?php echo $i;?>]" value="<?php echo @$tourist['phone'];?>"/></dd>
+        <dt>证件类型</dt><dd>
+        <select id="tourist_card_type_<?php echo $i;?>" name="tourist[card_type][<?php echo $i;?>]">
+        <?php foreach($config['id_card_types'] as $card_type=>$text):?>
+            <option value="<?php echo $card_type;?>"<?php echo $card_type==@$tourist['card_type'] && print(' selected="true"');?>><?php echo $text;?></option>
+        <?php endforeach;?>
+    </select></dd>
+        <dt>证件号码</dt><dd><input type="text" id="tourist_card_number_<?php echo $i;?>" name="tourist[card_number][<?php echo $i;?>]" value="<?php echo @$tourist['card_type'];?>"/></dd>
+        <dt>证件照片</dt><dd>
+        <label>网址：<input type="text" id="tourist_card_photo_url_<?php echo $i;?>" name="tourist[card_photo_url][<?php echo $i;?>]" size="80"   value="<?php echo @$tourist['card_photo'];?>"/></label><br />
+            <label>上传：<input type="file" id="tourist_card_photo_file_<?php echo $i;?>" name="tourist_card_photo_file[<?php echo $i;?>]" /></label></dd>
+        </dl> </dd></dl>
+
+    <?php endwhile;?>
+    </div>
+    </dd>
  <dt>车辆要求</dt>
     <dd><textarea id="car_request" name="plan[car_request]" rows="3" cols="70">宽敞舒适的越野车就最好了</textarea></dd>
      <dt>房间要求</dt>
@@ -109,5 +131,21 @@ $(document).ready(function(){
         placeholder: "ui-state-highlight"
     });
     $( "#sortable" ).disableSelection();
+
+
+    var titles=[],contents=[];
+    $('#tourists_tabs > dl').each(function(i, dl){
+        var $dl = $(dl);
+        titles.push($('>dt', $dl).html());
+        contents.push($('>dd:first', $dl).html());
+    	$dl.remove();
+    });
+    var ul=$('<ul/>');
+    $('#tourists_tabs').empty();
+    $.each(titles, function(i, title){
+        $('#tourists_tabs').append($('<div/>').attr('id', 'tourist_tab_'+i).html(contents[i]));
+        ul.append($('<li/>').html($('<a>').html(title).attr('href', '#tourist_tab_'+i)));
+    });
+    $('#tourists_tabs').prepend(ul).tabs();
 });
 </script>

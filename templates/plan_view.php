@@ -9,7 +9,15 @@
     </dl>
     </dd>
     <dt>人数</dt>
-    <dd><?php echo $plan['tourist_cnt']?></dd>
+    <dd><?php echo $plan['tourist_cnt']?><br />
+    <?php foreach($plan['tourists'] as $tourist):?>
+    <a href="<?php echo $tourist['card_photo'];?>" rel="facebox"><img src="<?php echo $tourist['card_photo'];?>" width="200" title="姓名：<?php echo $tourist['name'];?>
+    电话：<?php echo $tourist['phone'];?>
+    证件类型：<?php echo $config['id_card_types'][$tourist['card_type']];?>
+    证件号码：<?php echo $tourist['card_number'];?>
+    "></a>
+    <?php endforeach;?>
+    </dd>
  <dt>车辆要求</dt>
     <dd><?php echo $plan['car_request']?></dd>
      <dt>房间要求</dt>

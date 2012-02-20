@@ -28,6 +28,12 @@ $base_url = str_replace('\\', '/', substr(realpath(dirname(__file__) . '/..//'),
 $base_url_full = "http://{$_SERVER['HTTP_HOST']}{$base_url}";
 @session_start();
 $_SESSION['last_notice'] = @$_SESSION['notice'];unset($_SESSION['notice']);
+$thumb_config = array(
+//    'middle' => array('width'=>'120', 'height'=>'120', 'watermark'=>''),
+//    'small' => array('width'=>'50', 'height'=>'50', 'watermark'=>''),
+);
+$allowed_types = array('image/*');
+$card_photo_base_url = '/files/tourist/card_photo/';
 
 /******************************************************************************************************************************/
 function mock_data()
@@ -209,4 +215,22 @@ function sub_array($arr, $keys)
         $sub_array[$key] = empty($arr[$key])?'':$arr[$key];
     }
     return $sub_array;
+}
+function regexInArray($needle, $haystack)
+{
+    $in = true;
+    if($haystack)
+    {
+        $in = false;
+        foreach($haystack as $item)
+        {
+            $regex = '!'. str_replace(array('\*', '\?'), array('.+', '.'), preg_quote($item)) . '!i';
+            if(preg_match($regex, $needle))
+            {
+                $in = true;
+                break;
+            }
+        }
+    }
+    return $in;
 }

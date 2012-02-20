@@ -17,6 +17,29 @@ switch(@$_GET['act'])
         $tours = $db->fetchAll('select * from tour');
         if($_SERVER['REQUEST_METHOD']=='POST')
         {
+            if($files = Attachment::fromUpload('tourist_card_photo_file', APP_ROOT . $card_photo_base_url, $allowed_types, $thumb_config))
+            {
+                foreach($files as $i=>$file)
+                {
+                    if($file)
+                    {
+                        $_POST['tourist']['card_photo'][$i] = $card_photo_base_url . 'base/' . $file['filename'];
+                    }
+                }
+            }elseif(!empty($_POST['card_photo_url']))
+            {
+                if($files = Attachment::fromRemote($_POST['card_photo_url'], APP_ROOT . $card_photo_base_url, $allowed_types, $thumb_config))
+                {
+                    foreach($files as $i=>$file)
+                    {
+                        if($file)
+                        {
+                            $_POST['tourist']['card_photo'][$i] = $card_photo_base_url . 'base/' . $file['filename'];
+                        }
+                    }
+                }
+            }
+
             $contact_id = $db->insert('contact', $_POST['contact']);
             $user_id = 1;
             $plan_tours = array();
@@ -39,6 +62,19 @@ switch(@$_GET['act'])
             $room_status = $default_room_status;
 
             $plan_id = $db->insert('plan', array_merge($plan, compact('status', 'car_status', 'room_status', 'user_id', 'contact_id', 'created')));
+
+            foreach($_POST['tourist']['name'] as $i=>$name)
+            {
+                $phone= $_POST['tourist']['phone'][$i];
+                $card_type= $_POST['tourist']['card_type'][$i];
+                $card_number= $_POST['tourist']['card_number'][$i];
+                $card_photo= $_POST['tourist']['card_photo'][$i];
+                $tourist_id = $db->insert('tourist', compact('name', 'phone', 'card_type', 'card_number', 'card_photo'));
+                $tourist_id = $db->insert('plan_tourist', compact('tourist_id', 'plan_id'));
+            }
+
+
+
             $price=0;
             foreach($plan_tours as $plan_tour)
             {
@@ -77,6 +113,7 @@ switch(@$_GET['act'])
         $id = intval($_GET['id']);
         $plan = $db->find('plan', $id);
         $contact = $db->find('contact', $plan['contact_id']);
+        $plan['tourists'] = $db->fetchAll('select * from tourist where id in (select tourist_id from plan_tourist where plan_id=' . $plan['id'] . ')');
         $plan['tours'] = $db->fetchAll('select *,plan_tour.id as id from plan_tour left join tour on tour.id=plan_tour.tour_id where plan_tour.plan_id=' . $plan['id']);
         $plan['history'] = $db->fetchAll('select * from plan_history where plan_id=' . $plan['id'] . ' order by created desc');
         $plan['payments'] = $db->fetchAll('select * from plan_payment where plan_id=' . $plan['id'] . ' order by created desc');
