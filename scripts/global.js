@@ -13,4 +13,26 @@ $(document).ready(function(){
     $('a[rel*=facebox]').facebox();
     $('textarea').autogrow ({
     });
+
+    $('.btn-select-inverse').click(function()
+    {
+       $('.table-list td:first-child :checkbox').trigger('click');
+       return false;
+    });
+    $('.btn-select-none').click(function()
+    {
+       $('.table-list td:first-child :checkbox').attr('checked', false);
+       return false;
+    });
+    $('.btn-select-all').click(function()
+    {
+       $('.table-list td:first-child :checkbox').attr('checked', true);
+       return false;
+    });
+        $('.btn-danger').click(function()
+    {
+       return window.confirm('请确认此项操作！');
+    });
+
+
 });

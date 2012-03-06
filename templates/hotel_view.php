@@ -1,5 +1,11 @@
-<h3><?php echo $title_for_layout;?></h3>
-
+<ul class="breadcrumb">
+<li><a href="/">首页</a> <span class="divider">/</span></li>
+<li><a href="hotel.php?act=list">酒店</a> <span class="divider">/</span></li>
+<li class="active">#<?php echo $hotel['id'];?> <?php echo $hotel['name'];?></li>
+</ul>
+<div class="page-header">
+<h1><?php echo $title_for_layout;?><small></small></h1>
+</div>
 <dl>
     <dt>名称</dt>
     <dd><?php echo $hotel['name'];?></dd>
@@ -21,15 +27,15 @@
     <dd><?php echo $hotel['description'];?></dd>
     <dt>报价</dt>
     <dd>
-<table>
-    <tr>
-        <td>日期</td>
-        <td>房型</td>
+<table class="table table-bordered table-striped">
+    <thead><tr>
+        <th>日期</th>
+        <th>房型</th>
         <?php foreach($price_fields as $price_field=>$text):?>
-        <td><?php echo $text;?></td>
+        <th><?php echo $text;?></th>
          <?php endforeach;?>
-    </tr>
-    <?php foreach($price_trends as $the_date=>$room_type_prices):?>
+    </tr></thead>
+    <tbody><?php foreach($price_trends as $the_date=>$room_type_prices):?>
     <?php foreach($room_type_prices as $room_type=>$prices):?>
     <tr>
         <td><?php echo $the_date;?></td>
@@ -39,24 +45,24 @@
          <?php endforeach;?>
     </tr>
     <?php endforeach;?>
-    <?php endforeach;?>
+    <?php endforeach;?></tbody>
 </table>
-            <input type="button" value="添加报价" class="btn_add_price"/>
+            <input type="button" value="添加报价" class="btn btn_add_price"/>
              <div id="price_add_form" style="display:none">
             <form method="post" action="hotel.php?act=add-price"><input type="hidden" name="price[hotel_id]" value="<?php echo $hotel['id'];?>" />
             <dl>
                 <dt>起止日期</dt><dd>
-                <label><input type="text" name="start_date" id="price_start_date" value="" size="10" /></label> 至
-                <label><input type="text" name="end_date" id="price_end_date" value="" size="10" /></label>
+                <input type="text" class="input-small" name="start_date" id="price_start_date" value="" size="10" /> 至<input type="text" class="input-small" name="end_date" id="price_end_date" value="" size="10" />
                 </dd>
                 <dt>供应价</dt><dd>
-                <label>对外价<input type="text" name="price[public_price]" id="price_public_price" value="" size="5" /></label>
-                <label>成本价<input type="text" name="price[cost]" id="price_cost" value="" size="5" /></label>
+                对外价<input type="text" class="input-mini" name="price[public_price]" id="price_public_price" value="" size="5" />
+                成本价<input type="text" class="input-mini" name="price[cost]" id="price_cost" value="" size="5" />
+
                 </dd>
                 <dt>销售价</dt><dd>
-                <label>最低价<input type="text" name="price[min_price]" id="price_min_price" value="" size="5" /></label>
-                <label>默认价<input type="text" name="price[default_price]" id="price_default_price" value="" size="5" /></label>
-                <label>最高价<input type="text" name="price[max_price]" id="price_max_price" value="" size="5" /></label>
+                最低价<input type="text" class="input-mini" name="price[min_price]" id="price_min_price" value="" size="5" />
+                默认价<input type="text" class="input-mini" name="price[default_price]" id="price_default_price" value="" size="5" />
+                最高价<input type="text" class="input-mini" name="price[max_price]" id="price_max_price" value="" size="5" />
                 </dd>
                 <dt>房型</dt><dd><select name="price[room_type]" id="price_room_type">
                     <?php foreach($config['room_types'] as $room_type=>$text):?>

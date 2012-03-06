@@ -1,5 +1,12 @@
-<h3><?php echo $title_for_layout;?></h3>
+<ul class="breadcrumb">
+<li><a href="/">首页</a> <span class="divider">/</span></li>
+<li><a href="driver.php?act=list">司机</a> <span class="divider">/</span></li>
+<li class="active">所有</li>
+</ul>
 
+<p class="pull-right">
+<a href="driver.php?act=add" class="btn">添加司机</a>
+</p>
 
 <table class="table table-bordered table-striped">
     <thead><tr>

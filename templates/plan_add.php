@@ -67,7 +67,7 @@ $schedule_templates = $db->fetchAll('select * from schedule_template', MYSQL_ASS
                     <option value="<?php echo $schedule_template['id'];?>"><?php echo $schedule_template['name'];?></option>
                     <?php endforeach;?>
                 </select>
-                <textarea id="schedule_txt" rows="8" cols="70" class="span4">
+                <textarea id="schedule_txt" rows="8" cols="70" class="span4" height="200px">
                 </textarea>
                 <div class="btn-group">
                 <input type="button" class="btn" value="倒排" onclick="" />

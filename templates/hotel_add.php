@@ -1,4 +1,10 @@
-<h3><?php echo $title_for_layout;?></h3>
+<ul class="breadcrumb">
+<li><a href="/">首页</a> <span class="divider">/</span></li>
+<li><a href="hotel.php?act=list">酒店</a> <span class="divider">/</span></li>
+<li class="active">添加</li>
+</ul>
+
+
 <form method="post" action="">
 <dl>
     <dt>所在地</dt>
@@ -12,7 +18,7 @@
     <dt>星级</dt>
     <dd>
     <?php $i=0;while($i++<5):?>
-    <label><input type="radio" id="hotel_star_<?php echo $i;?>" name="hotel[star]" value="<?php echo $i;?>" /><?php echo $i;?></label>
+    <label class="inline radio"><input type="radio" id="hotel_star_<?php echo $i;?>" name="hotel[star]" value="<?php echo $i;?>" /><?php echo $i;?></label>
     <?php endwhile;?>
     <!-- <input type="text" id="hotel_star" name="hotel[star]" value="" />
  -->    </dd>

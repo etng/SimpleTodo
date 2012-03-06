@@ -22,7 +22,7 @@
     <dt>星级</dt>
     <dd>
     <?php $i=0;while($i++<5):?>
-    <label><input type="radio" id="driver_star_<?php echo $i;?>" name="driver[star]" value="<?php echo $i;?>" /><?php echo $i;?></label>
+    <label class="inline radio"><input type="radio" id="driver_star_<?php echo $i;?>" name="driver[star]" value="<?php echo $i;?>" /><?php echo $i;?></label>
     <?php endwhile;?>
     <!-- <input type="text" id="driver_star" name="driver[star]" value="" />
  -->    </dd>

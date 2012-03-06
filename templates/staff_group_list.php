@@ -1,4 +1,10 @@
-<h3><?php echo $title_for_layout;?></h3>
+<div class="page-header">
+<h1><?php echo $title_for_layout;?><small></small></h1>
+</div>
+
+<p class="pull-right">
+<a href="staff.php?act=group_add" class="btn">添加部门</a>
+</p>
 
 
 <table class="table table-bordered table-striped">
@@ -16,6 +22,8 @@
         <td><?php echo $staff_group['phone'];?></td>
         <td>
         <a href="staff.php?act=group_view&id=<?php echo $staff_group['id'];?>" class="btn btn-info">详情</a>
+        <a href="staff.php?act=group_edit&id=<?php echo $staff_group['id'];?>" class="btn">编辑</a>
+        <a href="staff.php?act=group_delete&id=<?php echo $staff_group['id'];?>" class="btn btn-danger">删除</a>
         </td>
     </tr>
     <?php endforeach;?>

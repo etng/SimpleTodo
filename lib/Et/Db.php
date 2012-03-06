@@ -99,17 +99,17 @@ class Et_Db
     }
     function getMeta($table)
     {
-        $result = $this->fetchAll("DESCRIBE `{$table}`", MYSQL_NUM);
+        $meta = array_change_key_case($this->fetchRow("SHOW TABLE STATUS WHERE name='{$table}'"));
         $field   = 0;
         $type    = 1;
-        $null    = 2;
-        $key     = 3;
-        $default = 4;
-        $extra   = 5;
-
-        $desc = array();
+        $null    = 3;
+        $key     = 4;
+        $default = 5;
+        $extra   = 6;
+        $comment   = 8;
         $i = 1;
         $p = 1;
+        $result = $this->fetchAll("SHOW FULL COLUMNS FROM `{$table}`", MYSQL_NUM);
         foreach ($result as $row) {
             list($length, $scale, $precision, $unsigned, $primary, $primaryPosition, $identity)
                 = array(null, null, null, null, false, null, false);
@@ -142,9 +142,11 @@ class Et_Db
                 }
                 ++$p;
             }
-            $desc[$row[$field]] = (object)array(
+            $meta['fields'][$row[$field]] = (object)array(
                 'schema_name'      => null, // @todo
                 'table_name'       => $table,
+                'name'              => $row[$field],
+                'comment'              => $row[$comment],
                 'column_name'      => $row[$field],
                 'column_position'  => $i,
                 'data_type'        => $row[$type],
@@ -160,7 +162,7 @@ class Et_Db
             );
             ++$i;
         }
-        return $desc;
+        return $meta;
     }
     function insert($table, $data)
     {
@@ -168,7 +170,7 @@ class Et_Db
         $set_fields = array();
         foreach($data as $k => $v)
         {
-            if(!isset($table_meta[$k]))
+            if(!isset($table_meta['fields'][$k]))
             {
                 continue;
             }
@@ -190,11 +192,11 @@ class Et_Db
 
         foreach($data as $k => $v)
         {
-            if(!isset($table_meta[$k]))
+            if(!isset($table_meta['fields'][$k]))
             {
                 continue;
             }
-            if(!in_array($table_meta[$k]->data_type, array('char', 'varchar', 'text', 'datetime')) && in_array($v{0}, array('*','+','-','/')))
+            if(!in_array($table_meta['fields'][$k]->data_type, array('char', 'varchar', 'text', 'datetime')) && in_array($v{0}, array('*','+','-','/')))
             {
                 $set_fields[] = sprintf('`%s`=`%s`%s"%s"', $k, $k, $v{0}, intval(substr($v, 1)));
             }

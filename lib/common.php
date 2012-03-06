@@ -25,7 +25,7 @@ if($db_config['mock_data'])
 
 $destination_options = $db->fetchOptions('select id,name from destination', 'name');
 $base_url = str_replace('\\', '/', substr(realpath(dirname(__file__) . '/..//'), strlen(realpath($_SERVER['DOCUMENT_ROOT']))));
-$base_url_full = "http://{$_SERVER['HTTP_HOST']}{$base_url}";
+$base_url_full = @"http://{$_SERVER['HTTP_HOST']}{$base_url}";
 @session_start();
 $_SESSION['last_notice'] = @$_SESSION['notice'];unset($_SESSION['notice']);
 $thumb_config = array(
@@ -159,11 +159,15 @@ function checkPrivilege($controller=null, $action=null)
     }
     if(!$has_privilege && $page_mode)
     {
-        $_SESSION['notice'] = '您的权限不够！';
+        alert('您的权限不够！', 'error');
         header('location:index.php');
         die('');
     }
     return $has_privilege;
+}
+function alert($content, $type="success")
+{
+    $_SESSION['notice'] = compact('type', 'content');
 }
 function todo_autoload($klass)
 {
@@ -241,4 +245,19 @@ function list2inta($list)
 function inta2list($a)
 {
     return implode(',', $a);
+}
+
+function makePager($total, $limit=20, $side=3)
+{
+    $pager = compact('total', 'limit', 'side');
+    $pager['total_page'] = max(1, ceil($pager['total']/$pager['limit']));
+    $pager['cur_page'] = min(max(1, intval(@$_GET['page'])), $pager['total_page']);
+    $pager['offset'] = ($pager['cur_page'] - 1) * $pager['limit'];
+    $pager['start_page'] = max(1, $pager['cur_page'] - $pager['side']);
+    $pager['end_page'] = min($pager['total_page'], $pager['cur_page'] + $pager['side']);
+    $pager['has_first'] = $pager['cur_page'] > 2;
+    $pager['has_prev'] = $pager['cur_page'] > 1;
+    $pager['has_next'] = $pager['cur_page'] < ($pager['total_page'] - 1);
+    $pager['has_last'] = $pager['cur_page'] < ($pager['total_page'] - 2);
+    return $pager;
 }

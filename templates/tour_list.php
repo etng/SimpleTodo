@@ -1,6 +1,10 @@
-<h3><?php echo $title_for_layout;?></h3>
+<div class="page-header">
+<h1><?php echo $title_for_layout;?><small></small></h1>
+</div>
 
-
+<p class="pull-right">
+<a href="tour.php?act=add" class="btn">添加线路</a>
+</p>
 <table class="table table-bordered table-striped">
     <thead><tr>
         <th>编号</th>

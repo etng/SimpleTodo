@@ -53,7 +53,7 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js" type="text/javascript"></script>
 <script src="http://jquery-ui.googlecode.com/svn/tags/latest/external/jquery.bgiframe-2.1.2.js" type="text/javascript"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery-ui-i18n.js" type="text/javascript"></script>
-<script src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js" type="text/javascript"></script>
+<script src="assets/js/jquery.tmpl.min.js" type="text/javascript"></script>
 <script src="scripts/jquery.autogrow.js" type="text/javascript"></script>
 <!-- <script src="http://jqueryui.com/themeroller/themeswitchertool/"></script>
  --><script type="text/javascript" src="scripts/jshash/md5-min.js"></script>
@@ -83,19 +83,12 @@
                 <li class=""><a href="<?php echo $base_url;?>/" title="<?php echo $config['site']['name'];?> 首页">首页</a></li>
                 <li class=""><a href="calendar.php">我的日程</a></li>
                 <li class=""><?php if(checkPrivilege('plan', 'list')):?><a href="plan.php">我的计划</a><?php endif;?></li>
-                <li class=""><?php if(checkPrivilege('plan', 'add')):?><a href="plan.php?act=add">添加计划</a><?php endif;?></li>
-                <!-- <li class=""><?php if(checkPrivilege('hotel', 'add')):?><a href="hotel.php?act=add">添加酒店</a><?php endif;?></li>
- -->                <li class=""><?php if(checkPrivilege('hotel', 'list')):?><a href="hotel.php">酒店</a><?php endif;?></li>
-                <!-- <li class=""><?php if(checkPrivilege('article', 'add')):?><a href="article.php?act=add">添加文章</a><?php endif;?></li>
- -->                <li class=""><?php if(checkPrivilege('article', 'list')):?><a href="article.php">文章</a><?php endif;?></li>
-                <!-- <li class=""><?php if(checkPrivilege('destination', 'add')):?><a href="destination.php?act=add">添加目的地</a><?php endif;?></li>
- -->                <li class=""><?php if(checkPrivilege('destination', 'list')):?><a href="destination.php">目的地</a><?php endif;?></li>
-                <!-- <li class=""><?php if(checkPrivilege('tour', 'add')):?><a href="tour.php?act=add">添加线路</a><?php endif;?></li>
- -->                <li class=""><?php if(checkPrivilege('tour', 'list')):?><a href="tour.php">线路</a><?php endif;?></li>
-                <!-- <li class=""><?php if(checkPrivilege('driver', 'add')):?><a href="driver.php?act=add">添加司机</a><?php endif;?></li>
- -->                <li class=""><?php if(checkPrivilege('driver', 'list')):?><a href="driver.php">司机</a><?php endif;?></li>
-                <!-- <li class=""><?php if(checkPrivilege('staff', 'add')):?><a href="staff.php?act=add">添加员工</a><?php endif;?></li>
- -->                <li class=""><?php if(checkPrivilege('staff', 'list')):?><a href="staff.php">员工</a><?php endif;?></li>
+                <li class=""><?php if(checkPrivilege('hotel', 'list')):?><a href="hotel.php">酒店</a><?php endif;?></li>
+                <li class=""><?php if(checkPrivilege('article', 'list')):?><a href="article.php">文章</a><?php endif;?></li>
+                <li class=""><?php if(checkPrivilege('destination', 'list')):?><a href="destination.php">目的地</a><?php endif;?></li>
+               <li class=""><?php if(checkPrivilege('tour', 'list')):?><a href="tour.php">线路</a><?php endif;?></li>
+                <li class=""><?php if(checkPrivilege('driver', 'list')):?><a href="driver.php">司机</a><?php endif;?></li>
+               <li class=""><?php if(checkPrivilege('staff', 'list')):?><a href="staff.php">员工</a><?php endif;?></li>
                 <li class=""><?php if(checkPrivilege('staff', 'list_group')):?><a href="staff.php?act=group_list">组织架构</a><?php endif;?></li>
             </ul>
           <form class="navbar-search pull-left" action="">
@@ -131,12 +124,11 @@
 
 
 
-<div class="alert alert-success">
-以下内容纯属虚构，如果有巧合，纯属对号入座！
+
  <?php if(!empty($_SESSION['last_notice'])):?>
-<?php echo $_SESSION['last_notice'];?>
+<div class="alert alert-<?php echo $_SESSION['last_notice']['type'];?>"><?php echo $_SESSION['last_notice']['content'];?></div>
  <?php endif;?>
-</div>
+
 
 
 <div id="switcher"></div>
@@ -145,6 +137,9 @@
 </div>
 
  ﻿<div class="footer">
+ <div class="alert alert-info">
+本站内容纯属虚构，如果有巧合，纯属对号入座！
+</div>
     <p class="pull-right"><a href="#">回到顶部</a></p>
     <p class="cp">
         <a href="/" title="<?php echo $config['site']['name'];?> 首页">首页</a>|

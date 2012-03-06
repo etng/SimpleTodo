@@ -1,4 +1,8 @@
-<h3><?php echo $title_for_layout;?></h3>
+<ul class="breadcrumb">
+<li><a href="/">首页</a> <span class="divider">/</span></li>
+<li><a href="plan.php?act=list">计划</a> <span class="divider">/</span></li>
+<li class="active">查看 #<?php echo $plan['id']?></li>
+</ul>
 
 <dl><dt>联系人</dt>
     <dd>
@@ -49,12 +53,12 @@
         <td><?php echo $plan_tour['tourist_cnt'];?></td>
         <td><?php echo $plan_tour['car_tourist_cnt'];?>
         <?php if($plan['car_status']=='assignning'):?>
-        <input data-plan_tour_id="<?php echo $plan_tour['id'];?>" type="button" value="安排" class="btn_assign_car"/>
+        <input data-plan_tour_id="<?php echo $plan_tour['id'];?>" type="button" value="安排" class="btn btn_assign_car"/>
         <?php endif;?>
         </td>
         <td><?php echo $plan_tour['room_tourist_cnt'];?>
         <?php if($plan['room_status']=='assignning'):?>
-        <input data-plan_tour_id="<?php echo $plan_tour['id'];?>" type="button" value="安排" class="btn_assign_room"/>
+        <input data-plan_tour_id="<?php echo $plan_tour['id'];?>" type="button" value="安排" class="btn btn_assign_room"/>
         <?php endif;?>
         </td>
         <td><?php echo $plan_tour['price_sum'];?>/<?php echo $plan_tour['market_price_sum'];?></td>
@@ -122,7 +126,7 @@
     <dt>操作</dt>
     <dd>
    <?php foreach(explode(',', $next_statuss) as $next_status):$next_status_info = $statuss[$next_status];?>
-    <a href="plan.php?act=set-status&status=<?php echo $next_status;?>&id=<?php echo $plan['id']?>"><?php echo $next_status_info['action_text']?></a>
+    <a class="btn" href="plan.php?act=set-status&status=<?php echo $next_status;?>&id=<?php echo $plan['id']?>"><?php echo $next_status_info['action_text']?></a>
     <?php endforeach;?>
 
     </dd>
@@ -137,7 +141,7 @@
     <dt>操作</dt>
     <dd>
    <?php foreach(explode(',', $next_room_statuss) as $next_room_status):$next_room_status_info = $room_statuss[$next_room_status];?>
-    <a href="plan.php?act=set-room-status&status=<?php echo $next_room_status;?>&id=<?php echo $plan['id']?>"><?php echo $next_room_status_info['action_text']?></a>
+    <a class="btn" href="plan.php?act=set-room-status&status=<?php echo $next_room_status;?>&id=<?php echo $plan['id']?>"><?php echo $next_room_status_info['action_text']?></a>
     <?php endforeach;?>
 
     </dd>
@@ -153,7 +157,7 @@
     <dt>操作</dt>
     <dd>
    <?php foreach(explode(',', $next_car_statuss) as $next_car_status):$next_car_status_info = $car_statuss[$next_car_status];?>
-    <a href="plan.php?act=set-car-status&status=<?php echo $next_car_status;?>&id=<?php echo $plan['id']?>"><?php echo $next_car_status_info['action_text']?></a>
+    <a class="btn" href="plan.php?act=set-car-status&status=<?php echo $next_car_status;?>&id=<?php echo $plan['id']?>"><?php echo $next_car_status_info['action_text']?></a>
     <?php endforeach;?>
 
     </dd>
@@ -171,7 +175,7 @@
                  <dt>余额</dt>
         <dd><?php echo $plan['balance']?>
         <?php if($plan['balance']!=0):?>
-            <input type="button" value="添加支付记录" class="btn_add_payment"/>
+            <input type="button" value="添加支付记录" class="btn btn_add_payment"/>
              <div id="payment_add_form" style="display:none">
             <form method="post" action="plan.php?act=add-payment"><input type="hidden" name="payment[plan_id]" value="<?php echo $plan['id']?>" />
             <dl>
@@ -229,7 +233,7 @@
 
  <div id="room_assign_form" style="display:none">
 <h4>已安排酒店情况</h4>
- <table class="plan_tour_rooms">
+ <table class="plan_tour_rooms table table-bordered table-striped">
      <thead><tr>
         <td>酒店</td>
         <td>房型</td>
@@ -278,7 +282,7 @@
 
  <div id="car_assign_form" style="display:none">
  <h4>已安排车辆情况</h4>
- <table class="plan_tour_cars">
+ <table class="plan_tour_cars table table-bordered table-striped">
      <thead><tr>
         <td>司机</td>
         <td>车型</td>
@@ -288,7 +292,7 @@
     </tr></thead>
     <tbody></tbody>
     <tfoot>
-        <td colspan="2"> </td>
+        <td colspan="2">合计</td>
         <td class="tourist_capacity"></td>
         <td class="sum_price"></td>
         <td></td>

@@ -1,6 +1,10 @@
-<h3><?php echo $title_for_layout;?></h3>
-<p class="pull-right"><?php if(checkPrivilege('plan', 'add')):?><a href="plan.php?act=add" class="btn">添加计划</a><?php endif;?></p>
+<ul class="breadcrumb">
+<li><a href="/">首页</a> <span class="divider">/</span></li>
+<li><a href="plan.php?act=list">计划</a> <span class="divider">/</span></li>
+<li class="active">所有</li>
+</ul>
 
+<p class="pull-right"><?php if(checkPrivilege('plan', 'add')):?><a href="plan.php?act=add" class="btn">添加计划</a><?php endif;?></p>
 
 <div class="row">
 <div class="span2"><dl>
@@ -9,7 +13,7 @@
     <a href="plan.php?act=list">所有</a>
     </li>
     <?php foreach($statuss as $status=>$status_info):?>
-    <li>
+    <li class="<?php (@$_GET['st']==$status) && print('active')?>">
     <a href="plan.php?act=list&st=<?php echo $status;?>"><?php echo $status_info['text']?></a>
     </li><?php endforeach;?>
 </ul></dd>

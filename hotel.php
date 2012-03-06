@@ -59,7 +59,9 @@ switch(@$_GET['act'])
         $title_for_layout = "酒店";
         $where = array();
         $s_where = $where?' where '.implode(' and ', $where):'';
-        $hotels = $db->fetchAll('select hotel.*,destination.name as destination_name from hotel  left join destination on destination.id=hotel.destination_id  '.$s_where.' order by hotel.id desc');
+        $total = $db->fetchOne('select count(1) as cnt from hotel ' . $s_where);
+        $pager = makePager($total, 5);
+        $hotels = $db->fetchAll("select hotel.*,destination.name as destination_name from hotel  left join destination on destination.id=hotel.destination_id  {$s_where} order by hotel.id desc  limit {$pager['offset']},{$pager['limit']}");
         include('templates/hotel_list.php');
         break;
 }
