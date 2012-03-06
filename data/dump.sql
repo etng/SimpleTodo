@@ -3,7 +3,7 @@
 -- Server version:               5.5.20-log - MySQL Community Server (GPL)
 -- Server OS:                    Win32
 -- HeidiSQL version:             7.0.0.4053
--- Date/time:                    2012-03-06 08:13:58
+-- Date/time:                    2012-03-07 01:08:56
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -103,13 +103,14 @@ CREATE TABLE IF NOT EXISTS `driver` (
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table aiyouwei.driver: ~2 rows (approximately)
+-- Dumping data for table aiyouwei.driver: ~3 rows (approximately)
 /*!40000 ALTER TABLE `driver` DISABLE KEYS */;
 INSERT INTO `driver` (`id`, `destination_id`, `name`, `nationality`, `age`, `car_type`, `car_capacity`, `car_plate_num`, `phone`, `star`, `description`, `created`, `updated`) VALUES
 	(1, 1, 'dfdsa', 'fdsafdsa', 0, 'suv', 0, 'fdsadfsa', 'fsadfdsa', 3, 'dsafdsa', '2012-03-04 11:52:33', '0000-00-00 00:00:00'),
-	(2, 1, 'dsafdsa', 'fdsafd', 0, 'jeep', 0, 'fdsa', 'fdsa', 3, 'fdsafdsa', '2012-03-04 11:52:48', '0000-00-00 00:00:00');
+	(2, 1, 'dsafdsa', 'fdsafd', 0, 'jeep', 0, 'fdsa', 'fdsa', 3, 'fdsafdsa', '2012-03-04 11:52:48', '0000-00-00 00:00:00'),
+	(3, 1, 'asdfadsfdsfsa', 'fasddf', 0, 'jeep', 0, 'asdfdsa', 'dsafasdf', 4, 'fadsfdsafa', '2012-03-06 21:51:07', '0000-00-00 00:00:00');
 /*!40000 ALTER TABLE `driver` ENABLE KEYS */;
 
 
@@ -127,9 +128,9 @@ CREATE TABLE IF NOT EXISTS `hotel` (
   `star` tinyint(3) unsigned NOT NULL DEFAULT '3',
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table aiyouwei.hotel: ~30 rows (approximately)
+-- Dumping data for table aiyouwei.hotel: ~31 rows (approximately)
 /*!40000 ALTER TABLE `hotel` DISABLE KEYS */;
 INSERT INTO `hotel` (`id`, `destination_id`, `name`, `description`, `phone`, `fax`, `website`, `address`, `star`, `created`) VALUES
 	(1, 1, '有间客栈', '有间客栈', '', '', '', '', 1, '2012-02-20 21:01:41'),
@@ -161,7 +162,8 @@ INSERT INTO `hotel` (`id`, `destination_id`, `name`, `description`, `phone`, `fa
 	(27, 9, '无名招待所', '无名招待所', '', '', '', '', 2, '2012-02-20 21:01:41'),
 	(28, 10, '有间客栈', '有间客栈', '', '', '', '', 1, '2012-02-20 21:01:41'),
 	(29, 10, '希尔顿', '希尔顿', '', '', '', '', 3, '2012-02-20 21:01:41'),
-	(30, 10, '无名招待所', '无名招待所', '', '', '', '', 4, '2012-02-20 21:01:41');
+	(30, 10, '无名招待所', '无名招待所', '', '', '', '', 4, '2012-02-20 21:01:41'),
+	(31, 1, 'dsafsadf', 'fasdfadsf', 'sdfsadfsa', 'adfdsaf', 'sdfasdf', 'sdfsad', 4, '2012-03-06 21:48:55');
 /*!40000 ALTER TABLE `hotel` ENABLE KEYS */;
 
 
@@ -266,12 +268,13 @@ CREATE TABLE IF NOT EXISTS `plan_note` (
   `content` varchar(512) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='订单备注';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='订单备注';
 
--- Dumping data for table aiyouwei.plan_note: ~1 rows (approximately)
+-- Dumping data for table aiyouwei.plan_note: ~2 rows (approximately)
 /*!40000 ALTER TABLE `plan_note` DISABLE KEYS */;
 INSERT INTO `plan_note` (`id`, `plan_id`, `staff_id`, `content`, `created`) VALUES
-	(1, 3, 1, '客户明天进藏，请安排司机去接一下，联系电话13882249210', '2012-03-04 12:22:01');
+	(1, 3, 1, '客户明天进藏，请安排司机去接一下，联系电话13882249210', '2012-03-04 12:22:01'),
+	(2, 3, 1, 'dsfadsf ', '2012-03-06 22:18:17');
 /*!40000 ALTER TABLE `plan_note` ENABLE KEYS */;
 
 
@@ -423,54 +426,64 @@ CREATE TABLE IF NOT EXISTS `room_daily_price` (
   `memo` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `updated` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table aiyouwei.room_daily_price: ~4 rows (approximately)
+-- Dumping data for table aiyouwei.room_daily_price: ~12 rows (approximately)
 /*!40000 ALTER TABLE `room_daily_price` DISABLE KEYS */;
 INSERT INTO `room_daily_price` (`id`, `the_date`, `hotel_id`, `room_type`, `cost`, `public_price`, `min_price`, `default_price`, `max_price`, `memo`, `updated`) VALUES
 	(1, '2012-03-21', 30, 'tao', 200, 400, 300, 320, 360, 'hhhh', '2012-03-04 11:50:53'),
 	(2, '2012-03-22', 30, 'tao', 200, 400, 300, 320, 360, 'hhhh', '2012-03-04 11:50:53'),
 	(3, '2012-03-23', 30, 'tao', 200, 400, 300, 320, 360, 'hhhh', '2012-03-04 11:50:53'),
-	(4, '2012-03-24', 30, 'tao', 200, 400, 300, 320, 360, 'hhhh', '2012-03-04 11:50:53');
+	(4, '2012-03-24', 30, 'tao', 200, 400, 300, 320, 360, 'hhhh', '2012-03-04 11:50:53'),
+	(5, '2012-03-09', 31, 'std', 50, 100, 80, 80, 90, 'asdafs', '2012-03-06 21:49:10'),
+	(6, '2012-03-10', 31, 'std', 50, 100, 80, 80, 90, 'asdafs', '2012-03-06 21:49:10'),
+	(7, '2012-03-11', 31, 'std', 50, 100, 80, 80, 90, 'asdafs', '2012-03-06 21:49:10'),
+	(8, '2012-03-12', 31, 'std', 50, 100, 80, 80, 90, 'asdafs', '2012-03-06 21:49:10'),
+	(9, '2012-03-13', 31, 'std', 50, 100, 80, 80, 90, 'asdafs', '2012-03-06 21:49:10'),
+	(10, '2012-03-14', 31, 'std', 50, 100, 80, 80, 90, 'asdafs', '2012-03-06 21:49:10'),
+	(11, '2012-03-15', 31, 'std', 50, 100, 80, 80, 90, 'asdafs', '2012-03-06 21:49:10'),
+	(12, '2012-03-16', 31, 'std', 50, 100, 80, 80, 90, 'asdafs', '2012-03-06 21:49:10');
 /*!40000 ALTER TABLE `room_daily_price` ENABLE KEYS */;
 
 
 -- Dumping structure for table aiyouwei.schedule_template
 DROP TABLE IF EXISTS `schedule_template`;
 CREATE TABLE IF NOT EXISTS `schedule_template` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `cate_id` int(10) unsigned NOT NULL,
-  `name` varchar(50) NOT NULL,
-  `code` varchar(50) NOT NULL,
-  `content` text NOT NULL,
-  `memo` varchar(512) NOT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `cate_id` int(10) unsigned NOT NULL COMMENT '分类',
+  `name` varchar(50) NOT NULL COMMENT '名称',
+  `code` varchar(50) NOT NULL COMMENT '代号',
+  `content` text NOT NULL COMMENT '内容',
+  `memo` varchar(512) NOT NULL COMMENT '备注',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='日程模版';
 
--- Dumping data for table aiyouwei.schedule_template: ~3 rows (approximately)
+-- Dumping data for table aiyouwei.schedule_template: ~6 rows (approximately)
 /*!40000 ALTER TABLE `schedule_template` DISABLE KEYS */;
 INSERT INTO `schedule_template` (`id`, `cate_id`, `name`, `code`, `content`, `memo`) VALUES
 	(1, 1, '鲁朗3日', 'A1', 'D1，拉萨→巴松错→八一，沿途尼洋河，住八一\r\n D2，八一→鲁朗→八一，鲁朗林海、牧场、石锅鸡、色季拉山观南迦巴瓦，住八一\r\n D3，八一→拉萨\r\n', ''),
 	(2, 1, '然乌4日', 'A4A', 'D1，拉萨→巴松错→八一\r\n D2，八一→鲁朗→波密→米堆冰川→然乌，住然乌，五日的话这天拆为两天，第一天住波密，第二天住然乌\r\n D3，然乌→八一，下午鲁朗石锅鸡，住八一\r\n D4，八一→拉萨\r\n ', ''),
-	(3, 2, '珠峰+纳木错5日（需要办理边防证）', 'B2', 'D1，拉萨→羊湖→江孜→日喀则\r\n D2，日喀则→定日→珠峰\r\n D3，珠峰→日喀则\r\n D4，日喀则→大竹卡→纳木错\r\n D5，纳木错→羊八井→拉萨\r\n ', '');
+	(3, 2, '珠峰+纳木错5日（需要办理边防证）', 'B2', 'D1，拉萨→羊湖→江孜→日喀则\r\n D2，日喀则→定日→珠峰\r\n D3，珠峰→日喀则\r\n D4，日喀则→大竹卡→纳木错\r\n D5，纳木错→羊八井→拉萨\r\n ', ''),
+	(4, 0, 'sadfas', 'fasdf', 'asdfads', 'fasdf'),
+	(6, 0, 'sdfads', 'fasdf', 'sdfsadf', 'adfasdf'),
+	(7, 0, 'ad', 'aadfa', 'fasf', 'safdsafa');
 /*!40000 ALTER TABLE `schedule_template` ENABLE KEYS */;
 
 
 -- Dumping structure for table aiyouwei.schedule_template_cate
 DROP TABLE IF EXISTS `schedule_template_cate`;
 CREATE TABLE IF NOT EXISTS `schedule_template_cate` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  `description` varchar(512) NOT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `name` varchar(50) NOT NULL COMMENT '名称',
+  `description` varchar(512) NOT NULL COMMENT '介绍',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COMMENT='日程模版分类';
 
--- Dumping data for table aiyouwei.schedule_template_cate: ~3 rows (approximately)
+-- Dumping data for table aiyouwei.schedule_template_cate: ~2 rows (approximately)
 /*!40000 ALTER TABLE `schedule_template_cate` DISABLE KEYS */;
 INSERT INTO `schedule_template_cate` (`id`, `name`, `description`) VALUES
 	(1, 'A线：林芝方向', '2-5天，暂有6种玩法可供参考。'),
-	(2, 'B线：日喀则、珠峰方向', '2-5天，暂有4种玩法可供参考。'),
-	(3, 'C线：山南方向，含亚东', '2-4天，暂有3种玩法可供参考。');
+	(2, 'B线：日喀则、珠峰方向', '2-5天，暂有4种玩法可供参考。');
 /*!40000 ALTER TABLE `schedule_template_cate` ENABLE KEYS */;
 
 
@@ -513,9 +526,9 @@ CREATE TABLE IF NOT EXISTS `staff_group` (
   `privileges` text NOT NULL,
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
--- Dumping data for table aiyouwei.staff_group: ~8 rows (approximately)
+-- Dumping data for table aiyouwei.staff_group: ~9 rows (approximately)
 /*!40000 ALTER TABLE `staff_group` DISABLE KEYS */;
 INSERT INTO `staff_group` (`id`, `name`, `phone`, `memo`, `privileges`, `created`) VALUES
 	(1, '总经理', '', '', '', '0000-00-00 00:00:00'),
@@ -525,7 +538,8 @@ INSERT INTO `staff_group` (`id`, `name`, `phone`, `memo`, `privileges`, `created
 	(5, '', '', '', '', '2012-03-04 10:31:49'),
 	(6, '', '', '', '', '2012-03-04 10:36:08'),
 	(7, '', '', '', '', '2012-03-04 10:56:06'),
-	(8, 'dsfdsaf', '11211212', 'dsfsad', '*,*.list,*.view,*.add,*.edit,*.del,hotel.*,hotel.list,hotel.view,hotel.add,hotel.del,hotel.add-price,destination.*,destination.list,destination.view,destination.add,destination.del,tour.*,tour.list,tour.view,tour.add,tour.del,driver.*,driver.list,driver.view,driver.add,driver.del,staff.*,staff.list,staff.view,staff.add,staff.del,article.*,article.list,article.view,article.add,article.del,plan.*,plan.list,plan.view,plan.add,plan.del,plan.add-payment,plan.get-plan-tour_rooms,plan.get-plan-tour_cars,plan.get-destination-hotels,plan.get-destination-drivers,plan.get-room-price,plan.add-car,plan.add-room,plan.set-status,plan.set-car-status,plan.set-room-status', '2012-03-04 11:09:20');
+	(8, 'dsfdsaf', '11211212', 'dsfsad', '*,*.list,*.view,*.add,*.edit,*.del,hotel.*,hotel.list,hotel.view,hotel.add,hotel.del,hotel.add-price,destination.*,destination.list,destination.view,destination.add,destination.del,tour.*,tour.list,tour.view,tour.add,tour.del,driver.*,driver.list,driver.view,driver.add,driver.del,staff.*,staff.list,staff.view,staff.add,staff.del,article.*,article.list,article.view,article.add,article.del,plan.*,plan.list,plan.view,plan.add,plan.del,plan.add-payment,plan.get-plan-tour_rooms,plan.get-plan-tour_cars,plan.get-destination-hotels,plan.get-destination-drivers,plan.get-room-price,plan.add-car,plan.add-room,plan.set-status,plan.set-car-status,plan.set-room-status', '2012-03-04 11:09:20'),
+	(9, 'dfasdf', 'dsafasdf', 'sdfa', '*,*.list,*.view,*.add,*.edit,*.del,hotel.*,hotel.list,hotel.view,hotel.add,hotel.del,hotel.add-price,destination.*,destination.list,destination.view,destination.add,destination.del,tour.*,tour.list,tour.view,tour.add,tour.del,driver.*,driver.list,driver.view,driver.add,driver.del,staff.*,staff.list,staff.view,staff.add,staff.del,article.*,article.list,article.view,article.add,article.del,plan.*,plan.list,plan.view,plan.add,plan.del,plan.add-payment,plan.get-plan-tour_rooms,plan.get-plan-tour_cars,plan.get-destination-hotels,plan.get-destination-drivers,plan.get-room-price,plan.add-car,plan.add-room,plan.set-status,plan.set-car-status,plan.set-room-status', '2012-03-06 21:54:42');
 /*!40000 ALTER TABLE `staff_group` ENABLE KEYS */;
 
 
@@ -668,9 +682,9 @@ CREATE TABLE IF NOT EXISTS `tour` (
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
--- Dumping data for table aiyouwei.tour: ~10 rows (approximately)
+-- Dumping data for table aiyouwei.tour: ~11 rows (approximately)
 /*!40000 ALTER TABLE `tour` DISABLE KEYS */;
 INSERT INTO `tour` (`id`, `name`, `destination_id`, `destination`, `description`, `market_price`, `price`, `distance`, `created`, `updated`) VALUES
 	(1, '珠峰 - 拉萨 - 纳木错 - 定日 - 林芝', 8, '林芝', '珠峰 - 拉萨 - 纳木错 - 定日 - 林芝', 410, 330, 210, '2012-02-20 21:01:43', '2012-02-20 21:01:43'),
@@ -682,7 +696,8 @@ INSERT INTO `tour` (`id`, `name`, `destination_id`, `destination`, `description`
 	(7, '林芝 - 亚东 - 山南', 6, '山南', '林芝 - 亚东 - 山南', 140, 120, 230, '2012-02-20 21:01:43', '2012-02-20 21:01:43'),
 	(8, '珠峰 - 江孜 - 林芝 - 纳木错 - 日喀则', 9, '日喀则', '珠峰 - 江孜 - 林芝 - 纳木错 - 日喀则', 300, 240, 380, '2012-02-20 21:01:43', '2012-02-20 21:01:43'),
 	(9, '江孜 - 然乌 - 林芝 - 珠峰', 5, '珠峰', '江孜 - 然乌 - 林芝 - 珠峰', 230, 190, 480, '2012-02-20 21:01:43', '2012-02-20 21:01:43'),
-	(10, '然乌 - 江孜 - 亚东', 1, '亚东', '然乌 - 江孜 - 亚东', 360, 290, 180, '2012-02-20 21:01:43', '2012-02-20 21:01:43');
+	(10, '然乌 - 江孜 - 亚东', 1, '亚东', '然乌 - 江孜 - 亚东', 360, 290, 180, '2012-02-20 21:01:43', '2012-02-20 21:01:43'),
+	(11, 'asdfdsa', 0, 'dsfsaf', 'dsfasdfasdfsad', 1111, 1221, 111, '2012-03-06 21:52:12', '2012-03-06 21:52:12');
 /*!40000 ALTER TABLE `tour` ENABLE KEYS */;
 
 
