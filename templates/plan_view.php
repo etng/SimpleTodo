@@ -96,16 +96,16 @@
         <td><?php echo $plan_note['content'];?></td>
     </tr>
     <?php endforeach;?></tbody>
-</table> <input type="button" value="添加备忘" class="btn_add_note"/>
+</table> <input type="button" value="添加备忘" class="btn btn_add_note"/>
 
  <div id="add_note_form" style="display:none">
- <h4>请留下你想说的话</h4>
+ <h4>请留下你想说的话</h4><div class="close">&times;</div>
 <form method="post" action="plan.php?act=add-note">
 <input type="hidden" name="note[plan_id]" value="<?php echo $plan['id']?>" />
 <dl>
      <dt>内容</dt>
         <dd><textarea name="note[content]" id="note_content" rows="3" cols="70"></textarea></dd>
-        </dl><input type="submit" value="提交" />
+        </dl><input type="submit" value="提交" class="btn" />
     </form>
  </div>
 </dd>
@@ -272,7 +272,7 @@
     <dt>金额</dt><dd><input type="text" name="room[price]" id="room_price" value="" /></dd>
      <dt>备注</dt>
         <dd><textarea name="room[memo]" id="room_memo" rows="3" cols="70"></textarea></dd>
-        </dl><input type="submit" value="提交" />
+        </dl><input type="submit" value="提交" class="btn"  />
     </form>
  </div>
 
@@ -322,7 +322,7 @@
     <dt>金额</dt><dd><input type="text" name="car[price]" id="car_price" value="" /></dd>
      <dt>备注</dt>
         <dd><textarea name="car[memo]" id="car_memo" rows="3" cols="70"></textarea></dd>
-        </dl><input type="submit" value="提交" />
+        </dl><input type="submit" value="提交" class="btn"  />
     </form>
  </div>
 

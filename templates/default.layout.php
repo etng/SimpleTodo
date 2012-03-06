@@ -103,7 +103,7 @@
           </form>
           <ul class="nav pull-right">
           <?php if(!empty($_SESSION['staff']['name'])):?>
-          <li><a href="#"><?php echo $_SESSION['staff']['name'];?></a></li>
+          <li><a href="#">当前用户</a></li>
             <li class="divider-vertical"></li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $_SESSION['staff']['name'];?> <b class="caret"></b></a>
