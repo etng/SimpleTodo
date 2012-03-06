@@ -67,7 +67,7 @@
 <title><?php echo $title_for_layout;?> - <?php echo $config['site']['name'];?></title>
 
 </head>
-<body data-spy="scroll" data-target=".subnav" data-offset="100">
+<body data-spy="scroll" data-target=".subnav" data-offset="50">
 
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
@@ -85,19 +85,40 @@
                 <li class=""><?php if(checkPrivilege('plan', 'list')):?><a href="plan.php">我的计划</a><?php endif;?></li>
                 <li class=""><?php if(checkPrivilege('plan', 'add')):?><a href="plan.php?act=add">添加计划</a><?php endif;?></li>
                 <!-- <li class=""><?php if(checkPrivilege('hotel', 'add')):?><a href="hotel.php?act=add">添加酒店</a><?php endif;?></li>
- -->                <li class=""><?php if(checkPrivilege('hotel', 'list')):?><a href="hotel.php">酒店管理</a><?php endif;?></li>
+ -->                <li class=""><?php if(checkPrivilege('hotel', 'list')):?><a href="hotel.php">酒店</a><?php endif;?></li>
                 <!-- <li class=""><?php if(checkPrivilege('article', 'add')):?><a href="article.php?act=add">添加文章</a><?php endif;?></li>
- -->                <li class=""><?php if(checkPrivilege('article', 'list')):?><a href="article.php">文章管理</a><?php endif;?></li>
+ -->                <li class=""><?php if(checkPrivilege('article', 'list')):?><a href="article.php">文章</a><?php endif;?></li>
                 <!-- <li class=""><?php if(checkPrivilege('destination', 'add')):?><a href="destination.php?act=add">添加目的地</a><?php endif;?></li>
- -->                <li class=""><?php if(checkPrivilege('destination', 'list')):?><a href="destination.php">目的地管理</a><?php endif;?></li>
+ -->                <li class=""><?php if(checkPrivilege('destination', 'list')):?><a href="destination.php">目的地</a><?php endif;?></li>
                 <!-- <li class=""><?php if(checkPrivilege('tour', 'add')):?><a href="tour.php?act=add">添加线路</a><?php endif;?></li>
- -->                <li class=""><?php if(checkPrivilege('tour', 'list')):?><a href="tour.php">线路管理</a><?php endif;?></li>
+ -->                <li class=""><?php if(checkPrivilege('tour', 'list')):?><a href="tour.php">线路</a><?php endif;?></li>
                 <!-- <li class=""><?php if(checkPrivilege('driver', 'add')):?><a href="driver.php?act=add">添加司机</a><?php endif;?></li>
- -->                <li class=""><?php if(checkPrivilege('driver', 'list')):?><a href="driver.php">司机管理</a><?php endif;?></li>
+ -->                <li class=""><?php if(checkPrivilege('driver', 'list')):?><a href="driver.php">司机</a><?php endif;?></li>
                 <!-- <li class=""><?php if(checkPrivilege('staff', 'add')):?><a href="staff.php?act=add">添加员工</a><?php endif;?></li>
- -->                <li class=""><?php if(checkPrivilege('staff', 'list')):?><a href="staff.php">员工管理</a><?php endif;?></li>
+ -->                <li class=""><?php if(checkPrivilege('staff', 'list')):?><a href="staff.php">员工</a><?php endif;?></li>
                 <li class=""><?php if(checkPrivilege('staff', 'list_group')):?><a href="staff.php?act=group_list">组织架构</a><?php endif;?></li>
             </ul>
+          <form class="navbar-search pull-left" action="">
+            <input type="text" class="search-query span2" placeholder="搜索">
+          </form>
+          <ul class="nav pull-right">
+          <?php if(!empty($_SESSION['staff']['name'])):?>
+          <li><a href="#"><?php echo $_SESSION['staff']['name'];?></a></li>
+            <li class="divider-vertical"></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $_SESSION['staff']['name'];?> <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="#">设置</a></li>
+                <li><a href="#">个人资料</a></li>
+                <li><a href="#">修改密码</a></li>
+                <li class="divider"></li>
+                <li><a href="auth.php?act=logout">退出登录</a></li>
+              </ul>
+            </li>
+            <?php else:?>
+          <li><a href="auth.php?act=login">登录</a></li>
+            <?php endif;?>
+          </ul>
           </div>
         </div>
       </div>
@@ -107,16 +128,19 @@
 <div class="container">
  <div id="main">
 
-<?php if(!empty($_SESSION['staff']['name'])):?>
-<div>欢迎：<?php echo $_SESSION['staff']['name'];?> <a href="auth.php?act=logout">退出登录</a></div>
-<?php endif;?>
+
+
+
+<div class="alert alert-success">
+以下内容纯属虚构，如果有巧合，纯属对号入座！
+ <?php if(!empty($_SESSION['last_notice'])):?>
+<?php echo $_SESSION['last_notice'];?>
+ <?php endif;?>
+</div>
+
 
 <div id="switcher"></div>
 <div id="loading" style="display:none">loading...</div>
-<div class="notice">以下内容纯属虚构，如果有巧合，纯属对号入座！</div>
- <?php if(!empty($_SESSION['last_notice'])):?>
-<div class="notice"><?php echo $_SESSION['last_notice'];?></div>
- <?php endif;?>
 <?php echo $content_for_layout;?>
 </div>
 

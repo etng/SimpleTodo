@@ -10,6 +10,31 @@ $forum_url = '';
 $schedule_templates = $db->fetchAll('select * from schedule_template', MYSQL_ASSOC, 'id');
 ?>
 <form method="post" action="" enctype="multipart/form-data">
+
+      <div class="tabbable tabs-left">
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#lA" data-toggle="tab">联系人</a></li>
+          <li><a href="#lB" data-toggle="tab">游客</a></li>
+          <li><a href="#lB" data-toggle="tab">日程</a></li>
+          <li><a href="#lC" data-toggle="tab">要求</a></li>
+          <li><a href="#lC" data-toggle="tab">财务</a></li>
+          <li><a href="#lC" data-toggle="tab">备忘</a></li>
+          <li><a href="#lC" data-toggle="tab">日志</a></li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="lA">
+            <p>I'm in Section A.</p>
+          </div>
+          <div class="tab-pane" id="lB">
+            <p>Howdy, I'm in Section B.</p>
+          </div>
+          <div class="tab-pane" id="lC">
+            <p>What up girl, this is Section C.</p>
+          </div>
+        </div>
+      </div> <!-- /tabbable -->
+
+
 <dl>
  <dt>联系人</dt>
     <dd>

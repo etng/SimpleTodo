@@ -6,3 +6,4 @@ data/*.local.ini
 .project
 .settings/
 sitemap*.xml.gz
+Thumbs.db
