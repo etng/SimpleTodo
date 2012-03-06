@@ -1,14 +1,16 @@
 <h3><?php echo $title_for_layout;?></h3>
 
-
-<table>
-    <tr>
-        <td>编号</td>
-        <td>标题</td>
-        <td>发布时间</td>
-        <td>更新时间</td>
-        <td>操作</td>
-    </tr> <?php if(!empty($articles)):?>
+<p class="pull-right"><?php if(checkPrivilege('article', 'add')):?><a href="article.php?act=add" class="btn"><i class="icon-eidt"></i>发文章</a><?php endif;?></p>
+<table class="table table-bordered table-striped">
+    <thead><tr>
+        <th>编号</th>
+        <th>标题</th>
+        <th>发布时间</th>
+        <th>更新时间</th>
+        <th>操作</th>
+    </tr> </thead>
+    <tbody>
+    <?php if(!empty($articles)):?>
 
     <?php foreach($articles as $article):?>
     <tr>
@@ -17,9 +19,9 @@
         <td><?php echo $article['created'];?></td>
         <td><?php echo $article['updated'];?></td>
         <td>
-        <a href="article.php?act=view&id=<?php echo $article['id'];?>">详情</a>
-        <a href="article.php?act=edit&id=<?php echo $article['id'];?>">编辑</a>
-        <a href="article.php?act=delete&id=<?php echo $article['id'];?>">删除</a>
+        <a href="article.php?act=view&id=<?php echo $article['id'];?>" class="btn btn-info">详情</a>
+        <a href="article.php?act=edit&id=<?php echo $article['id'];?>" class="btn">编辑</a>
+        <a href="article.php?act=delete&id=<?php echo $article['id'];?>" class="btn btn-danger">删除</a>
         </td>
     </tr>
     <?php endforeach;?>
@@ -27,5 +29,6 @@
     <tr>
         <td colspan="100"><a href="article.php?act=add">发文章</a></td>
     </tr>
-    <?php endif;?>
+
+    <?php endif;?></tbody>
 </table>

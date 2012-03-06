@@ -8,5 +8,5 @@
      <dt>内容</dt>
     <dd><textarea id="article_content" name="article[content]" rows="3" cols="70"></textarea></dd>
 </dl>
-<input type="submit" />
+<input type="submit" class="btn btn-primary" />
 </form>

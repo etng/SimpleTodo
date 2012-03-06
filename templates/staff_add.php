@@ -1,6 +1,14 @@
 <h3><?php echo $title_for_layout;?></h3>
 <form method="post" action="">
 <dl>
+    <dt>所属组</dt><dd>
+    <select id="staff_group_id" name="staff[group_id]">
+        <option value="" selected="selected">--请选择--</option>
+        <?php foreach($staff_groups as $staff_group):?>
+        <option value="<?php echo $staff_group['id'];?>"><?php echo $staff_group['name'];?></option>
+        <?php endforeach;?>
+    </select>
+    </dd>
     <dt>用户名</dt><dd><input type="text" id="staff_username" name="staff[username]" value="" /></dd>
     <dt>密码</dt><dd><input type="text" id="staff_password" name="staff[password]" value="" /></dd>
     <dt>姓名</dt><dd><input type="text" id="staff_name" name="staff[name]" value="" /></dd>

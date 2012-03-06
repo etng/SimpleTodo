@@ -1,15 +1,15 @@
 <h3><?php echo $title_for_layout;?></h3>
 
 
-<table>
-    <tr>
-        <td>编号</td>
-        <td>名称</td>
-        <td>所在地</td>
-        <td>联系电话</td>
-        <td>加入时间</td>
-        <td>操作</td>
-    </tr> <?php if(!empty($hotels)):?>
+<table class="table table-bordered table-striped">
+    <thead><tr>
+        <th>编号</th>
+        <th>名称</th>
+        <th>所在地</th>
+        <th>联系电话</th>
+        <th>加入时间</th>
+        <th>操作</th>
+    </tr></thead> <tbody><?php if(!empty($hotels)):?>
 
     <?php foreach($hotels as $hotel):?>
     <tr>
@@ -19,7 +19,7 @@
         <td><?php echo $hotel['phone'];?></td>
         <td><?php echo $hotel['created'];?></td>
         <td>
-        <a href="hotel.php?act=view&id=<?php echo $hotel['id'];?>">详情</a>
+        <a href="hotel.php?act=view&id=<?php echo $hotel['id'];?>" class="btn btn-info">详情</a>
         </td>
     </tr>
     <?php endforeach;?>
@@ -27,5 +27,5 @@
     <tr>
         <td colspan="100"><a href="hotel.php?act=add">先谈两家酒店来合作</a></td>
     </tr>
-    <?php endif;?>
+    <?php endif;?></tbody>
 </table>

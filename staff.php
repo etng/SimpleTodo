@@ -1,6 +1,7 @@
 <?php
 require "lib/common.php";
 ob_start();
+$staff_groups = $db->fetchAll('select * from staff_group');
 switch(@$_GET['act'])
 {
     case 'add':
@@ -18,13 +19,46 @@ switch(@$_GET['act'])
         }
         include('templates/staff_add.php');
         break;
+    case 'group_add':
+        checkPrivilege();
+        $title_for_layout = "添加部门";
+        if($_SERVER['REQUEST_METHOD']=='POST')
+        {
+            $created = now();
+            $_POST['staff_group']['privileges'] = implode(',', $_POST['staff_group']['privilege']);
+            unset($_POST['staff_group']['privilege']);
+            $staff_group_id = $db->insert('staff_group', $record = array_merge($_POST['staff_group'], compact('created')));
+            header('location:staff.php?act=group_view&id='.intval($staff_group_id));
+            die();
+        }
+        include('templates/staff_group_add.php');
+        break;
     case 'view':
         checkPrivilege();
         $title_for_layout = "员工详情";
         $id = intval($_GET['id']);
         $staff = $db->find('staff', $id);
+        $staff['group'] = $db->fetchRow('select * from staff_group where id=' . $staff['group_id']);
+        $staff['group_name'] = $staff['group']['name'];
         $staff['privileges'] = $staff['privileges']?explode(',', $staff['privileges']):array();
+        $staff['group']['privileges'] = $staff['group']['privileges']?explode(',', $staff['group']['privileges']):array();
         include('templates/staff_view.php');
+        break;
+    case 'group_view':
+        checkPrivilege();
+        $title_for_layout = "部门详情";
+        $id = intval($_GET['id']);
+        $staff_group = $db->find('staff_group', $id);
+        $staff_group['privileges'] = $staff_group['privileges']?explode(',', $staff_group['privileges']):array();
+        include('templates/staff_group_view.php');
+        break;
+    case 'group_list':
+        checkPrivilege();
+        $title_for_layout = "部门列表";
+        $where = array();
+        $s_where = $where?' where '.implode(' and ', $where):'';
+        $staff_groups = $db->fetchAll('select staff_group.* from staff_group '.$s_where.' order by staff_group.id desc');
+        include('templates/staff_group_list.php');
         break;
     case 'list':
     default:
@@ -33,7 +67,7 @@ switch(@$_GET['act'])
         $title_for_layout = "员工";
         $where = array();
         $s_where = $where?' where '.implode(' and ', $where):'';
-        $staffs = $db->fetchAll('select staff.* from staff '.$s_where.' order by id desc');
+        $staffs = $db->fetchAll('select staff.*,staff_group.name as group_name from staff left join staff_group on staff_group.id=staff.group_id '.$s_where.' order by staff.id desc');
         include('templates/staff_list.php');
         break;
 }

@@ -1,19 +1,19 @@
 <h3><?php echo $title_for_layout;?></h3>
 
 
-<table>
-    <tr>
-        <td>编号</td>
-        <td>所在地</td>
-        <td>姓名</td>
-        <td>民族</td>
-        <td>年龄</td>
-        <td>电话</td>
-        <td>车型</td>
-        <td>车牌号</td>
-        <td>车容量</td>
-        <td>操作</td>
-    </tr> <?php if(!empty($drivers)):?>
+<table class="table table-bordered table-striped">
+    <thead><tr>
+        <th>编号</th>
+        <th>所在地</th>
+        <th>姓名</th>
+        <th>民族</th>
+        <th>年龄</th>
+        <th>电话</th>
+        <th>车型</th>
+        <th>车牌号</th>
+        <th>车容量</th>
+        <th>操作</th>
+    </tr> </thead><tbody><?php if(!empty($drivers)):?>
 
     <?php foreach($drivers as $driver):?>
     <tr>
@@ -27,7 +27,7 @@
         <td><?php echo $driver['car_plate_num'];?></td>
         <td><?php echo $driver['car_capacity'];?></td>
         <td>
-        <a href="driver.php?act=view&id=<?php echo $driver['id'];?>">详情</a>
+        <a href="driver.php?act=view&id=<?php echo $driver['id'];?>" class="btn btn-info">详情</a>
         </td>
     </tr>
     <?php endforeach;?>
@@ -35,5 +35,5 @@
     <tr>
         <td colspan="100"><a href="driver.php?act=add">先谈两个师傅来合作</a></td>
     </tr>
-    <?php endif;?>
+    <?php endif;?></tbody>
 </table>

@@ -3,6 +3,7 @@
 <dl>
     <dt>用户名</dt><dd><?php echo $staff['username'];?></dd>
     <dt>姓名</dt><dd><?php echo $staff['name'];?></dd>
+    <dt>所属组</dt><dd><a href="staff.php?act=group_view&id=<?php echo $staff['group_id'];?>"><?php echo $staff['group_name'];?></a></dd>
     <dt>电话</dt><dd><?php echo $staff['phone'];?></dd>
     <dt>Email</dt><dd><?php echo $staff['email'];?></dd>
     <dt>权限</dt><dd> <ul>

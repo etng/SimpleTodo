@@ -279,7 +279,7 @@ class Et_Db
         return null;
     }
 
-    function fetchAll($sql, $type = MYSQL_ASSOC)
+    function fetchAll($sql, $type = MYSQL_ASSOC, $key_field=null)
     {
         $this->query($sql);
         $rows = array();
@@ -287,7 +287,14 @@ class Et_Db
         {
             while($row = mysql_fetch_array($this->result, $type))
             {
-                $rows[] = $row;
+                if($key_field)
+                {
+                    $rows[$row[$key_field]] = $row;
+                }
+                else
+                {
+                    $rows[] = $row;
+                }
             }
         }
         return $rows;

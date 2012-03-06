@@ -11,7 +11,7 @@
     <dt>人数</dt>
     <dd><?php echo $plan['tourist_cnt']?><br />
     <?php foreach($plan['tourists'] as $tourist):?>
-    <a href="<?php echo $tourist['card_photo'];?>" rel="facebox"><img src="<?php echo $tourist['card_photo'];?>" width="200" title="姓名：<?php echo $tourist['name'];?>
+    <a href="<?php echo empty($tourist['card_photo'])?'#':$tourist['card_photo'];?>" rel="facebox"><img src="<?php echo $tourist['card_photo'];?>" width="200" title="姓名：<?php echo $tourist['name'];?>
     电话：<?php echo $tourist['phone'];?>
     证件类型：<?php echo $config['id_card_types'][$tourist['card_type']];?>
     证件号码：<?php echo $tourist['card_number'];?>
@@ -26,8 +26,8 @@
     <dd><?php echo $plan['start_date']?></dd>
 
     <dt>日程安排</dt>
-    <dd><table>
-    <tr>
+    <dd><table class="table table-bordered table-striped">
+    <thead><tr>
         <td>日期</td>
         <td>线路</td>
         <td>住宿</td>
@@ -37,8 +37,8 @@
         <td>安排车辆</td>
         <td>安排住宿</td>
         <td>小计</td>
-    </tr>
-    <?php if(!empty($plan['tours'])):?>
+    </tr></thead>
+    <tbody><?php if(!empty($plan['tours'])):?>
     <?php foreach($plan['tours'] as $i=>$plan_tour):?>
     <tr>
         <td><?php echo $plan_tour['the_date'];?></td>
@@ -64,23 +64,55 @@
     <tr>
         <td colspan="100">咦，没有安排日程！</td>
     </tr>
-    <?php endif;?>
+    <?php endif;?></tbody>
 </table> </dd>
     <dt>操作进程</dt>
-    <dd><table>
-    <tr>
-        <td>处理时间</td>
-        <td>处理信息</td>
-        <td>操作人</td>
-    </tr>
-    <?php foreach($plan['history'] as $i=>$plan_history):?>
+    <dd><table class="table table-bordered table-striped">
+    <thead><tr>
+        <th>处理时间</th>
+        <th>处理信息</th>
+        <th>操作人</th>
+    </tr></thead>
+    <tbody><?php foreach($plan['history'] as $i=>$plan_history):?>
     <tr>
         <td><?php echo $plan_history['created'];?></td>
         <td><?php echo $plan_history['operation'];?></td>
         <td><?php echo $plan_history['operator'];?></td>
     </tr>
-    <?php endforeach;?>
+    <?php endforeach;?></tbody>
 </table> </dd>
+
+    <dt>备忘</dt>
+    <dd><table class="table table-bordered table-striped">
+    <thead><tr>
+        <th>时间</th>
+        <th>留言人</th>
+        <th>内容</th>
+    </tr></thead>
+    <tbody><?php foreach($plan['notes'] as $i=>$plan_note):?>
+    <tr>
+        <td><?php echo $plan_note['created'];?></td>
+        <td><?php echo $plan_note['staff_name'];?></td>
+        <td><?php echo $plan_note['content'];?></td>
+    </tr>
+    <?php endforeach;?></tbody>
+</table> <input type="button" value="添加备忘" class="btn_add_note"/>
+
+ <div id="add_note_form" style="display:none">
+ <h4>请留下你想说的话</h4>
+<form method="post" action="plan.php?act=add-note">
+<input type="hidden" name="note[plan_id]" value="<?php echo $plan['id']?>" />
+<dl>
+     <dt>内容</dt>
+        <dd><textarea name="note[content]" id="note_content" rows="3" cols="70"></textarea></dd>
+        </dl><input type="submit" value="提交" />
+    </form>
+ </div>
+</dd>
+
+
+
+
 <dt>订单状态</dt><dd><dl>
 <dt>当前状态</dt>
     <dd>
@@ -166,14 +198,14 @@
 
         </dd>
          <dt>支付记录</dt>
-    <dd><table>
-    <tr>
-        <td>时间</td>
-        <td>操作人</td>
-        <td>金额</td>
-        <td>备注</td>
-    </tr>
-        <?php if(!empty($plan['payments'])):?>
+    <dd><table class="table table-bordered table-striped">
+    <thead><tr>
+        <th>时间</th>
+        <th>操作人</th>
+        <th>金额</th>
+        <th>备注</th>
+    </tr></thead>
+        <tbody><?php if(!empty($plan['payments'])):?>
 
     <?php foreach($plan['payments'] as $i=>$plan_payment):?>
     <tr>
@@ -187,7 +219,7 @@
     <tr>
         <td colspan="100">还没有预付款，请暂时不要做任何安排</td>
     </tr>
-    <?php endif;?>
+    <?php endif;?></tbody>
 </table> </dd>
         </dl>
 
@@ -295,6 +327,9 @@
  </div>
 
 
+
+
+
 <script type='text/javascript'>
 function refreshCarPrice(plan_tour_id, driver_id, car_type)
 {
@@ -340,6 +375,9 @@ $(document).ready(function(){
                 $('#room_price'+'_'+ts).val(price_info.default_price);
             }, 'json');
         });
+    });
+    $('input.btn_add_note').click(function(){
+       jQuery.facebox({ div: '#add_note_form' });
     });
     $('input.btn_assign_car').live('click', function(){
         jQuery.facebox({ div: '#car_assign_form' });

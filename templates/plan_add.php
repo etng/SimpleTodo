@@ -6,6 +6,8 @@ $old_tours = $tours;
 shuffle($old_tours);
 $old_tours = array_splice($old_tours, 0, rand(1,3));
 $contact = $contacts[array_rand($contacts)];
+$forum_url = '';
+$schedule_templates = $db->fetchAll('select * from schedule_template', MYSQL_ASSOC, 'id');
 ?>
 <form method="post" action="" enctype="multipart/form-data">
 <dl>
@@ -15,11 +17,15 @@ $contact = $contacts[array_rand($contacts)];
         <dt>姓名</dt><dd><input type="text" id="contact_name" name="contact[name]" value="<?php echo $contact['name'];?>"/></dd>
         <dt>电话</dt><dd><input type="text" id="contact_phone" name="contact[phone]" value="<?php echo $contact['phone'];?>"/></dd>
         <dt>Email</dt><dd><input type="text" id="contact_email" name="contact[email]" value="<?php echo $contact['email'];?>"/></dd>
+        <dt>论坛Id</dt><dd><input type="text" id="contact_forum_uid" name="contact[forum_uid]" value="<?php echo $contact['forum_uid'];?>"/></dd>
     </dl>
-    </dd>
+    </dd><dt>报价贴地址</dt>
+    <dd>
+    <input type="text" id="forum_url" name="plan[forum_url]" value="<?php echo $forum_url;?>" size="50" />
     <dt>人数</dt>
     <dd>
     <input type="text" id="tourist_cnt" name="plan[tourist_cnt]" value="<?php echo $tourist_cnt;?>" size="3" />
+
     <div id="tourists_tabs">
     <?php $i=0;while($i++<$tourist_cnt):?><dl>
  <dt>旅客<?php echo $i;?></dt><dd>
@@ -29,7 +35,7 @@ $contact = $contacts[array_rand($contacts)];
         <dt>证件类型</dt><dd>
         <select id="tourist_card_type_<?php echo $i;?>" name="tourist[card_type][<?php echo $i;?>]">
         <?php foreach($config['id_card_types'] as $card_type=>$text):?>
-            <option value="<?php echo $card_type;?>"<?php echo $card_type==@$tourist['card_type'] && print(' selected="true"');?>><?php echo $text;?></option>
+            <option value="<?php echo $card_type;?>"<?php $card_type==@$tourist['card_type'] && print(' selected="true"');?>><?php echo $text;?></option>
         <?php endforeach;?>
     </select></dd>
         <dt>证件号码</dt><dd><input type="text" id="tourist_card_number_<?php echo $i;?>" name="tourist[card_number][<?php echo $i;?>]" value="<?php echo @$tourist['card_type'];?>"/></dd>
@@ -41,14 +47,38 @@ $contact = $contacts[array_rand($contacts)];
     <?php endwhile;?>
     </div>
     </dd>
- <dt>车辆要求</dt>
+
+    <dt>车辆要求</dt>
     <dd><textarea id="car_request" name="plan[car_request]" rows="3" cols="70">宽敞舒适的越野车就最好了</textarea></dd>
      <dt>房间要求</dt>
     <dd><textarea id="room_request" name="plan[room_request]" rows="3" cols="70">要么三星级以上，要么本地农家</textarea></dd>
+     <dt>其他要求</dt>
+    <dd><textarea id="other_request" name="plan[other_request]" rows="3" cols="70">就这些，劳驾</textarea></dd>
     <dt>出发日期</dt>
     <dd><input type="text" id="start_date" name="plan[start_date]" value="<?php echo date("Y-m-d", $start_date)?>" size="10" /></dd>
+     <dt>日程安排</dt>
+
+    <dd>
+    <select id="schedule_template_selector">
+        <option value="" selected="selected">--请选择--</option>
+        <?php foreach($schedule_templates as $schedule_template):?>
+        <option value="<?php echo $schedule_template['id'];?>"><?php echo $schedule_template['name'];?></option>
+        <?php endforeach;?>
+    </select>
+    <textarea id="schedule_txt" rows="8" cols="70">
+    </textarea>
+    <input type="button" value="倒排" onclick="" />
+    <input type="button" value="住宿" onclick="alert('需要安排住宿')" />
+    <input type="button" value="车辆" onclick="alert('需要安排车辆')" />
+    <input type="button" value="门票" onclick="alert('填写相关景点门票订购信息')" />
+    <input type="button" value="保险" onclick="alert('办理边防证')" />
+    <input type="button" value="边防" onclick="alert('办理边防证')" />
+    <input type="button" value="接客" onclick="alert('填写进藏时间、方式、接站地点等信息');" />
+    <input type="button" value="送客" onclick="alert('填写出藏时间、方式、节点地点等信息')" />
+    </dd>
     <dt>日程安排</dt>
-    <dd><ul id="sortable">
+    <dd>
+    <ul id="sortable">
     <?php foreach($old_tours as $i=>$tour):?>
         <li class="ui-state-default tour" id="item_<?php echo $i;?>"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span><div class="tour_name"><?php echo $tour['name'];?></div>(<span class="tour_distance"><?php echo $tour['distance'];?>公里</span> 住<span class="tour_destination"><?php echo $tour['destination'];?>公里</span>)<input type="hidden" id="item_<?php echo $i;?>_tour_id" name="plan[item_tour_id][<?php echo $i;?>]" value="<?php echo $tour['id'];?>" />
         第<input type="text" id="item_<?php echo $i;?>_num" name="plan[item_the_num][<?php echo $i;?>]" value="<?php echo $i+1;?>" size="3"/>天，
@@ -85,6 +115,7 @@ $contact = $contacts[array_rand($contacts)];
 </form>
 <script type='text/javascript'>
 tours=<?php echo json_encode($tours);?>;
+schedule_templates=<?php echo json_encode($schedule_templates);?>;
 $(document).ready(function(){
     function updatetourDates()
     {
@@ -114,6 +145,13 @@ $(document).ready(function(){
         updatetourDates();
 
         jQuery(document).trigger('close.facebox');
+    });
+    $('#schedule_template_selector').change(function(){
+        var template_id = $(this).val();
+        if(template_id>1)
+        {
+            $('#schedule_txt').val(schedule_templates[template_id]['content']);
+        }
     });
     $( "#start_date" ).datepicker({
         minDate: "+1W",

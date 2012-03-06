@@ -114,6 +114,7 @@ switch(@$_GET['act'])
         $plan = $db->find('plan', $id);
         $contact = $db->find('contact', $plan['contact_id']);
         $plan['tourists'] = $db->fetchAll('select * from tourist where id in (select tourist_id from plan_tourist where plan_id=' . $plan['id'] . ')');
+        $plan['notes'] = $db->fetchAll('select plan_note.*,staff.name as staff_name from plan_note left join staff on staff.id=plan_note.staff_id where plan_id=' . $plan['id'] . ' order by plan_note.created desc');
         $plan['tours'] = $db->fetchAll('select *,plan_tour.id as id from plan_tour left join tour on tour.id=plan_tour.tour_id where plan_tour.plan_id=' . $plan['id']);
         $plan['history'] = $db->fetchAll('select * from plan_history where plan_id=' . $plan['id'] . ' order by created desc');
         $plan['payments'] = $db->fetchAll('select * from plan_payment where plan_id=' . $plan['id'] . ' order by created desc');
@@ -130,6 +131,17 @@ switch(@$_GET['act'])
         $paid = $db->fetchOne('select sum(amount) from plan_payment where plan_id=' . $plan_id);
         $balance = $paid-$plan['price'];
         $db->update('plan', compact('paid', 'balance'), array('id'=>$plan_id));
+         header('location:plan.php?act=view&id='.$plan_id);
+         die();
+        break;
+    case 'add-note':
+        checkPrivilege();
+        $created = now();
+        $staff_id = currrent_staff('id');
+        $plan_id = intval($_POST['note']['plan_id']);
+        $plan = $db->find('plan', $plan_id);
+        $note = $_POST['note'];
+        $db->insert('plan_note', array_merge($note, compact('created', 'staff_id')));
          header('location:plan.php?act=view&id='.$plan_id);
          die();
         break;

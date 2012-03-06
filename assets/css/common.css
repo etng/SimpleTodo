@@ -1,0 +1,93 @@
+@charset "utf-8";
+/* CSS Document */
+body{ margin:0; padding:0; line-height:25px; font-size:14px; color:#444; background:url(../image/wrapbg.jpg) no-repeat top center #71cef0;}
+
+a{ text-decoration:none; color:#2b4a78}
+a:hover{ text-decoration:underline;}
+.left{ float:left;}
+.right{ float:right;}
+.clear{ clear:both;}
+
+ul,li,h3,ol{ margin:0; padding:0; list-style:none;}
+img{ border:none;}
+
+form dl, dl.labels {
+	margin:0em;
+	font-size:1.1;
+	margin-top:0.5em
+}
+form dt, dl.labels dt {
+	float:left;
+	clear:left;
+	width:8em;
+	margin-bottom:0.8em;
+	color:#555;
+	text-align:right;
+	font-weight:normal;
+	font-family:Verdana;
+	position:relative /*IEWin hack*/
+}
+form dd, dl.labels dd {
+	clear:right;
+	margin-left:8.5em;
+	margin-bottom:0.8em;
+	font-style:normal;
+	padding-left:0.5em
+}
+form dd.submit, dl.labels dd.submit	{
+	font-size: 3em
+}
+
+textarea{
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#F4F4F4), to(white));
+	border:1px solid #999;
+	border-top-color:#888;
+	border-bottom-color:#ccc;
+	opacity:.9;
+	resize: none;
+	border-radius:3px;
+	cursor:text;
+}
+textarea:focus{outline: none;}
+
+   .ui-state-highlight { height: 1.5em; line-height: 1.2em; }
+.center
+{
+    text-align: center;
+}
+.debug{
+    text-align: left;
+}
+
+.formhelp	{ color:#777; font-size:90% }
+.reqd	{ color:#c00; font-weight:bold }
+.help	{ cursor:help }
+code	{ color:#060 }
+
+
+.pagination a{display:inline-block;padding: 0 5px;}
+
+div.wrap{ margin:0 auto; width:1200px !important;}
+#header{}
+#header .top{line-height:35px; height:35px; padding:0 10px;}
+#header .top a{ font-size:12px; margin:0 10px; color:white}
+#header .search_wrapper{margin-left: 30px;line-height: 48px;height:48px;}
+#header .logo{ background:url(../images/logo_small.jpg) no-repeat left top; display:inline-block; height:48px; width:48px;text-indent: -9999px;}
+/*
+#search_box{ font-size: 16px;}
+*/
+#main{width: 1200px;}
+#main, #main .main, #main .sidebar{ border:none; overflow:hidden;}
+#main .main{ float:left; width:780px; background:#fff;padding: 0 10px 5px;}
+#main .sidebar{ float:right; width:380px; background:#c9f1ff;padding-bottom:10000px; margin-bottom:-10000px; }
+
+.keyword{color: red;font-weight: bold;}
+
+#footer{ font-size:12px; text-align:center;}
+#footer .widget{ width: 375px; height: 180px;border:1px solid #cfe7f7;  background:#fafdff;margin: 0 5px; padding: 5px; float: left;text-align:left;}
+#footer .widget h3{ text-align:center;}
+.link_list{ }
+.link_list ul{zoom:1; overflow:hidden; margin:5px 20px;}
+.link_list ul li{ float:left; margin-right:5px;}
+
+.notice{ margin:10px 10px 0; padding:10px 10px 5px; border:1px solid #cfe7f7;  background:#fafdff}

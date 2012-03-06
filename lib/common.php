@@ -234,3 +234,11 @@ function regexInArray($needle, $haystack)
     }
     return $in;
 }
+function list2inta($list)
+{
+    return empty($list)?array():explode(',', $list);
+}
+function inta2list($a)
+{
+    return implode(',', $a);
+}

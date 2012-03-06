@@ -2,6 +2,26 @@
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <!-- Le styles -->
+    <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="assets/css/docs.css" rel="stylesheet">
+    <link href="assets/js/google-code-prettify/prettify.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="shortcut icon" href="assets/ico/favicon.ico">
+    <link rel="apple-touch-icon" href="assets/ico/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="assets/ico/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="assets/ico/apple-touch-icon-114x114.png">
+
+
 <link rel="stylesheet" type="text/css" href="scripts/jquery.qtip.css" />
 <link rel="stylesheet" type="text/css" href="scripts/facebox.css" />
 <link rel="stylesheet" type="text/css" href="scripts/fullcalendar.css" />
@@ -9,23 +29,26 @@
 <link href="scripts/fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css"/>
 <link rel="stylesheet" type="text/css" href="scripts/fullcalendar.print.css" media="print" />
 <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css" type="text/css" media="all" />
-<style type='text/css'>
-
-	body {
-		margin-top: 40px;
-		font-size: 14px;
-		font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
-	}
-	#loading {
-		position: absolute;
-		top: 5px;
-		right: 5px;
-	}	#switcher {
-		float: 			right;
-		display: 		inline-block;
-	}
-    .ui-state-highlight { height: 1.5em; line-height: 1.2em; }
+<!-- <link rel="stylesheet" href="assets/css/common.css" type="text/css" media="all" />
+ --><style type='text/css'>
 </style>
+
+
+    <script src="assets/js/jquery.js"></script>
+    <script src="assets/js/google-code-prettify/prettify.js"></script>
+    <script src="assets/js/bootstrap-transition.js"></script>
+    <script src="assets/js/bootstrap-alert.js"></script>
+    <script src="assets/js/bootstrap-modal.js"></script>
+    <script src="assets/js/bootstrap-dropdown.js"></script>
+    <script src="assets/js/bootstrap-scrollspy.js"></script>
+    <script src="assets/js/bootstrap-tab.js"></script>
+    <script src="assets/js/bootstrap-tooltip.js"></script>
+    <script src="assets/js/bootstrap-popover.js"></script>
+    <script src="assets/js/bootstrap-button.js"></script>
+    <script src="assets/js/bootstrap-collapse.js"></script>
+    <script src="assets/js/bootstrap-carousel.js"></script>
+    <script src="assets/js/bootstrap-typeahead.js"></script>
+    <script src="assets/js/application.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js" type="text/javascript"></script>
 <script src="http://jquery-ui.googlecode.com/svn/tags/latest/external/jquery.bgiframe-2.1.2.js" type="text/javascript"></script>
@@ -44,28 +67,46 @@
 <title><?php echo $title_for_layout;?> - <?php echo $config['site']['name'];?></title>
 
 </head>
-<body>
-<div id="header">
-    <h2><a href="/" class="logo"><span><?php echo $config['site']['name'];?><span></a></h2>
-    <div id="mainMenu">
-        <a href="<?php echo $base_url;?>" title="<?php echo $config['site']['name'];?> 首页">首页</a>
-        <a href="calendar.php">我的日程</a>
-        <?php if(checkPrivilege('plan', 'list')):?><a href="plan.php">我的计划</a><?php endif;?>
-        <?php if(checkPrivilege('plan', 'add')):?><a href="plan.php?act=add">添加计划</a><?php endif;?>
-        <?php if(checkPrivilege('hotel', 'add')):?><a href="hotel.php?act=add">添加酒店</a><?php endif;?>
-        <?php if(checkPrivilege('hotel', 'list')):?><a href="hotel.php">酒店管理</a><?php endif;?>
-        <?php if(checkPrivilege('article', 'add')):?><a href="article.php?act=add">添加文章</a><?php endif;?>
-        <?php if(checkPrivilege('article', 'list')):?><a href="article.php">文章管理</a><?php endif;?>
-        <?php if(checkPrivilege('destination', 'add')):?><a href="destination.php?act=add">添加目的地</a><?php endif;?>
-        <?php if(checkPrivilege('destination', 'list')):?><a href="destination.php">目的地管理</a><?php endif;?>
-        <?php if(checkPrivilege('tour', 'add')):?><a href="tour.php?act=add">添加线路</a><?php endif;?>
-        <?php if(checkPrivilege('tour', 'list')):?><a href="tour.php">线路管理</a><?php endif;?>
-        <?php if(checkPrivilege('driver', 'add')):?><a href="driver.php?act=add">添加司机</a><?php endif;?>
-        <?php if(checkPrivilege('driver', 'list')):?><a href="driver.php">司机管理</a><?php endif;?>
-        <?php if(checkPrivilege('staff', 'add')):?><a href="staff.php?act=add">添加员工</a><?php endif;?>
-        <?php if(checkPrivilege('staff', 'list')):?><a href="staff.php">员工管理</a><?php endif;?>
-        </div><!--mainMenu-->
-</div><!--header-->
+<body data-spy="scroll" data-target=".subnav" data-offset="100">
+
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="/"><?php echo $config['site']['name'];?></a>
+          <div class="nav-collapse">
+            <ul class="nav">
+                <li class=""><a href="<?php echo $base_url;?>/" title="<?php echo $config['site']['name'];?> 首页">首页</a></li>
+                <li class=""><a href="calendar.php">我的日程</a></li>
+                <li class=""><?php if(checkPrivilege('plan', 'list')):?><a href="plan.php">我的计划</a><?php endif;?></li>
+                <li class=""><?php if(checkPrivilege('plan', 'add')):?><a href="plan.php?act=add">添加计划</a><?php endif;?></li>
+                <!-- <li class=""><?php if(checkPrivilege('hotel', 'add')):?><a href="hotel.php?act=add">添加酒店</a><?php endif;?></li>
+ -->                <li class=""><?php if(checkPrivilege('hotel', 'list')):?><a href="hotel.php">酒店管理</a><?php endif;?></li>
+                <!-- <li class=""><?php if(checkPrivilege('article', 'add')):?><a href="article.php?act=add">添加文章</a><?php endif;?></li>
+ -->                <li class=""><?php if(checkPrivilege('article', 'list')):?><a href="article.php">文章管理</a><?php endif;?></li>
+                <!-- <li class=""><?php if(checkPrivilege('destination', 'add')):?><a href="destination.php?act=add">添加目的地</a><?php endif;?></li>
+ -->                <li class=""><?php if(checkPrivilege('destination', 'list')):?><a href="destination.php">目的地管理</a><?php endif;?></li>
+                <!-- <li class=""><?php if(checkPrivilege('tour', 'add')):?><a href="tour.php?act=add">添加线路</a><?php endif;?></li>
+ -->                <li class=""><?php if(checkPrivilege('tour', 'list')):?><a href="tour.php">线路管理</a><?php endif;?></li>
+                <!-- <li class=""><?php if(checkPrivilege('driver', 'add')):?><a href="driver.php?act=add">添加司机</a><?php endif;?></li>
+ -->                <li class=""><?php if(checkPrivilege('driver', 'list')):?><a href="driver.php">司机管理</a><?php endif;?></li>
+                <!-- <li class=""><?php if(checkPrivilege('staff', 'add')):?><a href="staff.php?act=add">添加员工</a><?php endif;?></li>
+ -->                <li class=""><?php if(checkPrivilege('staff', 'list')):?><a href="staff.php">员工管理</a><?php endif;?></li>
+                <li class=""><?php if(checkPrivilege('staff', 'list_group')):?><a href="staff.php?act=group_list">组织架构</a><?php endif;?></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+<div class="container">
+ <div id="main">
+
 <?php if(!empty($_SESSION['staff']['name'])):?>
 <div>欢迎：<?php echo $_SESSION['staff']['name'];?> <a href="auth.php?act=logout">退出登录</a></div>
 <?php endif;?>
@@ -77,8 +118,10 @@
 <div class="notice"><?php echo $_SESSION['last_notice'];?></div>
  <?php endif;?>
 <?php echo $content_for_layout;?>
- ﻿<div id="footer">
-    <div class="clear"></div>
+</div>
+
+ ﻿<div class="footer">
+    <p class="pull-right"><a href="#">回到顶部</a></p>
     <p class="cp">
         <a href="/" title="<?php echo $config['site']['name'];?> 首页">首页</a>|
 		<a href="about.php">关于我们</a>|
@@ -88,6 +131,8 @@
 	</p>
     <p class="cp"> © <?php echo date('Y');?> <?php echo $_SERVER['HTTP_HOST'];?> </p>
 </div><!--footer-->
+</div>
+
 
 </body>
 </html>
