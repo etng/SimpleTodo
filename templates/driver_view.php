@@ -1,4 +1,8 @@
-<h3><?php echo $title_for_layout;?></h3>
+<ul class="breadcrumb">
+<li><a href="/">首页</a> <span class="divider">/</span></li>
+<li><a href="driver.php?act=list">司机</a> <span class="divider">/</span></li>
+<li class="active">查看#<?php echo $driver['id'];?></li>
+</ul>
 
 <dl>
     <dt>姓名</dt>
@@ -10,6 +14,7 @@
      <dt>车型</dt><dd><?php echo @$config['car_types'][$driver['car_type']];?></dd>
      <dt>车牌</dt><dd><?php echo $driver['car_plate_num'];?></dd>
      <dt>容量</dt><dd><?php echo $driver['car_capacity'];?></dd>
+     <dt>星级</dt><dd><?php echo $driver['star'];?></dd>
     <dt>电话</dt>
     <dd><?php echo $driver['phone'];?></dd>
     <dt>介绍</dt>

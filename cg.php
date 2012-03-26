@@ -26,7 +26,7 @@ foreach(array('list', 'form', 'add', 'edit', 'view') as $part)
     include "templates/cg/{$part}.php";
     $content = ob_get_clean();
     $content = str_replace(array('[?php', '?]'), array('<?php', '?>'), $content);
-    file_put_contents("templates/{$table_name}_{$part}.php", $content);
+    file_put_contents("templates/{$table_name}/{$part}.php", $content);
 }
 
     ob_start();

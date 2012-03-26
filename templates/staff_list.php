@@ -1,6 +1,8 @@
-<div class="page-header">
-<h1><?php echo $title_for_layout;?><small></small></h1>
-</div>
+<ul class="breadcrumb">
+<li><a href="/">首页</a> <span class="divider">/</span></li>
+<li><a href="staff.php?act=list">员工</a> <span class="divider">/</span></li>
+<li class="active">所有</li>
+</ul>
 
 <p class="pull-right">
 <a href="staff.php?act=add" class="btn">添加员工</a>

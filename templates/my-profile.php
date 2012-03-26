@@ -8,5 +8,5 @@
     <dt>Email</dt><dd><input type="text" id="staff_email" name="staff[email]" value="<?php echo $staff['email'];?>" /></dd>
     <dt>备注</dt><dd><textarea id="staff_memo" name="staff[memo]" rows="3" cols="70"><?php echo $staff['memo'];?></textarea></dd>
 </dl>
-<input type="submit" value="提交更改" />
+<input type="submit" value="提交更改" class="btn btn-primary" />
 </form>

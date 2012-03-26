@@ -1,10 +1,8 @@
 <ul class="breadcrumb">
 <li><a href="/">首页</a> <span class="divider">/</span></li>
-<l><a href="article.php?act=list">文章</a> <span class="divider">/</span></li>
-<lii class="active">所有</li>
+<li><a href="article.php?act=list">文章</a> <span class="divider">/</span></li>
+<li class="active">所有</li>
 </ul>
-
-
 
 <p class="pull-right"><?php if(checkPrivilege('article', 'add')):?><a href="article.php?act=add" class="btn"><i class="icon-eidt"></i>发文章</a><?php endif;?></p>
 <table class="table table-bordered table-striped">

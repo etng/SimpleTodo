@@ -39,7 +39,8 @@
         <td><?php echo $car_statuss[$plan['car_status']]['text'];?></td>
         <td><?php echo $room_statuss[$plan['room_status']]['text'];?></td>
         <td>
-        <a href="plan.php?act=view&id=<?php echo $plan['id'];?>" class="btn btn-info" class="btn btn-info">详情</a>
+        <a href="plan.php?act=view&id=<?php echo $plan['id'];?>" class="btn btn-info">详情</a>
+        <a href="plan.php?act=delete&id=<?php echo $plan['id'];?>" class="btn btn-danger">删除</a>
         </td>
     </tr>
     <?php endforeach;?>

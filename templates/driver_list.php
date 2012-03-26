@@ -35,6 +35,8 @@
         <td><?php echo $driver['car_capacity'];?></td>
         <td>
         <a href="driver.php?act=view&id=<?php echo $driver['id'];?>" class="btn btn-info">详情</a>
+        <a href="driver.php?act=edit&id=<?php echo $driver['id'];?>" class="btn">编辑</a>
+        <a href="driver.php?act=delete&id=<?php echo $driver['id'];?>" class="btn btn-danger">删除</a>
         </td>
     </tr>
     <?php endforeach;?>

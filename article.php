@@ -39,7 +39,7 @@ switch(@$_GET['act'])
     case 'delete':
         checkPrivilege();
         $id = intval($_GET['id']);
-        $article = $db->delete('article', compact('id'));
+        $db->delete('article', compact('id'));
         header('location:article.php');
         die();
         break;

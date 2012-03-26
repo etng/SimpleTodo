@@ -34,6 +34,7 @@ $thumb_config = array(
 );
 $allowed_types = array('image/*');
 $card_photo_base_url = '/files/tourist/card_photo/';
+$default_card_photo_url = '/files/tourist/card_photo/default.jpg';
 
 /******************************************************************************************************************************/
 function mock_data()

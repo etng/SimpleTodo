@@ -1,4 +1,8 @@
-<h3><?php echo $title_for_layout;?></h3>
+<ul class="breadcrumb">
+<li><a href="/">首页</a> <span class="divider">/</span></li>
+<li><a href="staff.php?act=group_list">组织架构</a> <span class="divider">/</span></li>
+<li class="active">查看<?php echo $staff_group['id'];?></li>
+</ul>
 
 <dl>
     <dt>名称</dt><dd><?php echo $staff_group['name'];?></dd>

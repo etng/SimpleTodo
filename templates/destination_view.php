@@ -1,3 +1,9 @@
+<ul class="breadcrumb">
+<li><a href="/">首页</a> <span class="divider">/</span></li>
+<li><a href="destination.php?act=list">目的地</a> <span class="divider">/</span></li>
+<li class="active">查看#<?php echo $destination['id']; ?></li>
+</ul>
+
 <h3><?php echo $destination['name']; ?></h3>
 <hr />
 <dl>

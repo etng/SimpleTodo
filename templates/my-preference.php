@@ -14,5 +14,5 @@ $preference = empty($staff['preference'])?array():json_decode($staff['preference
     </select>
     </dd>
 </dl>
-<input type="submit" value="提交更改" />
+<input type="submit" value="提交更改" class="btn btn-primary" />
 </form>

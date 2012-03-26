@@ -26,14 +26,36 @@ switch(@$_GET['act'])
         $sql = "
         SELECT *
         FROM `room_daily_price`
-        WHERE `hotel_id`=1 AND the_date>='{$today}' AND the_date <='{$later}'
+        WHERE `hotel_id`={$id} AND the_date>='{$today}' AND the_date <='{$later}'
         ";
-        $price_fields = array('cost'=>'成本', 'public_price'=>'市场价', 'min_price'=>'最低价', 'default_price'=>'默认价', 'max_price'=>'最高价');
+        $price_fields = array('cost'=>'成本', 'public_price'=>'市场价', 'min_price'=>'最低价', 'default_price'=>'默认价', 'max_price'=>'最高价','memo'=>'备注');
         foreach($db->fetchAll($sql) as $row)
         {
             $price_trends[$row['the_date']][$row['room_type']] = sub_array($row, array_keys($price_fields));
         }
+//        var_dump($price_trends);        die();
         include('templates/hotel_view.php');
+        break;
+    case 'edit':
+        checkPrivilege();
+        $title_for_layout = "编辑酒店";
+        $id = intval($_GET['id']);
+        $hotel = $db->find('hotel', $id);
+        if($_SERVER['REQUEST_METHOD']=='POST')
+        {
+            $updated= now();
+            $db->update('hotel', array_merge($_POST['hotel'], compact('updated')), compact('id'));
+            header('location:hotel.php?act=view&id='.intval($id));
+            die();
+        }
+        include('templates/hotel_edit.php');
+        break;
+    case 'delete':
+        checkPrivilege();
+        $id = intval($_GET['id']);
+        $db->delete('hotel', compact('id'));
+        header('location:hotel.php');
+        die();
         break;
     case 'add-price':
         checkPrivilege();

@@ -22,6 +22,27 @@ switch(@$_GET['act'])
         $driver = $db->find('driver', $id);
         include('templates/driver_view.php');
         break;
+    case 'edit':
+        checkPrivilege();
+        $title_for_layout = "编辑司机";
+        $id = intval($_GET['id']);
+        $driver = $db->find('driver', $id);
+        if($_SERVER['REQUEST_METHOD']=='POST')
+        {
+            $updated= now();
+            $db->update('driver', array_merge($_POST['driver'], compact('updated')), compact('id'));
+            header('location:driver.php?act=view&id='.intval($id));
+            die();
+        }
+        include('templates/driver_edit.php');
+        break;
+    case 'delete':
+        checkPrivilege();
+        $id = intval($_GET['id']);
+        $db->delete('driver', compact('id'));
+        header('location:driver.php');
+        die();
+        break;
     case 'list':
     default:
         $_GET['act']='list';

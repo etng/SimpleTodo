@@ -33,5 +33,5 @@
      <dt>介绍</dt>
     <dd><textarea id="hotel_description" name="hotel[description]" rows="3" cols="70"></textarea></dd>
 </dl>
-<input type="submit" />
+<input type="submit" class="btn btn-primary" />
 </form>

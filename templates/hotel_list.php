@@ -26,6 +26,8 @@
         <td><?php echo $hotel['created'];?></td>
         <td>
         <a href="hotel.php?act=view&id=<?php echo $hotel['id'];?>" class="btn btn-info">详情</a>
+        <a href="hotel.php?act=edit&id=<?php echo $hotel['id'];?>" class="btn">编辑</a>
+        <a href="hotel.php?act=delete&id=<?php echo $hotel['id'];?>" class="btn btn-danger">删除</a>
         </td>
     </tr>
     <?php endforeach;?>

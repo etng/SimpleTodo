@@ -1,4 +1,8 @@
-<h3><?php echo $title_for_layout;?></h3>
+<ul class="breadcrumb">
+<li><a href="/">首页</a> <span class="divider">/</span></li>
+<li><a href="article.php?act=list">文章</a> <span class="divider">/</span></li>
+<li class="active">添加</li>
+</ul>
 <form method="post" action="">
 <dl>
     <dt>标题</dt>

@@ -1,4 +1,8 @@
-<h3><?php echo $title_for_layout;?></h3>
+<ul class="breadcrumb">
+<li><a href="/">首页</a> <span class="divider">/</span></li>
+<li><a href="destination.php?act=list">目的地</a> <span class="divider">/</span></li>
+<li class="active">所有</li>
+</ul>
 
 
 <table class="table table-bordered table-striped">

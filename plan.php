@@ -113,12 +113,33 @@ switch(@$_GET['act'])
         $id = intval($_GET['id']);
         $plan = $db->find('plan', $id);
         $contact = $db->find('contact', $plan['contact_id']);
-        $plan['tourists'] = $db->fetchAll('select * from tourist where id in (select tourist_id from plan_tourist where plan_id=' . $plan['id'] . ')');
-        $plan['notes'] = $db->fetchAll('select plan_note.*,staff.name as staff_name from plan_note left join staff on staff.id=plan_note.staff_id where plan_id=' . $plan['id'] . ' order by plan_note.created desc');
-        $plan['tours'] = $db->fetchAll('select *,plan_tour.id as id from plan_tour left join tour on tour.id=plan_tour.tour_id where plan_tour.plan_id=' . $plan['id']);
-        $plan['history'] = $db->fetchAll('select * from plan_history where plan_id=' . $plan['id'] . ' order by created desc');
-        $plan['payments'] = $db->fetchAll('select * from plan_payment where plan_id=' . $plan['id'] . ' order by created desc');
+        $plan['tourists'] = $db->fetchAll('select * from tourist where id in (select tourist_id from plan_tourist where plan_id=' . $plan['id'] . ')', 'id');
+        $plan['notes'] = $db->fetchAll('select plan_note.*,staff.name as staff_name from plan_note left join staff on staff.id=plan_note.staff_id where plan_id=' . $plan['id'] . ' order by plan_note.created desc', 'id');
+        $plan['tours'] = $db->fetchAll('select *,plan_tour.id as id from plan_tour left join tour on tour.id=plan_tour.tour_id where plan_tour.plan_id=' . $plan['id'], 'id');
+        $plan['history'] = $db->fetchAll('select * from plan_history where plan_id=' . $plan['id'] . ' order by created desc', 'id');
+        $plan['payments'] = $db->fetchAll('select * from plan_payment where plan_id=' . $plan['id'] . ' order by created desc', 'id');
         include('templates/plan_view.php');
+        break;
+    case 'edit':
+        checkPrivilege();
+        $title_for_layout = "修改计划";
+        $id = intval($_GET['id']);
+        $plan = $db->find('plan', $id);
+        if($_SERVER['REQUEST_METHOD']=='POST')
+        {
+            $updated= now();
+            $db->update('plan', array_merge($_POST['plan'], compact('updated')), compact('id'));
+            header('location:plan.php?act=view&id='.intval($id));
+            die();
+        }
+        include('templates/plan_edit.php');
+        break;
+    case 'delete':
+        checkPrivilege();
+        $id = intval($_GET['id']);
+        $db->delete('plan', compact('id'));
+        header('location:plan.php');
+        die();
         break;
     case 'add-payment':
         checkPrivilege();
@@ -142,6 +163,93 @@ switch(@$_GET['act'])
         $plan = $db->find('plan', $plan_id);
         $note = $_POST['note'];
         $db->insert('plan_note', array_merge($note, compact('created', 'staff_id')));
+         header('location:plan.php?act=view&id='.$plan_id);
+         die();
+        break;
+    case 'add-tourist':
+        checkPrivilege();
+        $created = now();
+        $staff_id = currrent_staff('id');
+        $plan_id = intval($_POST['tourist']['plan_id']);
+        $plan = $db->find('plan', $plan_id);
+        $tourist = array();
+        foreach($_POST['tourist'] as $field=>$field_data)
+        {
+            $tourist[$field] = $field_data['new'];
+        }
+            if($files = Attachment::fromUpload('tourist_card_photo_file', APP_ROOT . $card_photo_base_url, $allowed_types, $thumb_config))
+            {
+                foreach($files as $i=>$file)
+                {
+                    if($file)
+                    {
+                        $tourist['card_photo'] = $card_photo_base_url . 'base/' . $file['filename'];
+                    }
+                }
+            }elseif(!empty($_POST['tourist_card_photo_url_new']))
+            {
+                if($files = Attachment::fromRemote($_POST['tourist_card_photo_url'], APP_ROOT . $card_photo_base_url, $allowed_types, $thumb_config))
+                {
+                    foreach($files as $i=>$file)
+                    {
+                        if($file)
+                        {
+                            $tourist['card_photo'] = $card_photo_base_url . 'base/' . $file['filename'];
+                        }
+                    }
+                }
+            }
+        $tourist_id = $db->insert('tourist', $tourist);
+        $db->insert('plan_tourist', compact('plan_id', 'tourist_id'));
+        $tourist_cnt = $db->fetchOne('select count(1) as cnt from plan_tourist where plan_id=' . $plan_id);
+        $db->update('plan', compact('tourist_cnt'), array('id'=>$plan_id));
+         header('location:plan.php?act=view&id='.$plan_id);
+         die();
+        break;
+    case 'update-tourist':
+        checkPrivilege();
+        $created = now();
+        $staff_id = currrent_staff('id');
+        $plan_id = intval($_POST['plan_id']);
+        $tourist_id = intval($_POST['tourist']['id']);
+        $plan = $db->find('plan', $plan_id);
+        $old_tourist = $db->find('tourist', $tourist_id);
+        $tourist = $_POST['tourist'];
+            if($files = Attachment::fromUpload('tourist_card_photo_file', APP_ROOT . $card_photo_base_url, $allowed_types, $thumb_config))
+            {
+                foreach($files as $i=>$file)
+                {
+                    if($file)
+                    {
+                        $tourist['card_photo'] = $card_photo_base_url . 'base/' . $file['filename'];
+                    }
+                }
+            }elseif(!empty($_POST['tourist_card_photo_url']))
+            {
+                if($files = Attachment::fromRemote($_POST['tourist_card_photo_url'], APP_ROOT . $card_photo_base_url, $allowed_types, $thumb_config))
+                {
+                    foreach($files as $i=>$file)
+                    {
+                        if($file)
+                        {
+                            $tourist['card_photo'] = $card_photo_base_url . 'base/' . $file['filename'];
+                        }
+                    }
+                }
+            }
+        $db->update('tourist', $tourist, array('id'=>$tourist_id));
+         header('location:plan.php?act=view&id='.$plan_id);
+         die();
+        break;
+    case 'update-contact':
+        checkPrivilege();
+        $updated = now();
+        $staff_id = currrent_staff('id');
+        $plan_id = intval($_POST['plan_id']);
+        $plan = $db->find('plan', $plan_id);
+        $contact_id = $plan['contact_id'];
+        $contact = $_POST['plan']['contact'];
+        $db->update('contact', $contact, array('id'=>$contact_id));
          header('location:plan.php?act=view&id='.$plan_id);
          die();
         break;

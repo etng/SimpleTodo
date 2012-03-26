@@ -1,6 +1,9 @@
-<div class="page-header">
-<h1><?php echo $title_for_layout;?><small></small></h1>
-</div>
+<ul class="breadcrumb">
+<li><a href="/">首页</a> <span class="divider">/</span></li>
+<li><a href="staff.php?act=group_list">组织架构</a> <span class="divider">/</span></li>
+<li class="active">所有</li>
+</ul>
+
 
 <p class="pull-right">
 <a href="staff.php?act=group_add" class="btn">添加部门</a>

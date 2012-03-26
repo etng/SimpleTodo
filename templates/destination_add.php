@@ -1,4 +1,8 @@
-<h3><?php echo $title_for_layout;?></h3>
+<ul class="breadcrumb">
+<li><a href="/">首页</a> <span class="divider">/</span></li>
+<li><a href="destination.php?act=list">目的地</a> <span class="divider">/</span></li>
+<li class="active">添加</li>
+</ul>
 <form method="post" action="">
 <dl>
     <dt>名称</dt>
@@ -8,5 +12,5 @@
      <dt>介绍</dt>
     <dd><textarea id="destination_description" name="destination[description]" rows="3" cols="70"></textarea></dd>
 </dl>
-<input type="submit" />
+<input type="submit" class="btn btn-primary" />
 </form>

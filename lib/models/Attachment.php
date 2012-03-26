@@ -31,6 +31,7 @@ class Attachment
     public static function fromUpload($field, $dest_dir, $allowed_types=array(), $thumb_configs=array())
     {
         $files = array();
+        var_dump($_FILES);
         if(!is_array($_FILES[$field]["error"]))
         {
             foreach($_FILES[$field] as $k=>$v)

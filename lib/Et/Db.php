@@ -283,6 +283,11 @@ class Et_Db
 
     function fetchAll($sql, $type = MYSQL_ASSOC, $key_field=null)
     {
+        if(!in_array($type, array(MYSQL_ASSOC, MYSQL_NUM, MYSQL_BOTH)))
+        {
+            $key_field = $type;
+            $type = MYSQL_ASSOC;
+        }
         $this->query($sql);
         $rows = array();
         if($this->result)

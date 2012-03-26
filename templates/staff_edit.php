@@ -1,4 +1,9 @@
-<h3><?php echo $title_for_layout;?></h3>
+<ul class="breadcrumb">
+<li><a href="/">首页</a> <span class="divider">/</span></li>
+<li><a href="staff.php?act=list">员工</a> <span class="divider">/</span></li>
+<li class="active">修改#<?php echo $staff['id']?></li>
+</ul>
+
 <form method="post" action="">
 <dl>
     <dt>所属组</dt><dd>
@@ -24,7 +29,7 @@
     </dd>
      <dt>备注</dt><dd><textarea id="staff_memo" name="staff[memo]" rows="3" cols="70"><?php echo $staff['memo']?></textarea></dd>
 </dl>
-<input type="submit" />
+<input type="submit" class="btn btn-primary" />
 </form>
 <script type='text/javascript'>
 $(document).ready(function(){
