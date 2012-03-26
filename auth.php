@@ -4,7 +4,7 @@ switch(@$_GET['act'])
 {
    case 'logout':
         unset($_SESSION['staff']);
-        $_SESSION['notice'] = '退出登录成功';
+        alert('退出登录成功');
         break;
    case 'login':
    default:
@@ -14,16 +14,17 @@ switch(@$_GET['act'])
             $name = $_POST['staff']['name'];
             $staff = $db->fetchRow('select * from staff where username="'.$name.'"');
             $password = $_POST['staff']['password'];
-            if($staff && $staff['password']==md5($password.$name))
+            if(false || ($staff && $staff['password']==md5($password.$name)))
             {
                 $_SESSION['staff']['username']=$staff['username'];
                 $_SESSION['staff']['name']=$staff['name'];
                 $_SESSION['staff']['privileges']=explode(',', $staff['privileges']);
                 $_SESSION['staff']['id']=$staff['id'];
+                alert('登录成功！');
             }
             else
             {
-                $_SESSION['notice'] = '登录成功';
+                alert('登录失败！');
             }
         }
         break;

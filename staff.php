@@ -44,6 +44,44 @@ switch(@$_GET['act'])
         $staff['group']['privileges'] = $staff['group']['privileges']?explode(',', $staff['group']['privileges']):array();
         include('templates/staff_view.php');
         break;
+    case 'delete':
+        checkPrivilege();
+        $id = intval($_GET['id']);
+        $db->delete('staff', compact('id'));
+        header('location:staff.php');
+        die();
+        break;
+    case 'group_delete':
+        checkPrivilege();
+        $id = intval($_GET['id']);
+        $db->delete('staff_group', compact('id'));
+        header('location:staff.php?act=group_list');
+        die();
+        break;
+    case 'edit':
+        checkPrivilege();
+        $title_for_layout = "修改员工资料";
+        $id = intval($_GET['id']);
+        $staff = $db->find('staff', $id);
+        if($_SERVER['REQUEST_METHOD']=='POST')
+        {
+            $new_staff = $_POST['staff'];
+            $new_staff['privileges'] = implode(',', $_POST['staff']['privilege']);
+            unset($new_staff['password']);
+            if(!empty($_POST['staff']['password']))
+            {
+                $new_staff['password'] = md5(md5($_POST['staff']['username'].$_POST['staff']['password']).$_POST['staff']['username']);
+            }
+            $db->update('staff', $new_staff, compact('id'));
+            header('location:staff.php?act=view&id='.intval($id));
+            die();
+        }
+        $staff['group'] = $db->fetchRow('select * from staff_group where id=' . $staff['group_id']);
+        $staff['group_name'] = $staff['group']['name'];
+        $staff['privileges'] = $staff['privileges']?explode(',', $staff['privileges']):array();
+        $staff['group']['privileges'] = $staff['group']['privileges']?explode(',', $staff['group']['privileges']):array();
+        include('templates/staff_edit.php');
+        break;
     case 'group_view':
         checkPrivilege();
         $title_for_layout = "部门详情";
@@ -51,6 +89,22 @@ switch(@$_GET['act'])
         $staff_group = $db->find('staff_group', $id);
         $staff_group['privileges'] = $staff_group['privileges']?explode(',', $staff_group['privileges']):array();
         include('templates/staff_group_view.php');
+        break;
+    case 'group_edit':
+        checkPrivilege();
+        $title_for_layout = "修改部门";
+        $id = intval($_GET['id']);
+        $staff_group = $db->find('staff_group', $id);
+        if($_SERVER['REQUEST_METHOD']=='POST')
+        {
+            $new_staff_group = $_POST['staff_group'];
+            $new_staff_group['privileges'] = implode(',', $_POST['staff_group']['privilege']);
+            $db->update('staff_group', $new_staff_group, compact('id'));
+            header('location:staff.php?act=group_view&id='.intval($id));
+            die();
+        }
+        $staff_group['privileges'] = $staff_group['privileges']?explode(',', $staff_group['privileges']):array();
+        include('templates/staff_group_edit.php');
         break;
     case 'group_list':
         checkPrivilege();

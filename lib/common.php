@@ -261,3 +261,17 @@ function makePager($total, $limit=20, $side=3)
     $pager['has_last'] = $pager['cur_page'] < ($pager['total_page'] - 2);
     return $pager;
 }
+
+function url_for($controller, $action, $params=array())
+{
+    $url = $controller . '.php';
+    if($action!='list')
+    {
+        $params['act'] = $action;
+    }
+    if($params)
+    {
+        $url .= '?' . http_build_query($params);
+    }
+    return $url;
+}

@@ -67,6 +67,21 @@
 <title><?php echo $title_for_layout;?> - <?php echo $config['site']['name'];?></title>
 
 </head>
+
+<?php
+$nav = array(
+    array('u'=>array('c'=>'calendar', 'a'=>'list'), 'title'=>'我的日程'),
+    array('u'=>array('c'=>'plan', 'a'=>'list'), 'title'=>'我的计划'),
+    array('u'=>array('c'=>'hotel', 'a'=>'list'), 'title'=>'酒店'),
+    array('u'=>array('c'=>'article', 'a'=>'list'), 'title'=>'文章'),
+    array('u'=>array('c'=>'destination', 'a'=>'list'), 'title'=>'目的地'),
+    array('u'=>array('c'=>'tour', 'a'=>'list'), 'title'=>'线路'),
+    array('u'=>array('c'=>'driver', 'a'=>'list'), 'title'=>'司机'),
+    array('u'=>array('c'=>'staff', 'a'=>'list'), 'title'=>'员工'),
+    array('u'=>array('c'=>'staff', 'a'=>'group_list'), 'title'=>'组织架构'),
+);
+
+?>
 <body data-spy="scroll" data-target=".subnav" data-offset="50">
 
     <div class="navbar navbar-fixed-top">
@@ -81,29 +96,23 @@
           <div class="nav-collapse">
             <ul class="nav">
                 <li class=""><a href="<?php echo $base_url;?>/" title="<?php echo $config['site']['name'];?> 首页">首页</a></li>
-                <li class=""><a href="calendar.php">我的日程</a></li>
-                <li class=""><?php if(checkPrivilege('plan', 'list')):?><a href="plan.php">我的计划</a><?php endif;?></li>
-                <li class=""><?php if(checkPrivilege('hotel', 'list')):?><a href="hotel.php">酒店</a><?php endif;?></li>
-                <li class=""><?php if(checkPrivilege('article', 'list')):?><a href="article.php">文章</a><?php endif;?></li>
-                <li class=""><?php if(checkPrivilege('destination', 'list')):?><a href="destination.php">目的地</a><?php endif;?></li>
-               <li class=""><?php if(checkPrivilege('tour', 'list')):?><a href="tour.php">线路</a><?php endif;?></li>
-                <li class=""><?php if(checkPrivilege('driver', 'list')):?><a href="driver.php">司机</a><?php endif;?></li>
-               <li class=""><?php if(checkPrivilege('staff', 'list')):?><a href="staff.php">员工</a><?php endif;?></li>
-                <li class=""><?php if(checkPrivilege('staff', 'list_group')):?><a href="staff.php?act=group_list">组织架构</a><?php endif;?></li>
+                <?php foreach($nav as $item):?>
+                    <?php if(checkPrivilege($item['u']['c'], $item['u']['a'])):?><li class=""><a href="<?php echo url_for($item['u']['c'], $item['u']['a']);?>"><?php echo $item['title'];?></a></li><?php endif;?>
+                <?php endforeach;?>
             </ul>
           <form class="navbar-search pull-left" action="">
             <input type="text" class="search-query span2" placeholder="搜索">
           </form>
           <ul class="nav pull-right">
           <?php if(!empty($_SESSION['staff']['name'])):?>
-          <li><a href="#">当前用户</a></li>
+          <li><a href="my.php?act=edit-profile">当前用户</a></li>
             <li class="divider-vertical"></li>
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $_SESSION['staff']['name'];?> <b class="caret"></b></a>
+              <a href="my.php?act=edit-profile" class="dropdown-toggle" data-toggle="dropdown"><?php echo $_SESSION['staff']['name'];?> <b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <li><a href="#">设置</a></li>
-                <li><a href="#">个人资料</a></li>
-                <li><a href="#">修改密码</a></li>
+                <li><a href="my.php?act=edit-preference">个人偏好</a></li>
+                <li><a href="my.php?act=edit-profile">个人资料</a></li>
+                <li><a href="my.php?act=edit-pass">修改密码</a></li>
                 <li class="divider"></li>
                 <li><a href="auth.php?act=logout">退出登录</a></li>
               </ul>

@@ -28,6 +28,8 @@
         <td><?php echo $staff['email'];?></td>
         <td>
         <a href="staff.php?act=view&id=<?php echo $staff['id'];?>" class="btn btn-info">详情</a>
+        <a href="staff.php?act=edit&id=<?php echo $staff['id'];?>" class="btn">编辑</a>
+        <a href="staff.php?act=delete&id=<?php echo $staff['id'];?>" class="btn btn-danger">删除</a>
         </td>
     </tr>
     <?php endforeach;?>
