@@ -209,6 +209,16 @@ class Et_Db
         $sql = sprintf('UPDATE %s SET %s WHERE %s', $table, implode(',', $set_fields), implode(' AND ', $cases));
         return $this->execute($sql);
     }
+    function getOrCreate($table, $values, $defaults=array())
+    {
+        $cases = $this->buildWhere($values);
+        $id = $this->fetchOne('select id from ' . $table . ' where ' .implode(' AND ', $cases));
+        if(!$id)
+        {
+          $id = $this->insert($table, array_merge($values, $defaults));
+        }
+        return $id;
+    }
     function buildWhere($where=array(), $not_null=true)
     {
         settype($where, 'array');

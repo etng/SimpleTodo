@@ -8,6 +8,7 @@
 <hr />
 <dl>
     <dt>更新时间</dt>    <dd><?php echo $destination['created']; ?></dd>
+    <dt>需要边防证</dt>    <dd><?php echo $destination['need_passport']?'是':'否';?></dd>
     <dt>阅读次数</dt>    <dd><?php echo $destination['hits']; ?></dd>
 </dl>
 <hr />

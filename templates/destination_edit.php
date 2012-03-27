@@ -9,6 +9,8 @@
 <dl>
     <dt>名称</dt>
     <dd><input type="text" id="destination_name" name="destination[name]" value="<?php echo $destination['name']; ?>" /></dd>
+    <dt>边防证</dt>
+    <dd><label class="checkbox inline"><input type="hidden" name="destination[need_passport]" value="0" /><input type="checkbox" id="destination_need_passport" name="destination[need_passport]" value="1"<?php echo @$destination['need_passport'] && print ' checked="true"'; ?> />需要边防证</label></dd>
     <dt>缩略语</dt>
     <dd><input type="text" id="destination_slug" name="destination[slug]" value="<?php echo $destination['slug']; ?>" /></dd>
      <dt>介绍</dt>

@@ -25,6 +25,8 @@
 <dd><?php echo $schedule_template['name'];?></dd>
 <dt>代号</dt>
 <dd><?php echo $schedule_template['code'];?></dd>
+    <dt>需要边防证</dt>    <dd><?php echo $schedule_template['need_passport']?'是':'否';?></dd>
+
 <dt>内容</dt>
 <dd><?php echo nl2br($schedule_template['content']);?></dd>
 <dt>备注</dt>

@@ -15,10 +15,13 @@
                         <th>分类</th>
                     <th>名称</th>
                     <th>代号</th>
+                    <th>需要边防证</th>
+
                             <th>备注</th>
             <th>操作</th>
     </tr> </thead>
     <tbody>
+
     <?php if(!empty($schedule_templates)):?>
     <?php foreach($schedule_templates as $schedule_template):?>
     <tr>
@@ -30,6 +33,7 @@
         <td><?php echo $schedule_template['name'];?></td>
 
         <td><?php echo $schedule_template['code'];?></td>
+        <td><?php echo $schedule_template['need_passport']?'是':'否';?></td>
 
         <td><?php echo $schedule_template['memo'];?></td>
             <td>

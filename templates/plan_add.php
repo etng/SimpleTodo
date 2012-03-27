@@ -2,12 +2,8 @@
 <?php
 $tourist_cnt=rand(2,5);
 $start_date=time();
-$old_tours = $tours;
-shuffle($old_tours);
-$old_tours = array_splice($old_tours, 0, rand(1,3));
 $contact = $contacts[array_rand($contacts)];
 $forum_url = '';
-$schedule_templates = $db->fetchAll('select * from schedule_template', MYSQL_ASSOC, 'id');
 ?>
 <form method="post" action="" enctype="multipart/form-data">
 
@@ -24,10 +20,10 @@ $schedule_templates = $db->fetchAll('select * from schedule_template', MYSQL_ASS
         <div class="tab-content">
           <div class="tab-pane" id="tab_contact">
             <dl>
-                <dt>姓名</dt><dd><input type="text" id="contact_name" name="contact[name]" value="<?php echo $contact['name'];?>"/></dd>
-                <dt>电话</dt><dd><input type="text" id="contact_phone" name="contact[phone]" value="<?php echo $contact['phone'];?>"/></dd>
-                <dt>Email</dt><dd><input type="text" id="contact_email" name="contact[email]" value="<?php echo $contact['email'];?>"/></dd>
-                <dt>论坛Id</dt><dd><input type="text" id="contact_forum_uid" name="contact[forum_uid]" value="<?php echo $contact['forum_uid'];?>"/></dd>
+                <dt>姓名</dt><dd><input type="text" id="contact_name" name="contact[name]" value="<?php echo @$contact['name'];?>"/></dd>
+                <dt>电话</dt><dd><input type="text" id="contact_phone" name="contact[phone]" value="<?php echo @$contact['phone'];?>"/></dd>
+                <dt>Email</dt><dd><input type="text" id="contact_email" name="contact[email]" value="<?php echo @$contact['email'];?>"/></dd>
+                <dt>论坛Id</dt><dd><input type="text" id="contact_forum_uid" name="contact[forum_uid]" value="<?php echo @$contact['forum_uid'];?>"/></dd>
             </dl>
           </div>
           <div class="tab-pane" id="tab_tourist">
@@ -55,101 +51,79 @@ $schedule_templates = $db->fetchAll('select * from schedule_template', MYSQL_ASS
                 </div>
         </div>
           <div class="tab-pane active" id="tab_schedule">
-<script type="text/javascript">
-<!--
-function parseScheduleTemplate()
-{
-    var tours=[];
-    $.each($('#schedule_txt').val().split("\n"), function(i, line){
-        var line=$.trim(line);
-        if(line.length){
-            var tour = line.split(/[,，]/g);
-            tours.push(tour);
-        }
-    });
-    return tours;
-}
-window.tour_sep='→';
-jQuery(function($){
-    $('.btn-reverse-schedule').click(function(){
-        var tours =  _.toArray(parseScheduleTemplate()).reverse();
-        var tours_text=[];
-        $.each(tours, function(i, tour){
-            tour[1] = _.toArray(tour[1].split(tour_sep)).reverse().join(tour_sep);
-            tours_text.push(['D'+(i+1), tour[1]].join(','));
-        });
-        $('#schedule_txt').val(tours_text.join("\n"));
-    });
-});
-//-->
-</script>
+<div>
+<h4><label class="checkbox inline"><input type="hidden" name="plan[need_receive]" value="0" /><input type="checkbox" id="plan_need_receive" name="plan[need_receive]" value="1" />需要接站</label></h4>
+<div id="receive_detail_container" style="display:none;"> <dl>
+             <dt>集合日期</dt><dd><input type="text" id="arrive_date" name="plan[arrive_date]" value="<?php echo date("Y-m-d", $start_date)?>" size="10" /></dd>
+             <dt>集合地点</dt><dd>
+              <select id="arrive_destination" name="plan[arrive_destination]">
+        <?php foreach(explode(',', '拉萨,成都,西安') as $city):?>
+        <option value="<?php echo $city;?>"><?php echo $city;?></option>
+        <?php endforeach;?>
+    </select></dd>
+             <dt>集合方式</dt><dd><input type="text" id="arrive_method" name="plan[arrive_method]" value="" size="6" />
+              <select id="arrive_method_selector">
+        <option value="" selected="selected">自定义</option>
+        <?php foreach(explode(',', '火车,飞机,自驾,长途车') as $method):?>
+        <option value="<?php echo $method;?>"><?php echo $method;?></option>
+        <?php endforeach;?>
+    </select></dd>
+<dt>接站地点等信息</dt><dd>
+<textarea id="arrive_detail" name="plan[arrive_detail]" rows="3" cols="70" plcaceholder="班次、到达时间等信息"></textarea>
+</dd>
+</dl>
+</div>
+</div>
 
-            <dl>
+<div>
+<h4><label class="checkbox inline"><input type="hidden" name="plan[need_seeoff]" value="0" /><input type="checkbox" id="plan_need_seeoff" name="plan[need_seeoff]" value="1" />需要送站</label></h4>
+<div id="seeoff_detail_container" style="display:none;"> <dl>
+
+             <dt>遣散日期</dt><dd><input type="text" id="seeoff_date" name="plan[seeoff_date]" value="<?php echo date("Y-m-d", $start_date)?>" size="10" /></dd>
+             <dt>遣散地点</dt><dd>
+              <select id="seeoff_destination" name="plan[seeoff_destination]">
+        <?php foreach(explode(',', '拉萨,成都,西安') as $city):?>
+        <option value="<?php echo $city;?>"><?php echo $city;?></option>
+        <?php endforeach;?>
+    </select></dd>
+             <dt>遣散方式</dt><dd><input type="text" id="seeoff_method" name="plan[seeoff_method]" value="" size="6" />
+              <select id="seeoff_method_selector">
+        <option value="" selected="selected">自定义</option>
+        <?php foreach(explode(',', '火车,飞机,自驾,长途车') as $method):?>
+        <option value="<?php echo $method;?>"><?php echo $method;?></option>
+        <?php endforeach;?>
+    </select></dd>
+<dt>送站地点等信息</dt><dd>
+<textarea id="seeoff_detail" name="plan[seeoff_detail]" rows="3" cols="70" plcaceholder="班次、出发时间等信息"></textarea>
+</dd>
+</dl>
+</div>
+</div>
+
+<div>
+    <dl>
                 <dt>出发日期</dt>
                 <dd><input type="text" id="start_date" name="plan[start_date]" value="<?php echo date("Y-m-d", $start_date)?>" size="10" /></dd>
                  <dt>日程安排</dt>
-
                 <dd>
                 <select id="schedule_template_selector" name="plan[schedule_template_id]">
                     <option value="" selected="selected">--请选择--</option>
                     <?php foreach($schedule_templates as $schedule_template):?>
                     <option value="<?php echo $schedule_template['id'];?>"><?php echo $schedule_template['name'];?></option>
                     <?php endforeach;?>
-                </select>
-                <textarea id="schedule_txt" rows="8" cols="70" class="span4"></textarea>
+                </select><br />
+                <textarea id="schedule_txt" name="plan[schedule_txt]" rows="8" cols="70"></textarea>
                 <div class="btn-group">
                 <input type="button" class="btn btn-reverse-schedule" value="倒排"/>
-                <input type="button" class="btn" value="住宿" onclick="alert('需要安排住宿')" />
-                <input type="button" class="btn" value="车辆" onclick="alert('需要安排车辆')" />
-                <input type="button" class="btn" value="门票" onclick="alert('填写相关景点门票订购信息')" />
-                <input type="button" class="btn" value="保险" onclick="alert('办理边防证')" />
-                <input type="button" class="btn" value="边防" onclick="alert('办理边防证')" />
-                <input type="button" class="btn" value="接客" onclick="alert('填写进藏时间、方式、接站地点等信息');" />
-                <input type="button" class="btn" value="送客" onclick="alert('填写出藏时间、方式、节点地点等信息')" />
+                <input type="button" class="btn btn-preview-schedule" value="预览"/>
                 </div>
-                </dd>
-                <dt>日程安排</dt>
-                <dd>
-                <ul id="schedules" class="unstyled sortable">
-                <?php foreach($old_tours as $i=>$tour):?>
-                    <li class="ui-state-default tour" id="item_<?php echo $i;?>">
-                    <span class="sortable-handle">
-                        <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
-                        D<?php echo $i+1;?><input type="hidden" id="item_<?php echo $i;?>_num" name="plan[item_the_num][<?php echo $i;?>]" value="<?php echo $i+1;?>" size="3"/>(
-                        <input type="hidden" id="item_<?php echo $i;?>_date" name="plan[item_the_date][<?php echo $i;?>]" value="<?php echo date("Y-m-d", strtotime(sprintf("+%d days", $i), $start_date))?>" /><?php echo date("Y-m-d", strtotime(sprintf("+%d days", $i), $start_date))?>)
-                        <input type="hidden" id="item_<?php echo $i;?>_tourist_cnt" name="plan[item_tourist_cnt][<?php echo $i;?>]" value="<?php echo $tourist_cnt;?>" size="3"/><?php echo $tourist_cnt;?>人
-                    </span>
-                    <div class="tour_info">
-                        <?php echo $tour['name'];?>(<span class="tour_distance"><?php echo $tour['distance'];?>公里</span> 住<span class="tour_destination"><?php echo $tour['destination'];?></span>)<input type="hidden" id="item_<?php echo $i;?>_tour_id" name="plan[item_tour_id][<?php echo $i;?>]" value="<?php echo $tour['id'];?>" />
-                    </div>
-                    <span class="controls">
-                    <label class="checkbox inline"><input type="hidden" name="plan[item_need_room][<?php echo $i;?>]" value="0" /><input type="checkbox" id="item_<?php echo $i;?>_need_room" name="plan[item_need_room][<?php echo $i;?>]" value="1" checked="true" />是否安排住宿</label>
-                    <label class="checkbox inline"><input type="hidden" name="plan[item_need_car][<?php echo $i;?>]" value="0" /><input type="checkbox" id="item_<?php echo $i;?>_need_car" name="plan[item_need_car][<?php echo $i;?>]" value="1" checked="true" />是否安排车辆</label>
-                    <input type="button" value="取消" class="btn_cancel_tour btn btn-danger" />
-                    </span>
-                    </li>
-                <?php endforeach;?>
-
-                </ul>  <script id="tourTemplate" type="text/x-jquery-tmpl">
-                    <li class="ui-state-default tour" id="item_${i}"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span><div class="tour_name">${name}</div>(<span class="tour_distance">${distance}公里</span> 住 <span class="tour_destination">${destination}公里</span>)<input type="hidden" id="item_${i}_tour_id" name="plan[item_tour_id][${i}]" value="${id}" />
-                    第<input type="text" id="item_${i}_num" name="plan[item_the_num][${i}]" value="" size="3"/>天，
-                    <input type="text" id="item_${i}_date" name="plan[item_the_date][${i}]" value="" size="8" />
-
-                    <input type="text" id="item_${i}_tourist_cnt" name="plan[item_tourist_cnt][${i}]" value="<?php echo $tourist_cnt;?>" size="3"/>人
-                    <label>安排住宿：<input type="hidden" name="plan[item_need_room][${i}]" value="0" /> <input type="checkbox" id="item_${i}_need_room" name="plan[item_need_room][${i}]" value="1" checked="true" /></label>
-                    <label>安排车辆：<input type="hidden" name="plan[item_need_car][${i}]" value="0" /><input type="checkbox" id="item_${i}_need_car" name="plan[item_need_car][${i}]" value="1" checked="true" /></label>
-                    <input type="button" class="btn btn-danger" value="取消" class="btn_cancel_tour" />
-                    </li>
-            </script>
-                <input type="button" class="btn btn_select_tour" value="添加日程"/>
-                <div id="tour_selector" style="display:none;">
-                <h4>可选线路</h4><ul>
-                <?php foreach($tours as $i=>$tour):?>
-                <li class="tour"><?php echo $tour['name'];?>(<?php echo $tour['price'];?>/<?php echo $tour['market_price'];?>)<input data-tour_id=<?php echo $i;?> type="button" value="添加" class="btn btn_add_tour" /></li>
-                <?php endforeach;?> </ul>
-                </div>
+                <label class="checkbox inline"><input type="hidden" name="plan[need_passport]" value="0" /><input type="checkbox" id="plan_need_passport" name="plan[need_passport]" value="1" checked="true" />办理边防证</label>
+                <label class="checkbox inline"><input type="hidden" name="plan[need_hotel]" value="0" /><input type="checkbox" id="plan_need_hotel" name="plan[need_hotel]" value="1" checked="true" />需要安排住宿</label>
+                <label class="checkbox inline"><input type="hidden" name="plan[need_car]" value="0" /><input type="checkbox" id="plan_need_car" name="plan[need_car]" value="1" checked="true" />需要安排车辆</label>
+                <label class="checkbox inline"><input type="hidden" name="plan[need_insurance]" value="0" /><input type="checkbox" id="plan_need_insurance" name="plan[need_insurance]" value="1" checked="true" />办理保险</label>
                 </dd>
             </dl>
+</div>
           </div>
           <div class="tab-pane" id="tab_request">
               <dl>
@@ -171,64 +145,8 @@ jQuery(function($){
 <input type="submit" class="btn btn-primary" />
 </form>
 <script type='text/javascript'>
-tours=<?php echo json_encode($tours);?>;
-schedule_templates=<?php echo json_encode($schedule_templates);?>;
-$(document).ready(function(){
-    function updatetourDates()
-    {
-        var start_date = $.datepicker.parseDate('yy-mm-dd', $('#start_date').val());
-        $($( "#schedules" ).sortable('toArray')).each(function(idx, li_id){
-            var li=$('#'+li_id);
-            li.find('#'+li_id+"_date").val($.datepicker.formatDate('yy-mm-dd', new Date(start_date.getTime()+86400000*(idx))));
-            li.find('#'+li_id+"_num").val(idx+1);
-        });
-    }
-    $('textarea').autogrow ({
-    });
-    $('input.btn_select_tour').live('click', function(){
-        jQuery.facebox({ div: '#tour_selector' });
-    });
-    $('input.btn_cancel_tour').live('click', function(){
-         $(this).parent('.tour').remove();
-         updatetourDates();
-    });
-    $('input.btn_add_tour').live('click', function(){
-        var tour = tours[$(this).data('tour_id')];
-        var container = $("#schedules");
-        var idx = container.find( "li" ).length;
-        var li =
-        $("#tourTemplate").tmpl({i: idx, id: tour.id, name: tour.name, distance: tour.distance, destination: tour.destination});
-        li.appendTo(container);
-        updatetourDates();
-
-        jQuery(document).trigger('close.facebox');
-    });
-    $('#schedule_template_selector').change(function(){
-        var template_id = $(this).val();
-        if(template_id>1)
-        {
-            $('#schedule_txt').val(schedule_templates[template_id]['content']);
-        }
-    });
-    $( "#start_date" ).datepicker({
-        minDate: "+1W",
-        maxDate: "+1Y",
-        onClose: function(dateText, inst)
-        {
-            updatetourDates();
-        }
-    });
-
-    $( "#schedules" ).sortable({
-        handle:'.sortable-handle',
-        update: function(evt, ui){
-            updatetourDates();
-        },
-        placeholder: "ui-state-highlight"
-    });
-//    $( "#schedules" ).disableSelection();
-
-
+jQuery(function($){
+    <?php include(dirname(__file__) .'/plan_edit.js.php');?>
     var titles=[],contents=[];
     $('#tourists_tabs > dl').each(function(i, dl){
         var $dl = $(dl);
@@ -246,6 +164,3 @@ $(document).ready(function(){
 });
 </script>
 
-<style type="text/css">
-    .sortable li span.ui-icon { position: absolute; margin-left: -1.3em; }
-</style>

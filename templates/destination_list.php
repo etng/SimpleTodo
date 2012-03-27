@@ -9,6 +9,7 @@
     <thead><tr>
         <th>编号</th>
         <th>名称</th>
+        <th>需要边防证</th>
         <th>发布时间</th>
         <th>更新时间</th>
         <th>操作</th>
@@ -18,6 +19,7 @@
     <tr>
         <td><?php echo $destination['id'];?></td>
         <td><?php echo $destination['name'];?></td>
+        <td><?php echo $destination['need_passport']?'是':'否';?></td>
         <td><?php echo $destination['created'];?></td>
         <td><?php echo $destination['updated'];?></td>
         <td>

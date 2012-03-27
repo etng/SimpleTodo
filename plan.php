@@ -7,7 +7,57 @@ $contacts = parse_ini_file(APP_ROOT . '/data/contact.ini', true);
 $default_status = key($statuss);
 $default_room_status = key($room_statuss);
 $default_car_status = key($car_statuss);
+$schedule_templates = $db->fetchAll('select * from schedule_template', MYSQL_ASSOC, 'id');
+$tour_sep='→';
 ob_start();
+$created = $updated = now();
+function generatePlanTours($plan)
+{
+  global $tour_sep,$db;
+    $plan_id = $plan['id'];
+    $start_date = strtotime($plan['start_date']);
+    $i=0;
+    foreach(explode("\n", $plan['schedule_txt']) as $line)
+    {
+      $line = trim($line);
+      if(!empty($line))
+      {
+        list($dummy, $name) = preg_split("/\s*[,]+\s*/sim", str_replace('，', ',', $line));
+        $destinations = explode($tour_sep, $name);
+        $name = implode(' - ', $destinations);
+        $destination = end($destinations);
+        $destination_id = $db->getOrCreate('destination', array('name'=>$destination), compact('created', 'updated'));
+        $tour_id = $db->getOrCreate('tour', $values=compact('name', 'destination', 'destination_id'),  compact('created', 'updated'));
+        $the_date = date('Y-m-d', $start_date+$i++*86400);
+        $plan_tours[]=compact('tour_id', 'the_date');
+      }
+    }
+    $price=0;
+    $db->delete('plan_tour', compact('plan_id'));
+    foreach($plan_tours as $plan_tour)
+    {
+        $plan_tour['tourist_cnt'] = $plan['tourist_cnt'];
+        if(!empty($plan_tour['need_car']))
+        {
+            $plan_tour['car_tourist_cnt'] = $plan_tour['tourist_cnt'];
+            unset($plan_tour['need_car']);
+        }
+        if(!empty($plan_tour['need_room']))
+        {
+            $plan_tour['room_tourist_cnt'] = $plan_tour['tourist_cnt'];
+            unset($plan_tour['need_room']);
+        }
+        $tour = $db->fetchRow('select * from tour where id=' . $plan_tour['tour_id']);
+        $plan_tour['price_sum'] =  $tour['price'] * $plan_tour['tourist_cnt'];
+        $plan_tour['market_price_sum'] =  $tour['market_price'] * $plan_tour['tourist_cnt'];
+        $price += $plan_tour['price_sum'];
+        $plan_tour['destination'] = $tour['destination'];
+        $db->insert('plan_tour', $plan_tour = array_merge($plan_tour, compact('plan_id')));
+    }
+    $paid = 0;
+    $balance = $paid-$price;
+    $db->update('plan', compact('price', 'paid', 'balance'), array('id'=>$plan_id));
+}
 $tours = $db->fetchAll('select * from tour');
 switch(@$_GET['act'])
 {
@@ -42,27 +92,13 @@ switch(@$_GET['act'])
 
             $contact_id = $db->insert('contact', $_POST['contact']);
             $user_id = 1;
-            $plan_tours = array();
-            $plan = $_POST['plan'];
-            foreach($plan as $field=>$values)
-            {
-                if(strpos($field, 'item_')===0)
-                {
-                    $field_name = substr($field, strlen('item_'));
-                    foreach($values as $k=>$v)
-                    {
-                         $plan_tours[$k][$field_name] = $v;
-                    }
-                    unset($plan[$field]);
-                }
-            }
-            $created = now();
             $status = $default_status;
             $car_status = $default_car_status;
             $room_status = $default_room_status;
 
-            $plan_id = $db->insert('plan', array_merge($plan, compact('status', 'car_status', 'room_status', 'user_id', 'contact_id', 'created')));
-
+            $plan_id = $db->insert('plan', array_merge($_POST['plan'], compact('status', 'car_status', 'room_status', 'user_id', 'contact_id', 'created')));
+            $plan = $db->find('plan', $plan_id);
+            generatePlanTours($plan);
             foreach($_POST['tourist']['name'] as $i=>$name)
             {
                 $phone= $_POST['tourist']['phone'][$i];
@@ -72,32 +108,6 @@ switch(@$_GET['act'])
                 $tourist_id = $db->insert('tourist', compact('name', 'phone', 'card_type', 'card_number', 'card_photo'));
                 $tourist_id = $db->insert('plan_tourist', compact('tourist_id', 'plan_id'));
             }
-
-
-
-            $price=0;
-            foreach($plan_tours as $plan_tour)
-            {
-                if(!empty($plan_tour['need_car']))
-                {
-                    $plan_tour['car_tourist_cnt'] = $plan_tour['tourist_cnt'];
-                    unset($plan_tour['need_car']);
-                }
-                if(!empty($plan_tour['need_room']))
-                {
-                    $plan_tour['room_tourist_cnt'] = $plan_tour['tourist_cnt'];
-                    unset($plan_tour['need_room']);
-                }
-                $tour = $db->fetchRow('select * from tour where id=' . $plan_tour['tour_id']);
-                $plan_tour['price_sum'] =  $tour['price'] * $plan_tour['tourist_cnt'];
-                $plan_tour['market_price_sum'] =  $tour['market_price'] * $plan_tour['tourist_cnt'];
-                $price += $plan_tour['price_sum'];
-                $plan_tour['destination'] = $tour['destination'];
-                $db->insert('plan_tour', $plan_tour = array_merge($plan_tour, compact('plan_id')));
-            }
-            $paid = 0;
-            $balance = $paid-$price;
-            $db->update('plan', compact('price', 'paid', 'balance'), array('id'=>$plan_id));
             $db->insert('plan_history', array_merge(array(
                 'operation'=>'计划创建完毕，等待进一步确认',
                 'operator'=> currrent_staff(),
@@ -133,6 +143,16 @@ switch(@$_GET['act'])
             die();
         }
         include('templates/plan_edit.php');
+        break;
+    case 'update-request':
+    case 'update-schedule':
+        checkPrivilege();
+        $plan_id = intval($_POST['plan_id']);
+        $db->update('plan', $_POST['plan'], array('id'=>$plan_id));
+        $plan = $db->find('plan', $plan_id);
+        generatePlanTours($plan);
+         header('location:plan.php?act=view&id='.$plan_id);
+         die();
         break;
     case 'delete':
         checkPrivilege();
@@ -331,6 +351,11 @@ switch(@$_GET['act'])
         if(!empty($statuss[$status]['lock_room']))
         {
             $extra['room_status'] = 'pending';
+        }
+        if($status=='assignning')
+        {
+          //确认开始安排后禁止修改行程，并开始安排酒店和车辆
+          $extra['schedule_status']='locked';
         }
         $db->update('plan', array_merge(compact('status'), $extra), array('id'=>$plan_id));
         header('location:plan.php?act=view&id='.$plan_id);
