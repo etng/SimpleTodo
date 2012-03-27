@@ -21,5 +21,5 @@
 <dt>名称</dt>
 <dd><?php echo $schedule_template_cate['name'];?></dd>
 <dt>介绍</dt>
-<dd><?php echo $schedule_template_cate['description'];?></dd>
+<dd><?php echo nl2br($schedule_template_cate['description']);?></dd>
 </dl>

@@ -19,6 +19,7 @@ switch(@$_GET['act'])
                 $_SESSION['staff']['username']=$staff['username'];
                 $_SESSION['staff']['name']=$staff['name'];
                 $_SESSION['staff']['privileges']=explode(',', $staff['privileges']);
+                $_SESSION['staff']['preference']=json_decode($staff['preference'], true);
                 $_SESSION['staff']['id']=$staff['id'];
                 alert('登录成功！');
             }

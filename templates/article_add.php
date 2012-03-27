@@ -10,7 +10,7 @@
     <dt>缩略语</dt>
     <dd><input type="text" id="article_slug" name="article[slug]" value="" /></dd>
      <dt>内容</dt>
-    <dd><textarea id="article_content" name="article[content]" rows="3" cols="70"></textarea></dd>
+    <dd><textarea id="article_content" name="article[content]" rows="20" cols="120"></textarea></dd>
 </dl>
 <input type="submit" class="btn btn-primary" />
 </form>

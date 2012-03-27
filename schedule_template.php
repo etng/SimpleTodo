@@ -1,6 +1,8 @@
 <?php
 require "lib/common.php";
 ob_start();
+$schedule_template_cate_options = $db->fetchOptions('select id,name from schedule_template_cate', 'name');
+
 switch(@$_GET['act'])
 {
     case 'add':
@@ -33,7 +35,7 @@ switch(@$_GET['act'])
         checkPrivilege();
         $title_for_layout = "查看日程模版";
         $id = intval($_GET['id']);
-        $schedule_template = $db->find('schedule_template', $id);
+        $schedule_template = $db->fetchRow('select schedule_template.*,schedule_template_cate.name as cate_name  from schedule_template left join schedule_template_cate on schedule_template_cate.id=schedule_template.cate_id where schedule_template.id=' . $id);
         include('templates/schedule_template_view.php');
         break;
     case 'delete':
@@ -52,7 +54,7 @@ switch(@$_GET['act'])
         $s_where = $where?' where '.implode(' AND ', $where):'';
         $total = $db->fetchOne('SELECT COUNT(1) AS CNT FROM schedule_template ' . $s_where);
         $pager = makePager($total, 5);
-        $schedule_templates = $db->fetchAll("SELECT * FROM schedule_template {$s_where} ORDER BY id DESC limit {$pager['offset']},{$pager['limit']}");
+        $schedule_templates = $db->fetchAll("SELECT schedule_template.*,schedule_template_cate.name as cate_name  FROM schedule_template  left join schedule_template_cate on schedule_template_cate.id=schedule_template.cate_id {$s_where} ORDER BY schedule_template.id DESC limit {$pager['offset']},{$pager['limit']}");
         include('templates/schedule_template_list.php');
         break;
 }

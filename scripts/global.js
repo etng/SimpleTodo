@@ -11,7 +11,7 @@ $(document).ready(function(){
     $.facebox.settings.closeImage = 'scripts/images/facebox/closelabel.png';
     $.facebox.settings.loadingImage = 'scripts/images/facebox/loading.gif';
     $('a[rel*=facebox]').facebox();
-    $('textarea').autogrow ({
+    $('textarea.autogrow').autogrow ({
     });
 
     $('.btn-select-inverse').click(function()

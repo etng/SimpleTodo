@@ -29,8 +29,8 @@
 <link href="scripts/fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css"/>
 <link rel="stylesheet" type="text/css" href="scripts/fullcalendar.print.css" media="print" />
 <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css" type="text/css" media="all" />
-<!-- <link rel="stylesheet" href="assets/css/common.css" type="text/css" media="all" />
- --><style type='text/css'>
+<link rel="stylesheet" href="assets/css/global.css" type="text/css" media="all" />
+<style type='text/css'>
 </style>
 
 
@@ -63,6 +63,7 @@
 <script type="text/javascript" src="scripts/jquery.mousewheel-3.0.6.pack.js"></script>
 <script type="text/javascript" src="scripts/fancybox/jquery.fancybox.js"></script>
 <script src="scripts/jquery.colorpicker.js"></script>
+<script src="scripts/underscore-min.js"></script>
 <script type="text/javascript" src="scripts/global.js"></script>
 <title><?php echo $title_for_layout;?> - <?php echo $config['site']['name'];?></title>
 
@@ -76,6 +77,8 @@ $nav = array(
     array('u'=>array('c'=>'article', 'a'=>'list'), 'title'=>'文章'),
     array('u'=>array('c'=>'destination', 'a'=>'list'), 'title'=>'目的地'),
     array('u'=>array('c'=>'tour', 'a'=>'list'), 'title'=>'线路'),
+    array('u'=>array('c'=>'schedule_template', 'a'=>'list'), 'title'=>'行程模版'),
+    array('u'=>array('c'=>'schedule_template_cate', 'a'=>'list'), 'title'=>'行程模版分类'),
     array('u'=>array('c'=>'driver', 'a'=>'list'), 'title'=>'司机'),
     array('u'=>array('c'=>'staff', 'a'=>'list'), 'title'=>'员工'),
     array('u'=>array('c'=>'staff', 'a'=>'group_list'), 'title'=>'组织架构'),

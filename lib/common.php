@@ -121,9 +121,15 @@ function mock_data()
 }
 
 
-function currrent_staff($field="name")
+function currrent_staff($field="name", $default=null)
 {
-    return @$_SESSION['staff'][$field];
+    if(strpos($field, 'preference_')===0)
+    {
+        $preference = currrent_staff('preference');
+        $key = end(explode('_', $field, 2));
+        return empty($preference[$key])?$default:$preference[$key];
+    }
+    return empty($_SESSION['staff'][$field])?$default:$_SESSION['staff'][$field];
 }
 function checkPrivilege($controller=null, $action=null)
 {

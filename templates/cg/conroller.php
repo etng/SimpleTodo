@@ -71,7 +71,7 @@ switch(@$_GET['act'])
         $where = array();
         $s_where = $where?' where '.implode(' AND ', $where):'';
         $total = $db->fetchOne('SELECT COUNT(1) AS CNT FROM <?php echo $table['name'];?> ' . $s_where);
-        $pager = makePager($total, 5);
+        $pager = makePager($total, currrent_staff('preference_perpage', 10));
         $<?php echo $table['name'];?>s = $db->fetchAll("SELECT * FROM <?php echo $table['name'];?> {$s_where} ORDER BY id DESC limit {$pager['offset']},{$pager['limit']}");
         include('templates/<?php echo $table['name'];?>_list.php');
         break;

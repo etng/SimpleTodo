@@ -55,22 +55,50 @@ $schedule_templates = $db->fetchAll('select * from schedule_template', MYSQL_ASS
                 </div>
         </div>
           <div class="tab-pane active" id="tab_schedule">
+<script type="text/javascript">
+<!--
+function parseScheduleTemplate()
+{
+    var tours=[];
+    $.each($('#schedule_txt').val().split("\n"), function(i, line){
+        var line=$.trim(line);
+        if(line.length){
+            var tour = line.split(/[,，]/g);
+            tours.push(tour);
+        }
+    });
+    return tours;
+}
+window.tour_sep='→';
+jQuery(function($){
+    $('.btn-reverse-schedule').click(function(){
+        var tours =  _.toArray(parseScheduleTemplate()).reverse();
+        var tours_text=[];
+        $.each(tours, function(i, tour){
+            tour[1] = _.toArray(tour[1].split(tour_sep)).reverse().join(tour_sep);
+            tours_text.push(['D'+(i+1), tour[1]].join(','));
+        });
+        $('#schedule_txt').val(tours_text.join("\n"));
+    });
+});
+//-->
+</script>
+
             <dl>
                 <dt>出发日期</dt>
                 <dd><input type="text" id="start_date" name="plan[start_date]" value="<?php echo date("Y-m-d", $start_date)?>" size="10" /></dd>
                  <dt>日程安排</dt>
 
                 <dd>
-                <select id="schedule_template_selector">
+                <select id="schedule_template_selector" name="plan[schedule_template_id]">
                     <option value="" selected="selected">--请选择--</option>
                     <?php foreach($schedule_templates as $schedule_template):?>
                     <option value="<?php echo $schedule_template['id'];?>"><?php echo $schedule_template['name'];?></option>
                     <?php endforeach;?>
                 </select>
-                <textarea id="schedule_txt" rows="8" cols="70" class="span4" height="200px">
-                </textarea>
+                <textarea id="schedule_txt" rows="8" cols="70" class="span4"></textarea>
                 <div class="btn-group">
-                <input type="button" class="btn" value="倒排" onclick="" />
+                <input type="button" class="btn btn-reverse-schedule" value="倒排"/>
                 <input type="button" class="btn" value="住宿" onclick="alert('需要安排住宿')" />
                 <input type="button" class="btn" value="车辆" onclick="alert('需要安排车辆')" />
                 <input type="button" class="btn" value="门票" onclick="alert('填写相关景点门票订购信息')" />

@@ -24,13 +24,13 @@
     <tr>
     <td>
     <label class="checkbox inline"><input type="checkbox" name="hotel_id[]" value="<?php echo $schedule_template['id'];?>" /><?php echo $schedule_template['id'];?></label></td>
-                                
-        <td><?php echo $schedule_template['cate_id'];?></td>
-                        
+
+        <td><a href="schedule_template_cate.php?act=view&id= <?php echo $schedule_template['cate_id'];?>"><?php echo $schedule_template['cate_name'];?></a></td>
+
         <td><?php echo $schedule_template['name'];?></td>
-                        
+
         <td><?php echo $schedule_template['code'];?></td>
-                                            
+
         <td><?php echo $schedule_template['memo'];?></td>
             <td>
                 <?php if(checkPrivilege('schedule_template', 'view')):?>

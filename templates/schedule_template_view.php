@@ -19,13 +19,14 @@
  <dt>编号</dt>
 <dd><?php echo $schedule_template['id'];?></dd>
 <dt>分类</dt>
-<dd><?php echo $schedule_template['cate_id'];?></dd>
+<dd><a href="schedule_template_cate.php?act=view&id= <?php echo $schedule_template['cate_id'];?>"><?php echo $schedule_template['cate_name'];?></a>
+</dd>
 <dt>名称</dt>
 <dd><?php echo $schedule_template['name'];?></dd>
 <dt>代号</dt>
 <dd><?php echo $schedule_template['code'];?></dd>
 <dt>内容</dt>
-<dd><?php echo $schedule_template['content'];?></dd>
+<dd><?php echo nl2br($schedule_template['content']);?></dd>
 <dt>备注</dt>
-<dd><?php echo $schedule_template['memo'];?></dd>
+<dd><?php echo nl2br($schedule_template['memo']);?></dd>
 </dl>

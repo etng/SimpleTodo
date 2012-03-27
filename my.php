@@ -51,6 +51,7 @@ switch(@$_GET['act'])
         {
             $data = $_POST['staff'];
             $preference = json_encode($data['preference']);
+            $_SESSION['staff']['preference']=$data['preference'];
             $db->update('staff', compact('preference'), compact('id'));
             header('location:my.php?act=edit-preference');
             die();
