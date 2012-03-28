@@ -2,7 +2,7 @@
 require "lib/common.php";
 ob_start();
 $staff_groups = $db->fetchAll('select * from staff_group');
-$id = currrent_staff('id');
+$id = current_staff('id');
 $staff = $db->find('staff', $id);
 function valid_password($username, $password, $stored_password)
 {

@@ -13,9 +13,7 @@ $forum_url = '';
           <li><a href="#tab_tourist" data-toggle="tab">游客</a></li>
           <li class="active"><a href="#tab_schedule" data-toggle="tab">日程</a></li>
           <li><a href="#tab_request" data-toggle="tab">要求</a></li>
-          <li><a href="#tab_payment" data-toggle="tab">财务</a></li>
-          <li><a href="#tab_note" data-toggle="tab">备忘</a></li>
-          <li><a href="#tab_history" data-toggle="tab">日志</a></li>
+          <li><a href="#tab_staff" data-toggle="tab">跟单</a></li>
         </ul>
         <div class="tab-content">
           <div class="tab-pane" id="tab_contact">
@@ -135,11 +133,35 @@ $forum_url = '';
                     <dd><textarea id="other_request" name="plan[other_request]" rows="3" cols="70">就这些，劳驾</textarea></dd>
               </dl>
           </div>
-          <div class="tab-pane" id="tab_payment">
+          <div class="tab-pane" id="tab_staff">
 
+          <dl>
+            <dt>业务跟进</dt>
+            <dd>
+                <select id="plan_market_staff_id" name="plan[market_staff_id]">
+                <?php foreach($market_staff_options as $id=>$name):?>
+                <option value="<?php echo $id;?>"<?php $id==@$plan['market_staff_id'] && print(' selected="true"');?>><?php echo $name;?></option>
+                <?php endforeach;?>
+                </select>
+            </dd>
+
+            <dt>酒店跟进</dt>
+            <dd>
+                <select id="plan_room_staff_id" name="plan[room_staff_id]">
+                <?php foreach($room_staff_options as $id=>$name):?>
+                <option value="<?php echo $id;?>"<?php $id==@$plan['room_staff_id'] && print(' selected="true"');?>><?php echo $name;?></option>
+                <?php endforeach;?>
+                </select>
+            </dd><dt>车辆跟进</dt>
+            <dd>
+                <select id="plan_car_staff_id" name="plan[car_staff_id]">
+                <?php foreach($car_staff_options as $id=>$name):?>
+                <option value="<?php echo $id;?>"<?php $id==@$plan['car_staff_id'] && print(' selected="true"');?>><?php echo $name;?></option>
+                <?php endforeach;?>
+                </select>
+            </dd>
+          </dl>
           </div>
-          <div class="tab-pane" id="tab_note"></div>
-          <div class="tab-pane" id="tab_history"></div>
         </div>
       </div> <!-- /tabbable -->
 <input type="submit" class="btn btn-primary" />

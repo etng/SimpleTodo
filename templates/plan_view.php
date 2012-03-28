@@ -27,6 +27,10 @@ function getPlanTourCars($plan_tour_id)
 </ul>
 <?php $plan['contact'] = $contact;?>
 <dl>
+<dt>业务跟进</dt>
+          <dd>
+          <?php echo $market_staff_options[$plan['market_staff_id']];?>
+           </dd>
         <dt>当前状态</dt>
           <dd>
           <?php echo $statuss[$plan['status']]['text'];?>
@@ -60,7 +64,7 @@ function getPlanTourCars($plan_tour_id)
       <?php if($plan['schedule_status']=='locked'):?>
 
     <div class="tab-pane" id="tab_car_assignment">
- <h4>请安排 <?php echo $plan['tourist_cnt'];?> 人旅行司机及车辆</h4>
+ <h4>请<?php echo $car_staff_options[$plan['car_staff_id']];?> 安排 <?php echo $plan['tourist_cnt'];?> 人旅行司机及车辆</h4>
     <div>客户留言:　<?php echo $plan['car_request']?></div>
     <dl>
         <dt>当前状态</dt>
@@ -134,7 +138,7 @@ function getPlanTourCars($plan_tour_id)
 
     </div>
     <div class="tab-pane" id="tab_hotel_assignment">
-    <h4>请安排 <?php echo $plan['tourist_cnt'];?> 人的住宿事宜</h4>
+    <h4>请<?php echo $room_staff_options[$plan['room_staff_id']];?> 安排 <?php echo $plan['tourist_cnt'];?> 人的住宿事宜</h4>
     <div>客户留言:　<?php echo $plan['room_request']?></div>
     <dl>
         <dt>当前状态</dt>
@@ -222,7 +226,7 @@ function getPlanTourCars($plan_tour_id)
       <div id="toutists">
       <?php foreach($plan['tourists'] as $tourist):?>
         <div class="tourist_detail" data-tourist_id="<?php echo $tourist['id'];?>">
-        <a href="<?php echo empty($tourist['card_photo'])?'#':$tourist['card_photo'];?>" rel="facebox"><img src="<?php echo empty($tourist['card_photo'])?$default_card_photo_url:$tourist['card_photo'];?>" width="200"></a>
+        <a href="<?php echo empty($tourist['card_photo'])?'#':$tourist['card_photo'];?>" rel="facebox"><img src="<?php echo empty($tourist['card_photo'])?$default_card_photo_url:$tourist['card_photo'];?>" style="width:200px,height:150px !important;"></a>
         <dl>
           <dt>姓名：</dt><dd><?php echo $tourist['name'];?></dd>
           <dt>电话：</dt><dd><?php echo $tourist['phone'];?></dd>

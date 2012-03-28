@@ -81,7 +81,7 @@ switch(@$_GET['act'])
         $where = array();
         $s_where = $where?' where '.implode(' and ', $where):'';
         $total = $db->fetchOne('select count(1) as cnt from hotel ' . $s_where);
-        $pager = makePager($total, currrent_staff('preference_perpage', 10));
+        $pager = makePager($total, current_staff('preference_perpage', 10));
         $hotels = $db->fetchAll("select hotel.*,destination.name as destination_name from hotel  left join destination on destination.id=hotel.destination_id  {$s_where} order by hotel.id desc  limit {$pager['offset']},{$pager['limit']}");
         include('templates/hotel_list.php');
         break;

@@ -1,9 +1,9 @@
 -- --------------------------------------------------------
 -- Host:                         127.0.0.1
--- Server version:               5.5.20-log - MySQL Community Server (GPL)
+-- Server version:               5.5.18-log - MySQL Community Server (GPL)
 -- Server OS:                    Win32
--- HeidiSQL version:             7.0.0.4053
--- Date/time:                    2012-03-28 01:11:20
+-- HeidiSQL version:             7.0.0.4073
+-- Date/time:                    2012-03-28 11:14:02
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -23,6 +23,24 @@ CREATE TABLE IF NOT EXISTS `article` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `slug` (`slug`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table aiyouwei.attraction
+DROP TABLE IF EXISTS `attraction`;
+CREATE TABLE IF NOT EXISTS `attraction` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `destination_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '所属目的地',
+  `name` varchar(255) NOT NULL COMMENT '名称',
+  `slug` varchar(255) NOT NULL COMMENT '缩写',
+  `description` text NOT NULL COMMENT '介绍',
+  `hits` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '点击次数',
+  `created` datetime NOT NULL COMMENT '创建时间',
+  `updated` datetime NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `slug` (`slug`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='景点';
 
 -- Data exporting was unselected.
 
@@ -123,6 +141,9 @@ CREATE TABLE IF NOT EXISTS `plan` (
   `room_request` text NOT NULL,
   `other_request` text NOT NULL,
   `user_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `market_staff_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `car_staff_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `room_staff_id` int(10) unsigned NOT NULL DEFAULT '0',
   `contact_id` int(10) unsigned NOT NULL DEFAULT '0',
   `tourist_cnt` int(10) unsigned NOT NULL DEFAULT '1',
   `start_date` date NOT NULL,
@@ -144,7 +165,7 @@ CREATE TABLE IF NOT EXISTS `plan` (
   `schedule_txt` varchar(512) NOT NULL,
   `price` int(10) unsigned NOT NULL DEFAULT '0',
   `paid` int(10) unsigned NOT NULL DEFAULT '0',
-  `balance` int(10) NOT NULL DEFAULT '-1',
+  `balance` int(10) NOT NULL DEFAULT '0',
   `created` datetime NOT NULL,
   `status` varchar(30) NOT NULL,
   `car_status` varchar(30) NOT NULL,
@@ -369,6 +390,7 @@ DROP TABLE IF EXISTS `staff_group`;
 CREATE TABLE IF NOT EXISTS `staff_group` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
+  `target` varchar(50) NOT NULL,
   `phone` varchar(50) NOT NULL,
   `memo` varchar(512) NOT NULL,
   `privileges` text NOT NULL,

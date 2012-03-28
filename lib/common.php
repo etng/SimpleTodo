@@ -107,25 +107,36 @@ function mock_data()
             $id = $db->insert('article', compact('slug', 'title', 'content', 'hits', 'created', 'updated'));
         }
     }
+
+
     if(!$db->fetchOne('select count(1) as cnt from staff'))
     {
-        foreach($config['staffs'] as $username=>$privileges)
+        $created = now();
+        $staffs = include(APP_ROOT . '/data/mock_staffs.php');
+        foreach($staffs as $group)
         {
-            $name = ucwords(str_replace('_', ' ', $username));
-            $password = $username."123";
-            $created = now();
-            $password = md5(md5($username.$password).$username);
-            $id = $db->insert('staff', compact('username', 'name', 'password', 'privileges', 'created'));
+            $privileges = implode(',',  $group['privileges']);
+            $name = $group['name'];
+            $target = $group['target'];
+            $group_id = $db->insert('staff_group', compact('name', 'privileges', 'created', 'target'));
+            foreach($group['staffs'] as $username => $staff)
+            {
+                $password = $username."123";
+                $name = $staff['name'];
+                $password = md5(md5($username.$password).$username);
+                $privileges = implode(',',  $staff['privileges']);
+                $staff_id = $db->insert('staff', compact('username', 'group_id', 'name', 'password', 'privileges', 'created'));
+            }
         }
     }
 }
 
 
-function currrent_staff($field="name", $default=null)
+function current_staff($field="name", $default=null)
 {
     if(strpos($field, 'preference_')===0)
     {
-        $preference = currrent_staff('preference');
+        $preference = current_staff('preference');
         $key = end(explode('_', $field, 2));
         return empty($preference[$key])?$default:$preference[$key];
     }

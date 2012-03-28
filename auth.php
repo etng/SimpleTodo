@@ -18,7 +18,10 @@ switch(@$_GET['act'])
             {
                 $_SESSION['staff']['username']=$staff['username'];
                 $_SESSION['staff']['name']=$staff['name'];
-                $_SESSION['staff']['privileges']=explode(',', $staff['privileges']);
+                $group_privileges = $db->fetchOne('select privileges from staff_group where id=' . $staff['group_id']);
+                $group_privileges = $group_privileges?explode(',', $group_privileges):array();
+                $_SESSION['staff']['privileges'] = array_merge($group_privileges, explode(',', $staff['privileges']));
+
                 $_SESSION['staff']['preference']=json_decode($staff['preference'], true);
                 $_SESSION['staff']['id']=$staff['id'];
                 alert('登录成功！');

@@ -7,7 +7,11 @@ $contacts = parse_ini_file(APP_ROOT . '/data/contact.ini', true);
 $default_status = key($statuss);
 $default_room_status = key($room_statuss);
 $default_car_status = key($car_statuss);
-$schedule_templates = $db->fetchAll('select * from schedule_template', MYSQL_ASSOC, 'id');
+$schedule_templates = $db->fetchAll('select * from schedule_template', 'id');
+
+$car_staff_options = $db->fetchOptions('select * from staff where group_id in (select id from staff_group where target="traffic")', 'name');
+$market_staff_options = $db->fetchOptions('select * from staff where group_id in (select id from staff_group where target="market")', 'name');
+$room_staff_options = $db->fetchOptions('select * from staff where group_id in (select id from staff_group where target="hotel")', 'name');
 $tour_sep='→';
 ob_start();
 $created = $updated = now();
@@ -110,7 +114,7 @@ switch(@$_GET['act'])
             }
             $db->insert('plan_history', array_merge(array(
                 'operation'=>'计划创建完毕，等待进一步确认',
-                'operator'=> currrent_staff(),
+                'operator'=> current_staff(),
             ), compact('plan_id', 'created')));
             header('location:plan.php');
             die();
@@ -164,7 +168,7 @@ switch(@$_GET['act'])
     case 'add-payment':
         checkPrivilege();
         $created = now();
-        $operator = currrent_staff();
+        $operator = current_staff();
         $plan_id = intval($_POST['payment']['plan_id']);
         $plan = $db->find('plan', $plan_id);
         $payment = $_POST['payment'];
@@ -178,7 +182,7 @@ switch(@$_GET['act'])
     case 'add-note':
         checkPrivilege();
         $created = now();
-        $staff_id = currrent_staff('id');
+        $staff_id = current_staff('id');
         $plan_id = intval($_POST['note']['plan_id']);
         $plan = $db->find('plan', $plan_id);
         $note = $_POST['note'];
@@ -189,7 +193,7 @@ switch(@$_GET['act'])
     case 'add-tourist':
         checkPrivilege();
         $created = now();
-        $staff_id = currrent_staff('id');
+        $staff_id = current_staff('id');
         $plan_id = intval($_POST['tourist']['plan_id']);
         $plan = $db->find('plan', $plan_id);
         $tourist = array();
@@ -229,7 +233,7 @@ switch(@$_GET['act'])
     case 'update-tourist':
         checkPrivilege();
         $created = now();
-        $staff_id = currrent_staff('id');
+        $staff_id = current_staff('id');
         $plan_id = intval($_POST['plan_id']);
         $tourist_id = intval($_POST['tourist']['id']);
         $plan = $db->find('plan', $plan_id);
@@ -264,7 +268,7 @@ switch(@$_GET['act'])
     case 'update-contact':
         checkPrivilege();
         $updated = now();
-        $staff_id = currrent_staff('id');
+        $staff_id = current_staff('id');
         $plan_id = intval($_POST['plan_id']);
         $plan = $db->find('plan', $plan_id);
         $contact_id = $plan['contact_id'];
@@ -326,7 +330,7 @@ switch(@$_GET['act'])
         break;
     case 'set-status':
         checkPrivilege();
-        $operator = currrent_staff();
+        $operator = current_staff();
         $created = now();
         $plan_id = intval($_GET['id']);
         $plan = $db->find('plan', $plan_id);
@@ -363,7 +367,7 @@ switch(@$_GET['act'])
         break;
     case 'set-car-status':
         checkPrivilege();
-        $operator = currrent_staff();
+        $operator = current_staff();
         $created = now();
         $plan_id = intval($_GET['id']);
         $plan = $db->find('plan', $plan_id);
@@ -378,7 +382,7 @@ switch(@$_GET['act'])
         break;
     case 'set-room-status':
         checkPrivilege();
-        $operator = currrent_staff();
+        $operator = current_staff();
         $created = now();
         $plan_id = intval($_GET['id']);
         $plan = $db->find('plan', $plan_id);
