@@ -9,6 +9,7 @@
     <dd><?php echo $driver['name'];?></dd>
     <dt>加入时间</dt>
     <dd><?php echo $driver['created'];?></dd>
+     <dt>生日</dt><dd><?php echo $driver['dob'];?></dd>
      <dt>民族</dt><dd><?php echo $driver['nationality'];?></dd>
      <dt>年龄</dt><dd><?php echo $driver['age'];?></dd>
      <dt>车型</dt><dd><?php echo @$config['car_types'][$driver['car_type']];?></dd>

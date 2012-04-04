@@ -1,24 +1,13 @@
 <ul class="breadcrumb">
 <li><a href="/">首页</a> <span class="divider">/</span></li>
 <li><a href="plan.php?act=list">计划</a> <span class="divider">/</span></li>
-<li class="active">所有</li>
+<li class="active"><?php echo empty($plan_statuss[$cur_status])?'所有':$plan_statuss[$cur_status]['text'];?></li>
 </ul>
 
 <p class="pull-right"><?php if(checkPrivilege('plan', 'add')):?><a href="plan.php?act=add" class="btn">添加计划</a><?php endif;?></p>
 
 <div class="row">
-<div class="span2"><dl>
-    <dt>状态</dt>
-    <dd><ul class="unstyled"> <li>
-    <a href="plan.php?act=list">所有</a>
-    </li>
-    <?php foreach($statuss as $status=>$status_info):?>
-    <li class="<?php (@$_GET['st']==$status) && print('active')?>">
-    <a href="plan.php?act=list&st=<?php echo $status;?>"><?php echo $status_info['text']?></a>
-    </li><?php endforeach;?>
-</ul></dd>
-</dl></div>
-<div class="span10">
+<div class="span12">
 <table class="table table-bordered table-striped">
     <thead><tr>
         <th>编号</th>
@@ -35,7 +24,7 @@
         <td><?php echo $plan['id'];?></td>
         <td><?php echo $plan['price'];?></td>
         <td><?php echo $plan['created'];?></td>
-        <td><?php echo $market_staff_options[$plan['market_staff_id']];?> <?php echo $statuss[$plan['status']]['text'];?></td>
+        <td><?php echo $market_staff_options[$plan['market_staff_id']];?> <?php echo $plan_statuss[$plan['status']]['text'];?></td>
         <td><?php echo $car_staff_options[$plan['car_staff_id']];?><?php echo $car_statuss[$plan['car_status']]['text'];?></td>
         <td><?php echo $room_staff_options[$plan['room_staff_id']];?><?php echo $room_statuss[$plan['room_status']]['text'];?></td>
         <td>

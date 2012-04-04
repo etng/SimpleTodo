@@ -8,6 +8,14 @@
 <form method="post" action="">
 <dl>
     <dt>名称</dt><dd><input type="text" id="staff_group_name" name="staff_group[name]" value="" /></dd>
+    <dt>主要职能</dt><dd>
+    <select name="staff_group[target]" id="staff_group_target">
+        <option value="" selected="selected">--请选择--</option>
+        <?php foreach($config['staff_targets'] as $target=>$text):?>
+        <option value="<?php echo $target;?>"><?php echo $text;?></option>
+        <?php endforeach;?>
+    </select>
+    </dd>
     <dt>办公室电话</dt><dd><input type="text" id="staff_group_phone" name="staff_group[phone]" value="" /></dd>
     <dt>权限</dt><dd>
     <?php $last_cate='';$i=0;foreach($config['privileges'] as $privilege=>$text):$cate=current(explode('.', $privilege));if($cate!=$last_cate){$last_cate=$cate;$i=0;echo "<br><br>";}$i++;?>

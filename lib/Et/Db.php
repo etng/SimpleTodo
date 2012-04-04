@@ -179,6 +179,21 @@ class Et_Db
         $sql = sprintf('INSERT INTO %s SET %s', $table, implode(',', $set_fields));
         return $this->execute($sql);
     }
+    function replace($table, $data)
+    {
+        $table_meta = $this->getMeta($table);
+        $set_fields = array();
+        foreach($data as $k => $v)
+        {
+            if(!isset($table_meta['fields'][$k]))
+            {
+                continue;
+            }
+            $set_fields[] = sprintf('`%s`="%s"', $k, $this->escape($v));
+        }
+        $sql = sprintf('REPLACE INTO %s SET %s', $table, implode(',', $set_fields));
+        return $this->execute($sql);
+    }
     function delete($table, $where=array())
     {
         $cases = $this->buildWhere($where);
@@ -266,6 +281,10 @@ class Et_Db
              return current($row);
         }
         return null;
+    }
+    function version()
+    {
+      return $this->fetchOne('SELECT VERSION()');
     }
     function find($table, $id)
     {

@@ -1,6 +1,18 @@
 <?php
 require "lib/common.php";
 ob_start();
+
+function parseTour($tour)
+{
+  global $tour_sep,$db;
+  $updated=$created = now();
+  foreach(explode($tour_sep, $tour) as $name)
+  {
+    $slug = $name;
+    $db->getOrCreate('destination', compact('name', 'slug'), compact('created', 'updated'));
+  }
+}
+
 switch(@$_GET['act'])
 {
     case 'add':
@@ -9,6 +21,7 @@ switch(@$_GET['act'])
         if($_SERVER['REQUEST_METHOD']=='POST')
         {
             $updated=$created = now();
+            parseTour($_POST['tour']['name']);
             $id = $db->insert('tour', array_merge($_POST['tour'], compact('created', 'updated')));
             header('location:tour.php?act=view&id='.intval($id));
             die();
@@ -23,6 +36,7 @@ switch(@$_GET['act'])
         if($_SERVER['REQUEST_METHOD']=='POST')
         {
             $updated= now();
+            parseTour($_POST['tour']['name']);
             $db->update('tour', array_merge($_POST['tour'], compact('updated')), compact('id'));
             header('location:tour.php?act=view&id='.intval($id));
             die();

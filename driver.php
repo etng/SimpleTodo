@@ -8,7 +8,11 @@ switch(@$_GET['act'])
         $title_for_layout = "添加司机";
         if($_SERVER['REQUEST_METHOD']=='POST')
         {
-        $created = now();
+            $created = now();
+            if(empty($_POST['driver']['age']))
+            {
+              $_POST['driver']['age'] = dob2age($_POST['driver']['dob']);
+            }
             $driver_id = $db->insert('driver', array_merge($_POST['driver'], compact('created')));
             header('location:driver.php?act=view&id='.intval($driver_id));
             die();
@@ -29,6 +33,10 @@ switch(@$_GET['act'])
         $driver = $db->find('driver', $id);
         if($_SERVER['REQUEST_METHOD']=='POST')
         {
+            if(empty($_POST['driver']['age']))
+            {
+              $_POST['driver']['age'] = dob2age($_POST['driver']['dob']);
+            }
             $updated= now();
             $db->update('driver', array_merge($_POST['driver'], compact('updated')), compact('id'));
             header('location:driver.php?act=view&id='.intval($id));

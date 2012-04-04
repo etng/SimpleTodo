@@ -14,6 +14,7 @@
     <thead><tr>
         <th>编号</th>
         <th>名称</th>
+        <th>主要职能</th>
         <th>电话</th>
         <th>操作</th>
     </tr></thead> <tbody><?php if(!empty($staff_groups)):?>
@@ -22,6 +23,7 @@
     <tr>
         <td><?php echo $staff_group['id'];?></td>
         <td><?php echo $staff_group['name'];?></td>
+        <td><?php echo $config['staff_targets'][$staff_group['target']];?></td>
         <td><?php echo $staff_group['phone'];?></td>
         <td>
         <a href="staff.php?act=group_view&id=<?php echo $staff_group['id'];?>" class="btn btn-info">详情</a>

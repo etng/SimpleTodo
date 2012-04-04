@@ -6,6 +6,7 @@
 
 <dl>
     <dt>名称</dt><dd><?php echo $staff_group['name'];?></dd>
+    <dt>主要职能</dt><dd><?php echo $config['staff_targets'][$staff_group['target']];?></dd>
     <dt>电话</dt><dd><?php echo $staff_group['phone'];?></dd>
     <dt>权限</dt><dd> <ul>
     <?php foreach($staff_group['privileges'] as $privilege):?>

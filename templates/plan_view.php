@@ -33,12 +33,12 @@ function getPlanTourCars($plan_tour_id)
            </dd>
         <dt>当前状态</dt>
           <dd>
-          <?php echo $statuss[$plan['status']]['text'];?>
+          <?php echo $plan_statuss[$plan['status']]['text'];?>
            </dd>
-        <?php if($next_statuss = $statuss[$plan['status']]['next']):?>
+        <?php if($next_statuss = $plan_statuss[$plan['status']]['next']):?>
           <dt>操作</dt>
           <dd>
-           <?php foreach(explode(',', $next_statuss) as $next_status):$next_status_info = $statuss[$next_status];?>
+           <?php foreach(explode(',', $next_statuss) as $next_status):$next_status_info = $plan_statuss[$next_status];?>
           <a class="btn" href="plan.php?act=set-status&status=<?php echo $next_status;?>&id=<?php echo $plan['id']?>"><?php echo $next_status_info['action_text']?></a>
           <?php endforeach;?>
 
@@ -352,8 +352,8 @@ function getPlanTourCars($plan_tour_id)
             <td>路程</td>
             <td>金额</td>
             <td>人数</td>
-            <td>安排车辆</td>
-            <td>安排住宿</td>
+            <td>需要车辆数</td>
+            <td>需要房间数</td>
             <td>小计</td>
           </tr></thead>
           <tbody><?php if(!empty($plan['tours'])):?>
@@ -365,13 +365,13 @@ function getPlanTourCars($plan_tour_id)
             <td><?php echo $plan_tour['distance'];?></td>
             <td><?php echo $plan_tour['price'];?></td>
             <td><?php echo $plan_tour['tourist_cnt'];?></td>
-            <td><?php echo $plan_tour['car_tourist_cnt'];?>
-            <?php if($plan['car_status']=='assignning'):?>
+            <td><?php echo $plan_tour['need_car_cnt'];?>
+            <?php if($plan_tour['need_car_cnt'] && ($plan['car_status']=='assignning')):?>
             <input data-plan_tour_id="<?php echo $plan_tour['id'];?>" type="button" value="安排" class="btn btn_assign_car"/>
             <?php endif;?>
             </td>
-            <td><?php echo $plan_tour['room_tourist_cnt'];?>
-            <?php if($plan['room_status']=='assignning'):?>
+            <td><?php echo $plan_tour['need_room_cnt'];?>
+            <?php if($plan_tour['need_room_cnt'] && ($plan['room_status']=='assignning')):?>
             <input data-plan_tour_id="<?php echo $plan_tour['id'];?>" type="button" value="安排" class="btn btn_assign_room"/>
             <?php endif;?>
             </td>
@@ -432,7 +432,7 @@ function getPlanTourCars($plan_tour_id)
     <dl>
     <dt>应付费用</dt><dd><?php echo $plan['price']?></dd>
     <dt>已付费用</dt><dd><?php echo $plan['paid']?></dd>
-    <dt>余额</dt><dd><?php echo $plan['balance']?><?php if($plan['balance']!=0):?><input type="button" value="添加支付记录" class="btn btn_add_payment"/><?php endif;?></dd>
+    <dt>余额</dt><dd><?php echo $plan['balance']?><?php if($plan['balance']!=0 || true):?><input type="button" value="添加支付记录" class="btn btn_add_payment"/><?php endif;?></dd>
     <dt>支付记录</dt><dd><table class="table table-bordered table-striped">
           <thead><tr>
             <th>时间</th>
@@ -752,10 +752,9 @@ $(document).ready(function(){
     <dl>
       <dt>金额</dt><dd><input type="text" name="payment[amount]" id="payment_amount" value="" /></dd>
       <dt>支付方式</dt><dd><select name="payment[via]" id="payment_via">
-      <option value="alipay" selected="selected">支付宝</option>
-      <option value="cash">现金</option>
-      <option value="tenpay">财付通</option>
-      <option value="netbank">网上银行</option>
+      <?php foreach($config['payment_vias'] as $via=>$text): /* @var Array $row */?>
+      <option value="<?php echo $via;?>" selected="selected"><?php echo $text;?></option>
+      <?php endforeach;?>
       </select></dd>
       <dt>备注</dt>
       <dd><textarea name="payment[memo]" id="payment_memo" rows="3" cols="70"></textarea></dd>

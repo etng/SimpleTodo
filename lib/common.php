@@ -7,6 +7,7 @@ if(!spl_autoload_register('todo_autoload'))
 {
     die('autoload die');
 }
+require_once(APP_ROOT . '/lib/functions.php');
 $config = parse_ini_file(APP_ROOT . '/data/config.ini', true);
 $config['colors'] = array_values($config['colors']);
 $db_config = parse_ini_file(APP_ROOT . '/data/database.local.ini', true);
@@ -22,7 +23,18 @@ if($db_config['mock_data'])
 {
      mock_data();
 }
-
+$setting = array();
+foreach($db->fetchAll('select * from setting') as $row)
+{
+    $setting[$row['var']] = json_decode($row['val']);
+}
+$plan_statuss = parse_ini_file(APP_ROOT . '/data/status.ini', true);
+$car_statuss = parse_ini_file(APP_ROOT . '/data/car_status.ini', true);
+$room_statuss = parse_ini_file(APP_ROOT . '/data/room_status.ini', true);
+$car_staff_options = $db->fetchOptions('select * from staff where group_id in (select id from staff_group where target="car")', 'name');
+$market_staff_options = $db->fetchOptions('select * from staff where group_id in (select id from staff_group where target="business")', 'name');
+$room_staff_options = $db->fetchOptions('select * from staff where group_id in (select id from staff_group where target="room")', 'name');
+$tour_sep='→';
 $destination_options = $db->fetchOptions('select id,name from destination', 'name');
 $base_url = str_replace('\\', '/', substr(realpath(dirname(__file__) . '/..//'), strlen(realpath($_SERVER['DOCUMENT_ROOT']))));
 $base_url_full = @"http://{$_SERVER['HTTP_HOST']}{$base_url}";
@@ -201,69 +213,10 @@ function todo_autoload($klass)
     }
     return false;
 }
-function now()
-{
-    return date('Y-m-d H:i:s');
-}
-function loadSqlFile($filename)
-{
-    $fp = fopen($filename, 'r');
-    $sqls = array();
-    $sql = '';
-    while(($line = fgets($fp, 4096))!==false)
-    {
-        $line = trim($line);
-        if(empty($line) || ($line{0}=='#'))
-        {
-            continue;
-        }
-        $sql .= $line;
-        if(substr($line, -1)==';')
-        {
-            $sqls []= $sql;
-            $sql = '';
-        }
 
-    }
-    fclose($fp);
-    return $sqls;
-}
 
-function sub_array($arr, $keys)
-{
-    $sub_array = array();
-    foreach($keys as $key)
-    {
-        $sub_array[$key] = empty($arr[$key])?'':$arr[$key];
-    }
-    return $sub_array;
-}
-function regexInArray($needle, $haystack)
-{
-    $in = true;
-    if($haystack)
-    {
-        $in = false;
-        foreach($haystack as $item)
-        {
-            $regex = '!'. str_replace(array('\*', '\?'), array('.+', '.'), preg_quote($item)) . '!i';
-            if(preg_match($regex, $needle))
-            {
-                $in = true;
-                break;
-            }
-        }
-    }
-    return $in;
-}
-function list2inta($list)
-{
-    return empty($list)?array():explode(',', $list);
-}
-function inta2list($a)
-{
-    return implode(',', $a);
-}
+
+
 
 function makePager($total, $limit=20, $side=3)
 {
@@ -283,6 +236,8 @@ function makePager($total, $limit=20, $side=3)
 function url_for($controller, $action, $params=array())
 {
     $url = $controller . '.php';
+    unset($params['c']);
+    unset($params['a']);
     if($action!='list')
     {
         $params['act'] = $action;

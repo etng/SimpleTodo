@@ -1,18 +1,10 @@
 <?php
 require "lib/common.php";
-$statuss = parse_ini_file(APP_ROOT . '/data/status.ini', true);
-$car_statuss = parse_ini_file(APP_ROOT . '/data/car_status.ini', true);
-$room_statuss = parse_ini_file(APP_ROOT . '/data/room_status.ini', true);
 $contacts = parse_ini_file(APP_ROOT . '/data/contact.ini', true);
-$default_status = key($statuss);
+$default_status = key($plan_statuss);
 $default_room_status = key($room_statuss);
 $default_car_status = key($car_statuss);
 $schedule_templates = $db->fetchAll('select * from schedule_template', 'id');
-
-$car_staff_options = $db->fetchOptions('select * from staff where group_id in (select id from staff_group where target="traffic")', 'name');
-$market_staff_options = $db->fetchOptions('select * from staff where group_id in (select id from staff_group where target="market")', 'name');
-$room_staff_options = $db->fetchOptions('select * from staff where group_id in (select id from staff_group where target="hotel")', 'name');
-$tour_sep='→';
 ob_start();
 $created = $updated = now();
 function generatePlanTours($plan)
@@ -335,24 +327,24 @@ switch(@$_GET['act'])
         $plan_id = intval($_GET['id']);
         $plan = $db->find('plan', $plan_id);
         $status = $_GET['status'];
-        $msg = $statuss[$status]['text'];
+        $msg = $plan_statuss[$status]['text'];
         $db->insert('plan_history', array_merge(array(
                 'operation'=>$msg,
             ), compact('plan_id', 'created', 'operator')));
         $extra= array();
-        if(!empty($statuss[$status]['unlock_car']))
+        if(!empty($plan_statuss[$status]['unlock_car']))
         {
             $extra['car_status'] = 'pending';
         }
-        if(!empty($statuss[$status]['unlock_room']))
+        if(!empty($plan_statuss[$status]['unlock_room']))
         {
             $extra['room_status'] = 'pending';
         }
-        if(!empty($statuss[$status]['lock_car']))
+        if(!empty($plan_statuss[$status]['lock_car']))
         {
             $extra['car_status'] = 'locked';
         }
-        if(!empty($statuss[$status]['lock_room']))
+        if(!empty($plan_statuss[$status]['lock_room']))
         {
             $extra['room_status'] = 'pending';
         }
@@ -401,12 +393,13 @@ switch(@$_GET['act'])
         checkPrivilege();
         $title_for_layout = "我的计划";
         $where = array();
-        if(!empty($_GET['st']))
+        if(!empty($_GET['st']) && isset($plan_statuss[$_GET['st']]))
         {
             $where []='status="'.$_GET['st'] . '"';
         }
+        $cur_status = @$_GET['st'];
         $s_where = $where?' where '.implode(' and ', $where):'';
-        $plans = $db->fetchAll('select * from plan '.$s_where.' order by id desc');
+        $plans = $db->fetchAll('select * from plan '.$s_where.' order by arrive_date desc');
         include('templates/plan_list.php');
         break;
 }

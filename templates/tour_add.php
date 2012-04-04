@@ -7,9 +7,14 @@
 <form method="post" action="">
 <dl>
     <dt>名称</dt>
-    <dd><input type="text" id="tour_name" name="tour[name]" value="" /></dd>
+    <dd><input type="text" id="tour_name" name="tour[name]" value="" />请用<b><?php echo $tour_sep;?></b>分割的目的地名作为线路名称</dd>
     <dt>住宿地</dt>
-    <dd><input type="text" id="tour_destination" name="tour[destination]" value="" /></dd>
+    <dd><select id="tour_destination_id" name="tour[destination_id]">
+        <?php foreach($destination_options as $id=>$destination):?>
+            <option value="<?php echo $id;?>"<?php $id==@$tour['destination_id'] && print(' selected="true"');?>><?php echo $destination;?></option>
+        <?php endforeach;?>
+    </select>
+    </dd>
     <dt>公里数</dt>
     <dd><input type="text" id="tour_distance" name="tour[distance]" value="" /></dd>
     <dt>市场价</dt>

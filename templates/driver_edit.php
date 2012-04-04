@@ -14,6 +14,7 @@
     </select></dd>
     <dt>姓名</dt><dd><input type="text" id="driver_name" name="driver[name]" value="<?php echo $driver['name']?>" /></dd>
     <dt>民族</dt><dd><input type="text" id="driver_nationality" name="driver[nationality]" value="<?php echo $driver['nationality']?>" /></dd>
+    <dt>生日</dt><dd><input type="text" id="driver_dob" name="driver[dob]" value="<?php echo $driver['dob']?$driver['dob']:date("Y-m-d", strtotime('-40 years'))?>" size="10" data-widget='datepicker' /></dd>
     <dt>年龄</dt><dd><input type="text" id="driver_age" name="driver[age]" value="<?php echo $driver['age']?>" /></dd>
     <dt>电话</dt><dd><input type="text" id="driver_phone" name="driver[phone]" value="<?php echo $driver['phone']?>" /></dd>
     <dt>车型</dt><dd><select name="driver[car_type]" id="driver_car_type">
@@ -29,10 +30,15 @@
     <?php $i=0;while($i++<5):?>
     <label class="inline radio"><input type="radio" id="driver_star_<?php echo $i;?>" name="driver[star]" value="<?php echo $i;?>"<?php $i==@$driver['star'] && print(' checked="true"');?> /><?php echo $i;?></label>
     <?php endwhile;?>
-    <!-- <input type="text" id="driver_star" name="driver[star]" value="" />
- -->    </dd>
+     </dd>
      <dt>介绍</dt>
     <dd><textarea id="driver_description" name="driver[description]" rows="3" cols="70"><?php echo $driver['description']?></textarea></dd>
 </dl>
 <input type="submit" class="btn btn-primary" />
-</form>
+</form><script type="text/javascript">
+<!--
+  jQuery(function($){
+    $('#driver_dob').datepicker();
+  });
+//-->
+</script>

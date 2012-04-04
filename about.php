@@ -1,8 +1,8 @@
 <?php
 require "lib/common.php";
-$statuss = parse_ini_file(APP_ROOT . '/data/status.ini', true);
+$plan_statuss = parse_ini_file(APP_ROOT . '/data/status.ini', true);
 $contacts = parse_ini_file(APP_ROOT . '/data/contact.ini', true);
-$default_status = key($statuss);
+$default_status = key($plan_statuss);
 ob_start();
 $tours = $db->fetchAll('select * from tour');
 switch(@$_GET['act'])

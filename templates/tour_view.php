@@ -6,7 +6,7 @@
 
 <dl>
     <dt>名称</dt>    <dd><?php echo $tour['name']; ?></dd>
-    <dt>住宿地</dt>    <dd><?php echo $tour['destination']; ?></dd>
+    <dt>住宿地</dt>    <dd><?php echo $destination_options[$tour['destination_id']]; ?></dd>
     <dt>公里数</dt>    <dd><?php echo $tour['distance']; ?></dd>
     <dt>市场价</dt>    <dd><?php echo $tour['market_price']; ?></dd>
     <dt>价格</dt>    <dd><?php echo $tour['price']; ?></dd>

@@ -9,7 +9,12 @@
     <dt>名称</dt>
     <dd><input type="text" id="tour_name" name="tour[name]" value="<?php echo $tour['name']; ?>" /></dd>
     <dt>住宿地</dt>
-    <dd><input type="text" id="tour_destination" name="tour[destination]" value="<?php echo $tour['destination']; ?>" /></dd>
+    <dd><select id="tour_destination_id" name="tour[destination_id]">
+        <?php foreach($destination_options as $id=>$destination):?>
+            <option value="<?php echo $id;?>"<?php $id==@$tour['destination_id'] && print(' selected="true"');?>><?php echo $destination;?></option>
+        <?php endforeach;?>
+    </select>
+    </dd>
     <dt>公里数</dt>
     <dd><input type="text" id="tour_distance" name="tour[distance]" value="<?php echo $tour['distance']; ?>" /></dd>
     <dt>市场价</dt>

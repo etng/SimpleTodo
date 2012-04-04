@@ -69,22 +69,7 @@
 
 </head>
 
-<?php
-$nav = array(
-    array('u'=>array('c'=>'calendar', 'a'=>'list'), 'title'=>'我的日程'),
-    array('u'=>array('c'=>'plan', 'a'=>'list'), 'title'=>'我的计划'),
-    array('u'=>array('c'=>'hotel', 'a'=>'list'), 'title'=>'酒店'),
-    array('u'=>array('c'=>'article', 'a'=>'list'), 'title'=>'文章'),
-    array('u'=>array('c'=>'destination', 'a'=>'list'), 'title'=>'目的地'),
-    array('u'=>array('c'=>'tour', 'a'=>'list'), 'title'=>'线路'),
-    array('u'=>array('c'=>'schedule_template', 'a'=>'list'), 'title'=>'行程模版'),
-    array('u'=>array('c'=>'schedule_template_cate', 'a'=>'list'), 'title'=>'行程模版分类'),
-    array('u'=>array('c'=>'driver', 'a'=>'list'), 'title'=>'司机'),
-    array('u'=>array('c'=>'staff', 'a'=>'list'), 'title'=>'员工'),
-    array('u'=>array('c'=>'staff', 'a'=>'group_list'), 'title'=>'组织架构'),
-);
-
-?>
+<?php $nav = include(APP_ROOT . '/data/nav.php');?>
 <body data-spy="scroll" data-target=".subnav" data-offset="50">
 
     <div class="navbar navbar-fixed-top">
@@ -97,10 +82,29 @@ $nav = array(
           </a>
           <a class="brand" href="/"><?php echo $config['site']['name'];?></a>
           <div class="nav-collapse">
-            <ul class="nav">
+            <ul class="nav nav-pills">
                 <li class=""><a href="<?php echo $base_url;?>/" title="<?php echo $config['site']['name'];?> 首页">首页</a></li>
                 <?php foreach($nav as $item):?>
+                  <?php if(!empty($item['children'])):?>
+                   <li class="dropdown">
+                      <a class="dropdown-toggle" data-toggle="dropdown" href="<?php echo url_for($item['u']['c'], $item['u']['a']);?>"><?php echo $item['title'];?><b class="caret"></b></a>
+                      <ul class="dropdown-menu">
+                      <?php foreach($item['children'] as $sub_item):?>
+                      <?php if($sub_item=='divider'):?>
+                       <li class="divider"></li>
+                      <?php else:?>
+
+                      <li>
+                       <?php if(checkPrivilege($sub_item['u']['c'], $sub_item['u']['a'])):?><li class=""><a href="<?php echo url_for($sub_item['u']['c'], $sub_item['u']['a'], $sub_item['u']);?>"><?php echo $sub_item['title'];?></a></li><?php endif;?>
+                      </li>
+
+                      <?php endif;?>
+                      <?php endforeach;?>
+                      </ul>
+                    </li>
+                    <?php else:?>
                     <?php if(checkPrivilege($item['u']['c'], $item['u']['a'])):?><li class=""><a href="<?php echo url_for($item['u']['c'], $item['u']['a']);?>"><?php echo $item['title'];?></a></li><?php endif;?>
+                <?php endif;?>
                 <?php endforeach;?>
             </ul>
           <form class="navbar-search pull-left" action="">
@@ -113,11 +117,11 @@ $nav = array(
             <li class="dropdown">
               <a href="my.php?act=edit-profile" class="dropdown-toggle" data-toggle="dropdown"><?php echo $_SESSION['staff']['name'];?> <b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <li><a href="my.php?act=edit-preference">个人偏好</a></li>
-                <li><a href="my.php?act=edit-profile">个人资料</a></li>
+                <li><a href="my.php?act=edit-profile">资料更新</a></li>
                 <li><a href="my.php?act=edit-pass">修改密码</a></li>
+                <li><a href="my.php?act=edit-preference">偏好设置</a></li>
                 <li class="divider"></li>
-                <li><a href="auth.php?act=logout">退出登录</a></li>
+                <li><a href="auth.php?act=logout">退出</a></li>
               </ul>
             </li>
             <?php else:?>
@@ -149,9 +153,11 @@ $nav = array(
 </div>
 
  ﻿<div class="footer">
+ <?php if($config['site']['legal_notice']):?>
  <div class="alert alert-info">
 本站内容纯属虚构，如果有巧合，纯属对号入座！
 </div>
+<?php endif;?>
     <p class="pull-right"><a href="#">回到顶部</a></p>
     <p class="cp">
         <a href="/" title="<?php echo $config['site']['name'];?> 首页">首页</a>|

@@ -22,7 +22,7 @@
     <tr>
         <td><?php echo $tour['id'];?></td>
         <td><?php echo $tour['name'];?></td>
-        <td><?php echo $tour['destination'];?></td>
+        <td><?php echo $destination_options[$tour['destination_id']];?></td>
         <td><?php echo $tour['distance'];?></td>
         <td><?php echo $tour['market_price'];?></td>
         <td><?php echo $tour['price'];?></td>
