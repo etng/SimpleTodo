@@ -52,6 +52,10 @@ $default_card_photo_url = '/files/tourist/card_photo/default.jpg';
 function mock_data()
 {
     global $db,$config;
+    if(!$config['mock_data'])
+    {
+        return false;
+    }
     if(!$db->fetchOne('select count(1) as cnt from todo'))
     {
         $colors = $config['colors'];
