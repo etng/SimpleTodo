@@ -33,6 +33,7 @@ $car_statuss = parse_ini_file(APP_ROOT . '/data/car_status.ini', true);
 $room_statuss = parse_ini_file(APP_ROOT . '/data/room_status.ini', true);
 $car_staff_options = $db->fetchOptions('select * from staff where group_id in (select id from staff_group where target="car")', 'name');
 $market_staff_options = $db->fetchOptions('select * from staff where group_id in (select id from staff_group where target="business")', 'name');
+$consult_staff_options = $db->fetchOptions('select * from staff where group_id in (select id from staff_group where target="consult")', 'name');
 $room_staff_options = $db->fetchOptions('select * from staff where group_id in (select id from staff_group where target="room")', 'name');
 $tour_sep='→';
 $destination_options = $db->fetchOptions('select id,name from destination', 'name');

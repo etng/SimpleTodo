@@ -97,12 +97,15 @@ switch(@$_GET['act'])
             generatePlanTours($plan);
             foreach($_POST['tourist']['name'] as $i=>$name)
             {
+              if(!empty($name))
+              {
                 $phone= $_POST['tourist']['phone'][$i];
                 $card_type= $_POST['tourist']['card_type'][$i];
                 $card_number= $_POST['tourist']['card_number'][$i];
                 $card_photo= $_POST['tourist']['card_photo'][$i];
                 $tourist_id = $db->insert('tourist', compact('name', 'phone', 'card_type', 'card_number', 'card_photo'));
                 $tourist_id = $db->insert('plan_tourist', compact('tourist_id', 'plan_id'));
+              }
             }
             $db->insert('plan_history', array_merge(array(
                 'operation'=>'计划创建完毕，等待进一步确认',

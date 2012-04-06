@@ -1,8 +1,6 @@
 <h3><?php echo $title_for_layout;?></h3>
 <?php
-$tourist_cnt=rand(2,5);
 $start_date=time();
-$contact = $contacts[array_rand($contacts)];
 $forum_url = '';
 ?>
 <form method="post" action="" enctype="multipart/form-data">
@@ -25,9 +23,10 @@ $forum_url = '';
             </dl>
           </div>
           <div class="tab-pane" id="tab_tourist">
-                <label>人数：<input type="text" id="tourist_cnt" name="plan[tourist_cnt]" value="<?php echo $tourist_cnt;?>" size="3" /></label>
+                <label>人数：<input type="text" id="tourist_cnt" name="plan[tourist_cnt]" value="<?php echo @$tourist_cnt;?>" size="3" /></label>
+                <div class="alert alert-notice">旅客信息不用全部填写，仅保存有姓名的信息，可在订单中修改</div>
                 <div id="tourists_tabs">
-                <?php $i=0;while($i++<$tourist_cnt):?>
+                <?php $i=0;while($i++<6):?>
                 <dl>
                     <dt>旅客<?php echo $i;?></dt><dd>
                     <dl>
@@ -136,6 +135,18 @@ $forum_url = '';
           <div class="tab-pane" id="tab_staff">
 
           <dl>
+        <dt>主贴地址</dt>
+          <dd>
+          <input type="text" id="forum_url" name="plan[forum_url]" value="<?php echo @$plan['forum_url'];?>" size="255" /></dd>
+            <dt>旅行顾问</dt>
+            <dd>
+                <select id="plan_consult_staff_id" name="plan[consult_staff_id]">
+                <?php foreach($consult_staff_options as $id=>$name):?>
+                <option value="<?php echo $id;?>"<?php $id==@$plan['consult_staff_id'] && print(' selected="true"');?>><?php echo $name;?></option>
+                <?php endforeach;?>
+                </select>
+            </dd>
+
             <dt>业务跟进</dt>
             <dd>
                 <select id="plan_market_staff_id" name="plan[market_staff_id]">

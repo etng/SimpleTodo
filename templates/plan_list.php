@@ -16,6 +16,7 @@
         <th>业务状态</th>
         <th>车辆状态</th>
         <th>酒店状态</th>
+        <th>顾问</th>
         <th>操作</th>
     </tr></thead> <tbody><?php if(!empty($plans)):?>
 
@@ -24,9 +25,10 @@
         <td><?php echo $plan['id'];?></td>
         <td><?php echo $plan['price'];?></td>
         <td><?php echo $plan['created'];?></td>
-        <td><?php echo $market_staff_options[$plan['market_staff_id']];?> <?php echo $plan_statuss[$plan['status']]['text'];?></td>
-        <td><?php echo $car_staff_options[$plan['car_staff_id']];?><?php echo $car_statuss[$plan['car_status']]['text'];?></td>
-        <td><?php echo $room_staff_options[$plan['room_staff_id']];?><?php echo $room_statuss[$plan['room_status']]['text'];?></td>
+        <td><?php echo @$market_staff_options[$plan['market_staff_id']];?> <?php echo $plan_statuss[$plan['status']]['text'];?></td>
+        <td><?php echo @$car_staff_options[$plan['car_staff_id']];?><?php echo $car_statuss[$plan['car_status']]['text'];?></td>
+        <td><?php echo @$room_staff_options[$plan['room_staff_id']];?><?php echo $room_statuss[$plan['room_status']]['text'];?></td>
+        <td><?php echo @$consult_staff_options[$plan['consult_staff_id']];?></td>
         <td>
         <a href="plan.php?act=view&id=<?php echo $plan['id'];?>" class="btn btn-info">详情</a>
         <a href="plan.php?act=delete&id=<?php echo $plan['id'];?>" class="btn btn-danger">删除</a>
