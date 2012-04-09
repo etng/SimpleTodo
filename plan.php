@@ -18,7 +18,7 @@ function generatePlanTours($plan)
         $destinations = explode($tour_sep, $name);
         $name = implode($tour_sep, $destinations);
         $destination = end($destinations);
-        $destination_id = $db->getOrCreate('destination', array('name'=>$destination), compact('created', 'updated'));
+        $destination_id = $db->getOrCreate('destination', array('name'=>$destination, 'slug'=>$destination), compact('created', 'updated'));
         $tour_id = $db->getOrCreate('tour', $values=compact('name', 'destination', 'destination_id'),  compact('created', 'updated'));
         $the_date = date('Y-m-d', $start_date+$i++*86400);
         $plan_tours[]=compact('tour_id', 'the_date');
