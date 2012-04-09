@@ -5,6 +5,7 @@
 </ul>
 
 
+<p class="pull-right"><?php if(checkPrivilege('destination', 'add')):?><a href="destination.php?act=add" class="btn"><i class="icon-eidt"></i>添加目的地</a><?php endif;?></p>
 <table class="table table-bordered table-striped">
     <thead><tr>
         <th>编号</th>

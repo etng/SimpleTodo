@@ -1,9 +1,5 @@
 <?php
 require "lib/common.php";
-$contacts = parse_ini_file(APP_ROOT . '/data/contact.ini', true);
-$default_status = key($plan_statuss);
-$default_room_status = key($room_statuss);
-$default_car_status = key($car_statuss);
 $schedule_templates = $db->fetchAll('select * from schedule_template', 'id');
 ob_start();
 $created = $updated = now();
@@ -20,7 +16,7 @@ function generatePlanTours($plan)
       {
         list($dummy, $name) = preg_split("/\s*[,]+\s*/sim", str_replace('，', ',', $line));
         $destinations = explode($tour_sep, $name);
-        $name = implode(' - ', $destinations);
+        $name = implode($tour_sep, $destinations);
         $destination = end($destinations);
         $destination_id = $db->getOrCreate('destination', array('name'=>$destination), compact('created', 'updated'));
         $tour_id = $db->getOrCreate('tour', $values=compact('name', 'destination', 'destination_id'),  compact('created', 'updated'));
@@ -150,6 +146,16 @@ switch(@$_GET['act'])
         $db->update('plan', $_POST['plan'], array('id'=>$plan_id));
         $plan = $db->find('plan', $plan_id);
         generatePlanTours($plan);
+         header('location:plan.php?act=view&id='.$plan_id);
+         die();
+        break;
+    case 'update-detail-schedule':
+        checkPrivilege();
+        $plan_id = intval($_POST['plan_id']);
+        foreach($_POST['plan_tour'] as $id=>$data)
+        {
+            $db->update('plan_tour', $data, compact('id'));
+        }
          header('location:plan.php?act=view&id='.$plan_id);
          die();
         break;

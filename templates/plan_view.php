@@ -27,6 +27,10 @@ function getPlanTourCars($plan_tour_id)
 </ul>
 <?php $plan['contact'] = $contact;?>
 <dl>
+<dt>旅行顾问</dt>
+          <dd>
+          <?php echo $consult_staff_options[$plan['consult_staff_id']];?>
+           </dd>
 <dt>业务跟进</dt>
           <dd>
           <?php echo $market_staff_options[$plan['market_staff_id']];?>
@@ -334,12 +338,19 @@ function getPlanTourCars($plan_tour_id)
                 </div>
                 <label class="checkbox inline"><input type="hidden" name="plan[need_passport]" value="0" /><input type="checkbox" id="plan_need_passport" name="plan[need_passport]" value="1"<?php echo 1==@$plan['need_passport'] && print(' checked="true"');?> />办理边防证</label>
                 <label class="checkbox inline"><input type="hidden" name="plan[need_hotel]" value="0" /><input type="checkbox" id="plan_need_hotel" name="plan[need_hotel]" value="1"<?php echo 1==@$plan['need_hotel'] && print(' checked="true"');?> />需要安排住宿</label>
+                <input type="text" size="2" class="input-mini need_room_cnt"  id="plan_need_room_cnt" name="plan[need_room_cnt]" value="<?php echo $plan['need_room_cnt'];?>" />
+
                 <label class="checkbox inline"><input type="hidden" name="plan[need_car]" value="0" /><input type="checkbox" id="plan_need_car" name="plan[need_car]" value="1"<?php echo 1==@$plan['need_car'] && print(' checked="true"');?> />需要安排车辆</label>
+<input type="text" size="2" class="input-mini need_car_cnt"  id="plan_need_car_cnt" name="plan[need_car_cnt]" value="<?php echo $plan['need_car_cnt'];?>" />
                 <label class="checkbox inline"><input type="hidden" name="plan[need_insurance]" value="0" /><input type="checkbox" id="plan_need_insurance" name="plan[need_insurance]" value="1"<?php echo 1==@$plan['need_insurance'] && print(' checked="true"');?> />办理保险</label>
                 </dd>
             </dl>
 </div>
       <input type="submit" value="更新日程" class="btn btn-primary"  />
+</form>
+
+<form method="post" action="plan.php?act=update-detail-schedule" enctype="multipart/form-data">
+      <input type="hidden" name="plan_id" value="<?php echo $plan['id']?>" />
 
         <dl>
           <dt>出发日期</dt><dd><?php echo $plan['start_date']?></dd>
@@ -365,12 +376,17 @@ function getPlanTourCars($plan_tour_id)
             <td><?php echo $plan_tour['distance'];?></td>
             <td><?php echo $plan_tour['price'];?></td>
             <td><?php echo $plan_tour['tourist_cnt'];?></td>
-            <td><?php echo $plan_tour['need_car_cnt'];?>
-            <?php if($plan_tour['need_car_cnt'] && ($plan['car_status']=='assignning')):?>
+            <td><input type="text" size="2" class="input-mini need_car_cnt"  id="plan_tour_<?php echo $i;?>_need_car_cnt" name="plan_tour[<?php echo $i;?>][need_car_cnt]" value="<?php echo $plan_tour['need_car_cnt'];?>" />
+
+            <label class="checkbox"><input type="checkbox" class="do_not_need_car"<?php if(!$plan_tour['need_car_cnt']):?> checked="true"<?php endif;?> />无需车辆</label>
+
+           <?php if($plan_tour['need_car_cnt'] && ($plan['car_status']=='assignning')):?>
             <input data-plan_tour_id="<?php echo $plan_tour['id'];?>" type="button" value="安排" class="btn btn_assign_car"/>
             <?php endif;?>
             </td>
-            <td><?php echo $plan_tour['need_room_cnt'];?>
+            <td><input type="text" size="2" class="input-mini need_room_cnt"  id="plan_tour_<?php echo $i;?>_need_room_cnt" name="plan_tour[<?php echo $i;?>][need_room_cnt]" value="<?php echo $plan_tour['need_room_cnt'];?>" />
+
+            <label class="checkbox"><input type="checkbox" class="do_not_need_room"<?php if(!$plan_tour['need_room_cnt']):?> checked="true"<?php endif;?> />酒店自理</label>
             <?php if($plan_tour['need_room_cnt'] && ($plan['room_status']=='assignning')):?>
             <input data-plan_tour_id="<?php echo $plan_tour['id'];?>" type="button" value="安排" class="btn btn_assign_room"/>
             <?php endif;?>
@@ -385,8 +401,11 @@ function getPlanTourCars($plan_tour_id)
           <?php endif;?></tbody>
         </table> </dd>
         </dl>
+         <input type="submit" value="更新日程细节" class="btn btn-primary"  />
 </form>
-
+<style type="text/css">
+    .need_room_cnt, .need_car_cnt{width: auto;}
+</style>
 
 
 
@@ -471,6 +490,55 @@ $(document).ready(function(){
   window.room_types = <?php echo json_encode($config['room_types']);?>;
   window.car_types = <?php echo json_encode($config['car_types']);?>;
   window.plan_tourists = <?php echo json_encode($plan['tourists']);?>;
+  window.need_room_cnt = <?php echo intval($plan['need_room_cnt']);?>;
+  window.need_car_cnt = <?php echo intval($plan['need_car_cnt']);?>;
+  $('input:checkbox.do_not_need_room').change(function(){
+        var txt_need_room_cnt = $(this).closest('td').find('input.need_room_cnt');
+        if(this.checked)
+      {
+        txt_need_room_cnt.val(0).hide();
+      }
+      else
+      {
+        txt_need_room_cnt.val(window.need_room_cnt).show().focus().select();
+      }
+  });
+
+  $('#plan_need_hotel').change(function(){
+        var txt_need_room_cnt = $('#plan_need_room_cnt');
+        if(!this.checked)
+      {
+        txt_need_room_cnt.val(0).hide();
+      }
+      else
+      {
+        txt_need_room_cnt.val(1).show().focus().select();
+      }
+  });
+  $('#plan_need_car').change(function(){
+        var txt_need_car_cnt = $('#plan_need_car_cnt');
+        if(!this.checked)
+      {
+        txt_need_car_cnt.val(0).hide();
+      }
+      else
+      {
+        txt_need_car_cnt.val(1).show().focus().select();
+      }
+  });
+
+    $('input:checkbox.do_not_need_car').change(function(){
+        var txt_need_car_cnt = $(this).closest('td').find('input.need_car_cnt');
+        if(this.checked)
+      {
+        txt_need_car_cnt.val(0).hide();
+      }
+      else
+      {
+        txt_need_car_cnt.val(window.need_car_cnt).show().focus().select();
+      }
+  });
+  $('input:checkbox.do_not_need_room,input:checkbox.do_not_need_car').trigger('change');
   $('input.btn_assign_room').live('click', function(){
     jQuery.facebox({ div: '#room_assign_form' });
     var ts=+new Date();

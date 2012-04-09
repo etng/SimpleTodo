@@ -21,6 +21,8 @@
     <label class="inline radio"><input type="radio" id="hotel_star_<?php echo $i;?>" name="hotel[star]" value="<?php echo $i;?>"<?php $i==@$hotel['star'] && print(' checked="true"');?> /><?php echo $i;?></label>
     <?php endwhile;?>
    </dd>
+    <dt>优先级</dt>
+    <dd><input type="text" id="hotel_priority" name="hotel[priority]" value="<?php echo 100-$hotel['priority']?>" /></dd>
     <dt>电话</dt>
     <dd><input type="text" id="hotel_phone" name="hotel[phone]" value="<?php echo $hotel['phone']?>" /></dd>
     <dt>传真</dt>

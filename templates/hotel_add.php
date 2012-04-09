@@ -10,7 +10,7 @@
     <dt>所在地</dt>
     <dd><select name="hotel[destination_id]" id="hotel_destination_id">
         <?php foreach($destination_options as $id=>$destination):?>
-            <option value="<?php echo $id;?>"><?php echo $destination;?></option>
+            <option value="<?php echo $id;?>"<?php $id==@$setting['hotel_destination_id'] && print(' selected="true"');?>><?php echo $destination;?></option>
         <?php endforeach;?>
     </select></dd>
     <dt>名称</dt>
@@ -18,12 +18,13 @@
     <dt>星级</dt>
     <dd>
     <?php $i=0;while($i++<5):?>
-    <label class="inline radio"><input type="radio" id="hotel_star_<?php echo $i;?>" name="hotel[star]" value="<?php echo $i;?>" /><?php echo $i;?></label>
+    <label class="inline radio"><input type="radio" id="hotel_star_<?php echo $i;?>" name="hotel[star]" value="<?php echo $i;?>"<?php $i==@$setting['hotel_star'] && print(' checked="true"');?> /><?php echo $i;?></label>
     <?php endwhile;?>
-    <!-- <input type="text" id="hotel_star" name="hotel[star]" value="" />
- -->    </dd>
+   </dd>
     <dt>电话</dt>
     <dd><input type="text" id="hotel_phone" name="hotel[phone]" value="" /></dd>
+    <dt>优先级</dt>
+    <dd><input type="text" id="hotel_priority" name="hotel[priority]" value="0" /></dd>
     <dt>传真</dt>
     <dd><input type="text" id="hotel_fax" name="hotel[fax]" value="" /></dd>
     <dt>网站</dt>

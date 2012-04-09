@@ -8,7 +8,8 @@ switch(@$_GET['act'])
         $title_for_layout = "添加酒店";
         if($_SERVER['REQUEST_METHOD']=='POST')
         {
-        $created = now();
+            $created = now();
+            $_POST['hotel']['priority'] = 100-intval($_POST['hotel']['priority']);
             $hotel_id = $db->insert('hotel', array_merge($_POST['hotel'], compact('created')));
             header('location:hotel.php?act=view&id='.intval($hotel_id));
             die();
@@ -79,10 +80,14 @@ switch(@$_GET['act'])
         checkPrivilege();
         $title_for_layout = "酒店";
         $where = array();
+        if(!empty($_REQUEST['did']))
+        {
+            $where[]='hotel.destination_id='.intval($_REQUEST['did']);
+        }
         $s_where = $where?' where '.implode(' and ', $where):'';
         $total = $db->fetchOne('select count(1) as cnt from hotel ' . $s_where);
         $pager = makePager($total, current_staff('preference_perpage', 10));
-        $hotels = $db->fetchAll("select hotel.*,destination.name as destination_name from hotel  left join destination on destination.id=hotel.destination_id  {$s_where} order by hotel.id desc  limit {$pager['offset']},{$pager['limit']}");
+        $hotels = $db->fetchAll("select hotel.*,destination.name as destination_name from hotel  left join destination on destination.id=hotel.destination_id  {$s_where} order by hotel.priority ASC, hotel.id desc  limit {$pager['offset']},{$pager['limit']}");
         include('templates/hotel_list.php');
         break;
 }

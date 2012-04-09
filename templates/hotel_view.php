@@ -9,6 +9,8 @@
 <dl>
     <dt>名称</dt>
     <dd><?php echo $hotel['name'];?></dd>
+    <dt>优先级</dt>
+    <dd><?php echo 100-$hotel['priority'];?></dd>
     <dt>加入时间</dt>
     <dd><?php echo $hotel['created'];?></dd>
     <dt>所在地</dt>

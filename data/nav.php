@@ -21,6 +21,7 @@ $nav = array(
     array('u'=>array('c'=>'hotel', 'a'=>'list'), 'title'=>'已完成酒店安排'),
     'divider',
     array('u'=>array('c'=>'hotel', 'a'=>'list'), 'title'=>'酒店列表'),
+    array('u'=>array('c'=>'hotel', 'a'=>'add'), 'title'=>'添加酒店'),
     array('u'=>array('c'=>'hotel', 'a'=>'list'), 'title'=>'酒店价格更新'),
     )),
 
@@ -33,8 +34,11 @@ $nav = array(
 
     array('u'=>array('c'=>'article', 'a'=>'list'), 'title'=>'产品管理', 'children'=>array(
     array('u'=>array('c'=>'article', 'a'=>'list'), 'title'=>'文章'),
+    array('u'=>array('c'=>'article', 'a'=>'add'), 'title'=>'添加文章'),
     array('u'=>array('c'=>'destination', 'a'=>'list'), 'title'=>'目的地'),
+    array('u'=>array('c'=>'destination', 'a'=>'add'), 'title'=>'添加目的地'),
     array('u'=>array('c'=>'tour', 'a'=>'list'), 'title'=>'线路'),
+    array('u'=>array('c'=>'tour', 'a'=>'add'), 'title'=>'添加线路'),
     'divider',
     array('u'=>array('c'=>'schedule_template', 'a'=>'list'), 'title'=>'行程模版'),
     array('u'=>array('c'=>'schedule_template_cate', 'a'=>'list'), 'title'=>'行程模版分类'),
@@ -43,7 +47,9 @@ $nav = array(
     array('u'=>array('c'=>'setting', 'a'=>'list'), 'title'=>'系统设置', 'children'=>array(
       array('u'=>array('c'=>'setting', 'a'=>'list'), 'title'=>'默认值'),
       array('u'=>array('c'=>'staff', 'a'=>'list'), 'title'=>'员工'),
+      array('u'=>array('c'=>'staff', 'a'=>'add'), 'title'=>'添加员工'),
       array('u'=>array('c'=>'staff', 'a'=>'group_list'), 'title'=>'组织架构'),
+      array('u'=>array('c'=>'staff', 'a'=>'group_add'), 'title'=>'添加部门'),
     )),
 );
 $nav['plan']['children'][]=array('u'=>array('c'=>'plan', 'a'=>'list', 'st'=>'all'), 'title'=>'所有');

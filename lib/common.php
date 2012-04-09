@@ -35,6 +35,9 @@ $car_staff_options = $db->fetchOptions('select * from staff where group_id in (s
 $market_staff_options = $db->fetchOptions('select * from staff where group_id in (select id from staff_group where target="business")', 'name');
 $consult_staff_options = $db->fetchOptions('select * from staff where group_id in (select id from staff_group where target="consult")', 'name');
 $room_staff_options = $db->fetchOptions('select * from staff where group_id in (select id from staff_group where target="room")', 'name');
+$default_status = key($plan_statuss);
+$default_room_status = key($room_statuss);
+$default_car_status = key($car_statuss);
 $tour_sep='→';
 $destination_options = $db->fetchOptions('select id,name from destination', 'name');
 $base_url = str_replace('\\', '/', substr(realpath(dirname(__file__) . '/..//'), strlen(realpath($_SERVER['DOCUMENT_ROOT']))));
