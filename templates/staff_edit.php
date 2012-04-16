@@ -15,6 +15,7 @@
     </select>
     </dd>
     <dt>用户名</dt><dd><input type="text" id="staff_username" name="staff[username]" value="<?php echo $staff['username']?>" /></dd>
+    <dt>论坛ID</dt><dd><input type="text" id="staff_forum_uid" name="staff[forum_uid]" value="<?php echo $staff['forum_uid']?>" /></dd>
     <dt>密码</dt><dd><input type="text" id="staff_password" name="staff[password]" value="" /></dd>
     <dt>姓名</dt><dd><input type="text" id="staff_name" name="staff[name]" value="<?php echo $staff['name']?>" /></dd>
     <dt>电话</dt><dd><input type="text" id="staff_phone" name="staff[phone]" value="<?php echo $staff['phone']?>" /></dd>

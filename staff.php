@@ -82,6 +82,65 @@ switch(@$_GET['act'])
         $staff['group']['privileges'] = $staff['group']['privileges']?explode(',', $staff['group']['privileges']):array();
         include('templates/staff_edit.php');
         break;
+    case 'import':
+        checkPrivilege();
+        $title_for_layout = "导入员工资料";
+        if($_SERVER['REQUEST_METHOD']=='POST')
+        {
+            try{
+                $files = Attachment::fromUpload('staff_list_csv', APP_ROOT . '/files/import', array());
+                if(!$files)
+                {
+                    throw new Exception('没有上传文件');
+                }
+                $file = current($files);
+                if(!$file)
+                {
+                    throw new Exception('没有上传文件');
+                }
+                $staffs = loadCSV($file['fullpath']);
+                $map = parse_ini_file(APP_ROOT . '/data/staff_map.ini', true);
+                $staff_group_options = $db->fetchOptions('select * from staff_group', 'id', 'name');
+                $c=0;
+                $created = now();
+                foreach($staffs as $staff)
+                {
+                    $record = array();
+                    foreach($map as $staff_field=>$record_field)
+                    {
+                        if(isset($staff[$staff_field]))
+                        {
+                            if($record_field=='group_name')
+                            {
+                                $staff[$staff_field] = @$staff_group_options[$staff[$staff_field]];
+                                $record_field = 'group_id';
+                            }
+                            $record[$record_field] = $staff[$staff_field];
+                        }
+                    }
+//                    var_dump($record, $staff_group_options);                    die();
+                    $password = $record['username'].'123';
+                    $password = md5(md5($record['username'].$password).$record['username']);
+                    $staff_id = $db->insert('staff', $record = array_merge($record, compact('created', 'password')));
+                    if($staff_id)
+                    {
+                        $c++;
+                    }
+                }
+                if($c)
+                {
+                    alert(sprintf('成功导入%d个员工资料', $c));
+                }
+            }
+            catch(Exception $e)
+            {
+                alert($e->getMessage() . '<br />导入员工资料失败');
+            }
+            header('location:staff.php?act=list');
+            die();
+        }
+        include('templates/staff_import.php');
+        break;
     case 'group_view':
         checkPrivilege();
         $title_for_layout = "部门详情";

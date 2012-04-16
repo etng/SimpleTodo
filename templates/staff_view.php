@@ -2,6 +2,7 @@
 
 <dl>
     <dt>用户名</dt><dd><?php echo $staff['username'];?></dd>
+    <dt>论坛ID</dt><dd><?php echo $staff['forum_uid'];?></dd>
     <dt>姓名</dt><dd><?php echo $staff['name'];?></dd>
     <dt>所属组</dt><dd><a href="staff.php?act=group_view&id=<?php echo $staff['group_id'];?>"><?php echo $staff['group_name'];?></a></dd>
     <dt>电话</dt><dd><?php echo $staff['phone'];?></dd>

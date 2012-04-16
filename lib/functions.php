@@ -79,3 +79,27 @@ function loadSqlFile($filename)
     fclose($fp);
     return $sqls;
 }
+function loadCSV($filename, $first_row_as_header=true)
+{
+    $rows = array();
+    $header = array();
+    $tmp_file = tempnam(APP_ROOT . "/files", "csv");
+    file_put_contents($tmp_file, iconv('', 'utf-8', file_get_contents($filename)));
+    if(($fp = fopen($tmp_file, "r")) !== FALSE) {
+        $i=0;
+        while (($data = fgetcsv($fp, 1000, "\t")) !== FALSE) {
+            $i++;
+            if(($i==1) && $first_row_as_header)
+            {
+                $header =  $data;
+            }
+            else
+            {
+                $rows[]=$header?array_combine($header, $data):$data;
+            }
+        }
+        @fclose($fp);
+    }
+    @unlink($tmp_file);
+    return $rows;
+}

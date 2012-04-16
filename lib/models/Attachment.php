@@ -31,7 +31,6 @@ class Attachment
     public static function fromUpload($field, $dest_dir, $allowed_types=array(), $thumb_configs=array())
     {
         $files = array();
-        var_dump($_FILES);
         if(!is_array($_FILES[$field]["error"]))
         {
             foreach($_FILES[$field] as $k=>$v)
@@ -43,7 +42,7 @@ class Attachment
             $files[$key] = false;
             if ($error == UPLOAD_ERR_OK) {
                 $type = $_FILES[$field]["type"][$key];
-                if(regexInArray($type, $allowed_types))
+                if(!$allowed_types || regexInArray($type, $allowed_types))
                 {
                     $tmp_name = $_FILES[$field]["tmp_name"][$key];
                     $orig_name = $_FILES[$field]["name"][$key];
@@ -64,7 +63,7 @@ class Attachment
     }
     public static function generateRecord($dest_dir, $dest_file, $thumb_configs, $filename, $name, $extention, $type, $size)
     {
-        $dest_file = realpath($dest_file);
+        $fullpath = $dest_file = realpath($dest_file);
         list($width, $height, $img_type, $attr) = getimagesize($dest_file);
         if(!$type)
         {
@@ -77,7 +76,7 @@ class Attachment
                 self::generateThumb($dest_file, $dest_dir .'/'.$thumb_name.'/'. $filename, $thumb_config);
             }
         }
-        return compact('name', 'filename', 'extention', 'type', 'size', 'width', 'height');
+        return compact('name', 'filename', 'fullpath', 'extention', 'type', 'size', 'width', 'height');
     }
      public static function generateThumb($src_file, $dest_file, $config)
     {

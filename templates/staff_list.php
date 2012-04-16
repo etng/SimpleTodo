@@ -14,6 +14,7 @@
         <th>编号</th>
         <th>所属组</th>
         <th>用户名</th>
+        <th>论坛ID</th>
         <th>姓名</th>
         <th>电话</th>
         <th>Email</th>
@@ -24,6 +25,7 @@
     <tr>
         <td><?php echo $staff['id'];?></td>
         <td><a href="staff.php?act=group_view&id=<?php echo $staff['group_id'];?>"><?php echo $staff['group_name'];?></a></td>
+        <td><?php echo $staff['forum_uid'];?></td>
         <td><?php echo $staff['username'];?></td>
         <td><?php echo $staff['name'];?></td>
         <td><?php echo $staff['phone'];?></td>
@@ -41,3 +43,12 @@
     </tr>
     <?php endif;?></tbody>
 </table>
+
+  <h4>导入员工</h4>
+  <form method="post" enctype="multipart/form-data" action="staff.php?act=import">
+    <dl>
+      <dt>员工数据CSV文件</dt><dd>
+      <label>上传：<input type="file" id="import_staff_list_csv" name="staff_list_csv[]" /></label></dd>
+    </dl>
+    <input type="submit" value="提交" class="btn" />
+  </form>
