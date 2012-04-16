@@ -118,7 +118,6 @@ switch(@$_GET['act'])
                             $record[$record_field] = $staff[$staff_field];
                         }
                     }
-//                    var_dump($record, $staff_group_options);                    die();
                     $password = $record['username'].'123';
                     $password = md5(md5($record['username'].$password).$record['username']);
                     $staff_id = $db->insert('staff', $record = array_merge($record, compact('created', 'password')));
