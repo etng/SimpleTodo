@@ -33,7 +33,7 @@ function getPlanTourCars($plan_tour_id)
            </dd>
 <dt>业务跟进</dt>
           <dd>
-          <?php echo $market_staff_options[$plan['market_staff_id']];?>
+          <?php echo @$market_staff_options[$plan['market_staff_id']];?>
            </dd>
         <dt>当前状态</dt>
           <dd>

@@ -46,9 +46,9 @@ $(document).ready(function(){
         <td><?php echo $plan['id'];?></td>
         <td><?php echo $plan['price'];?></td>
         <td><?php echo $plan['created'];?></td>
-        <td><?php echo $market_staff_options[$plan['market_staff_id']];?><br /><?php echo $plan_statuss[$plan['status']]['text'];?></td>
-        <td><?php echo $car_staff_options[$plan['car_staff_id']];?><br /><?php echo $car_statuss[$plan['car_status']]['text'];?></td>
-        <td><?php echo $room_staff_options[$plan['room_staff_id']];?><br /><?php echo $room_statuss[$plan['room_status']]['text'];?></td>
+        <td><?php echo @$market_staff_options[$plan['market_staff_id']];?><br /><?php echo $plan_statuss[$plan['status']]['text'];?></td>
+        <td><?php echo @$car_staff_options[$plan['car_staff_id']];?><br /><?php echo $car_statuss[$plan['car_status']]['text'];?></td>
+        <td><?php echo @$room_staff_options[$plan['room_staff_id']];?><br /><?php echo $room_statuss[$plan['room_status']]['text'];?></td>
         <td><a href="plan.php?act=view&id=<?php echo $plan['id'];?>" class="btn btn-info">详情</a></td>
         <?php endforeach;?>
       </tbody>
