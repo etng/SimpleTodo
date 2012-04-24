@@ -40,8 +40,8 @@ $forum_url = '';
                 </select></dd>
                     <dt>证件号码</dt><dd><input type="text" id="tourist_card_number_<?php echo $i;?>" name="tourist[card_number][<?php echo $i;?>]" value="<?php echo @$tourist['card_type'];?>"/></dd>
                     <dt>证件照片</dt><dd>
-                    <label>网址：<input type="text" id="tourist_card_photo_url_<?php echo $i;?>" name="tourist[card_photo_url][<?php echo $i;?>]" size="80"   value="<?php echo @$tourist['card_photo'];?>"/></label><br />
-                        <label>上传：<input type="file" id="tourist_card_photo_file_<?php echo $i;?>" name="tourist_card_photo_file[<?php echo $i;?>]" /></label></dd>
+                    <label>网址：<input type="text" id="tourist_card_photo_url_<?php echo $i;?>" name="tourist[card_photo_url][<?php echo $i;?>]" size="80" value="<?php echo @$tourist['card_photo'];?>"/></label><br />
+                        <label>上传：<input type="file" class="span3" id="tourist_card_photo_file_<?php echo $i;?>" name="tourist_card_photo_file[<?php echo $i;?>]" /></label></dd>
                     </dl> </dd></dl>
 
                 <?php endwhile;?>

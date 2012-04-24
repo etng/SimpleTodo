@@ -1,70 +1,69 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="assets/css/bootstrap-responsive.css">
+<link rel="stylesheet" type="text/css" href="assets/css/docs.css" />
+<link rel="stylesheet" type="text/css" href="assets/js/google-code-prettify/prettify.css" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<link rel="shortcut icon" href="assets/ico/favicon.ico" />
+<link rel="apple-touch-icon" href="assets/ico/apple-touch-icon.png" />
+<link rel="apple-touch-icon" sizes="72x72" href="assets/ico/apple-touch-icon-72x72.png" />
+<link rel="apple-touch-icon" sizes="114x114" href="assets/ico/apple-touch-icon-114x114.png" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
-    <!-- Le styles -->
-    <link href="assets/css/bootstrap.css" rel="stylesheet">
-    <link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
-    <link href="assets/css/docs.css" rel="stylesheet">
-    <link href="assets/js/google-code-prettify/prettify.css" rel="stylesheet">
-
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
-    <link rel="shortcut icon" href="assets/ico/favicon.ico">
-    <link rel="apple-touch-icon" href="assets/ico/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="assets/ico/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="assets/ico/apple-touch-icon-114x114.png">
-
-
-<link rel="stylesheet" type="text/css" href="scripts/jquery.qtip.css" />
-<link rel="stylesheet" type="text/css" href="scripts/facebox.css" />
-<link rel="stylesheet" type="text/css" href="scripts/fullcalendar.css" />
-<link href="scripts/jquery.colorpicker.css" rel="stylesheet" type="text/css"/>
-<link href="scripts/fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css"/>
-<link rel="stylesheet" type="text/css" href="scripts/fullcalendar.print.css" media="print" />
-<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css" type="text/css" media="all" />
-<link rel="stylesheet" href="assets/css/global.css" type="text/css" media="all" />
+<link rel="stylesheet" type="text/css" href="assets/js/jquery.qtip.css" />
+<link rel="stylesheet" type="text/css" href="assets/js/facebox.css" />
+<link rel="stylesheet" type="text/css" href="assets/js/fullcalendar.css" />
+<link rel="stylesheet" type="text/css" href="assets/js/jquery.colorpicker.css" />
+<link rel="stylesheet" type="text/css" href="assets/js/fancybox/jquery.fancybox.css" />
+<link rel="stylesheet" type="text/css" href="assets/css/ui.daterangepicker.css" />
+<link rel="stylesheet" type="text/css" href="assets/css/enhanced.css" />
+<link rel="stylesheet" type="text/css" href="assets/js/fullcalendar.print.css" media="print" />
+<link rel="stylesheet" type="text/css" href="assets/css/jquery-ui-1.8.16.custom.css"/>
+<!--[if IE]>
+<link rel="stylesheet" type="text/css" href="assets/css/jquery.ui.1.8.16.ie.css" />
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="assets/css/global.css" media="all" />
 <style type='text/css'>
 </style>
 
-
-    <script src="assets/js/jquery.js"></script>
-    <script src="assets/js/google-code-prettify/prettify.js"></script>
-    <script src="assets/js/bootstrap-transition.js"></script>
-    <script src="assets/js/bootstrap-alert.js"></script>
-    <script src="assets/js/bootstrap-modal.js"></script>
-    <script src="assets/js/bootstrap-dropdown.js"></script>
-    <script src="assets/js/bootstrap-scrollspy.js"></script>
-    <script src="assets/js/bootstrap-tab.js"></script>
-    <script src="assets/js/bootstrap-tooltip.js"></script>
-    <script src="assets/js/bootstrap-popover.js"></script>
-    <script src="assets/js/bootstrap-button.js"></script>
-    <script src="assets/js/bootstrap-collapse.js"></script>
-    <script src="assets/js/bootstrap-carousel.js"></script>
-    <script src="assets/js/bootstrap-typeahead.js"></script>
-    <script src="assets/js/application.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js" type="text/javascript"></script>
-<script src="http://jquery-ui.googlecode.com/svn/tags/latest/external/jquery.bgiframe-2.1.2.js" type="text/javascript"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery-ui-i18n.js" type="text/javascript"></script>
-<script src="assets/js/jquery.tmpl.min.js" type="text/javascript"></script>
-<script src="scripts/jquery.autogrow.js" type="text/javascript"></script>
-<!-- <script src="http://jqueryui.com/themeroller/themeswitchertool/"></script>
- --><script type="text/javascript" src="scripts/jshash/md5-min.js"></script>
-<script type="text/javascript" src="scripts/fullcalendar.min.js"></script>
-<script type="text/javascript" src="scripts/facebox.js"></script>
-<script type="text/javascript" src="scripts/jquery.qtip.js"></script>
-<script type="text/javascript" src="scripts/jquery.mousewheel-3.0.6.pack.js"></script>
-<script type="text/javascript" src="scripts/fancybox/jquery.fancybox.js"></script>
-<script src="scripts/jquery.colorpicker.js"></script>
-<script src="scripts/underscore-min.js"></script>
-<script type="text/javascript" src="scripts/global.js"></script>
+<script type="text/javascript" src="assets/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="assets/js/google-code-prettify/prettify.js"></script>
+<script type="text/javascript" src="assets/js/bootstrap-transition.js"></script>
+<script type="text/javascript" src="assets/js/bootstrap-alert.js"></script>
+<script type="text/javascript" src="assets/js/bootstrap-modal.js"></script>
+<script type="text/javascript" src="assets/js/bootstrap-dropdown.js"></script>
+<script type="text/javascript" src="assets/js/bootstrap-scrollspy.js"></script>
+<script type="text/javascript" src="assets/js/bootstrap-tab.js"></script>
+<script type="text/javascript" src="assets/js/bootstrap-tooltip.js"></script>
+<script type="text/javascript" src="assets/js/bootstrap-popover.js"></script>
+<script type="text/javascript" src="assets/js/bootstrap-button.js"></script>
+<script type="text/javascript" src="assets/js/bootstrap-collapse.js"></script>
+<script type="text/javascript" src="assets/js/bootstrap-carousel.js"></script>
+<script type="text/javascript" src="assets/js/bootstrap-typeahead.js"></script>
+<script type="text/javascript" src="assets/js/application.js"></script>
+<script type="text/javascript" src="assets/js/jquery-ui-1.8.19.custom.min.js"></script>
+<script type="text/javascript" src="assets/js/jquery-ui-i18n.js"></script>
+<script type="text/javascript" src="assets/js/jquery.tmpl.min.js"></script>
+<script type="text/javascript" src="assets/js/jquery.autogrow.js"></script>
+<script type="text/javascript" src="assets/js/jshash/md5-min.js"></script>
+<script type="text/javascript" src="assets/js/fullcalendar.min.js"></script>
+<script type="text/javascript" src="assets/js/facebox.js"></script>
+<script type="text/javascript" src="assets/js/jquery.qtip.js"></script>
+<script type="text/javascript" src="assets/js/jquery.mousewheel-3.0.6.pack.js"></script>
+<script type="text/javascript" src="assets/js/fancybox/jquery.fancybox.js"></script>
+<script type="text/javascript" src="assets/js/jquery.colorpicker.js"></script>
+<script type="text/javascript" src="assets/js/underscore-min.js"></script>
+<script type="text/javascript" src="assets/js/date.js"></script>
+<script type="text/javascript" src="assets/js/daterangepicker.jQuery.js"></script>
+<script type="text/javascript" src="assets/js/jquery.bgiframe-2.1.3-pre.js"></script>
+<script type="text/javascript" src="assets/js/enhance.min.js"></script>
+<script type="text/javascript" src="assets/js/fileinput.jquery.js"></script>
+<script type="text/javascript" src="assets/js/global.js"></script>
 <title><?php echo $title_for_layout;?> - <?php echo $config['site']['name'];?></title>
 
 </head>
