@@ -12,7 +12,7 @@
 			title:				'请选择颜色',
 			buttonText:			'颜色',	// Text on the button and/or title of button image.
 			doneText: '确认',
-			buttonImage:		'scripts/images/ui-colorpicker.png',
+			buttonImage:		'assets/images/ui-colorpicker.png',
 			hsv: false,
 			limit: 'websafe',
 			parts: 'popup',
