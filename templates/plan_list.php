@@ -10,21 +10,22 @@
 <div class="span12">
 <table class="table table-bordered table-striped">
     <thead><tr>
-        <th>编号</th>
-        <th>金额</th>
-        <th>时间</th>
-        <th>业务状态</th>
-        <th>车辆状态</th>
-        <th>酒店状态</th>
+        <th>到达日期</th>
+        <th>客人(昵称)</th>
+        <th>人数</th>
         <th>顾问</th>
+        <th>行程(天数)</th>
+        <th>订单状态</th>
+        <th>司机状态</th>
+        <th>酒店状态</th>
         <th>操作</th>
     </tr></thead> <tbody><?php if(!empty($plans)):?>
 
     <?php foreach($plans as $plan):?>
     <tr>
-        <td><?php echo $plan['id'];?></td>
-        <td><?php echo $plan['price'];?></td>
-        <td><?php echo $plan['created'];?></td>
+        <td><?php echo $plan['arrive_date'];?></td>
+        <td><?php echo $plan['contact_name'];?>(<?php echo $plan['forum_uid'];?>)</td>
+        <td><?php echo $plan['tourist_cnt'];?></td>
         <td><?php echo @$market_staff_options[$plan['market_staff_id']];?> <?php echo $plan_statuss[$plan['status']]['text'];?></td>
         <td><?php echo @$car_staff_options[$plan['car_staff_id']];?><?php echo $car_statuss[$plan['car_status']]['text'];?></td>
         <td><?php echo @$room_staff_options[$plan['room_staff_id']];?><?php echo $room_statuss[$plan['room_status']]['text'];?></td>

@@ -4,7 +4,7 @@
 <li class="active">查看#<?php echo $tour['id']; ?></li>
 </ul>
 
-<dl>
+<dl class="dlist">
     <dt>名称</dt>    <dd><?php echo $tour['name']; ?></dd>
     <dt>住宿地</dt>    <dd><?php echo $destination_options[$tour['destination_id']]; ?></dd>
     <dt>公里数</dt>    <dd><?php echo $tour['distance']; ?></dd>

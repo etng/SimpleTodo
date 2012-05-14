@@ -172,13 +172,25 @@ switch(@$_GET['act'])
         $operator = current_staff();
         $plan_id = intval($_POST['payment']['plan_id']);
         $plan = $db->find('plan', $plan_id);
-        $payment = $_POST['payment'];
-        $db->insert('plan_payment', array_merge($payment, compact('created', 'operator')));
-        $paid = $db->fetchOne('select sum(amount) from plan_payment where plan_id=' . $plan_id);
-        $balance = $paid-$plan['price'];
-        $db->update('plan', compact('paid', 'balance'), array('id'=>$plan_id));
-         header('location:plan.php?act=view&id='.$plan_id);
-         die();
+        if($plan)
+        {
+            $payment = $_POST['payment'];
+            $db->insert('plan_payment', array_merge($payment, compact('created', 'operator')));
+            $paid = $db->fetchOne('select sum(amount) from plan_payment where plan_id=' . $plan_id);
+            $balance = $paid-$plan['price'];
+            $db->update('plan', compact('paid', 'balance'), array('id'=>$plan_id));
+            $url = @$_POST['return_url'];
+            if(empty($url))
+            {
+                $url = 'plan.php?act=view&id='.$plan_id;
+            }
+             header('location:'.$url);
+        }
+        else
+        {
+            die('订单号丢失！');
+        }
+        die();
         break;
     case 'add-note':
         checkPrivilege();
@@ -408,7 +420,7 @@ switch(@$_GET['act'])
         }
         $cur_status = @$_GET['st'];
         $s_where = $where?' where '.implode(' and ', $where):'';
-        $plans = $db->fetchAll('select * from plan '.$s_where.' order by arrive_date desc');
+        $plans = $db->fetchAll('select plan.*,contact.name as contact_name,contact.forum_uid from plan '.$s_where.' left join contact on contact.id=plan.contact_id order by plan.arrive_date desc');
         include('templates/plan_list.php');
         break;
 }

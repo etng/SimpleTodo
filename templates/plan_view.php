@@ -142,7 +142,7 @@ function getPlanTourCars($plan_tour_id)
 
     </div>
     <div class="tab-pane" id="tab_hotel_assignment">
-    <h4>请<?php echo $room_staff_options[$plan['room_staff_id']];?> 安排 <?php echo $plan['tourist_cnt'];?> 人的住宿事宜</h4>
+    <h4>请<?php echo @$room_staff_options[$plan['room_staff_id']];?> 安排 <?php echo $plan['tourist_cnt'];?> 人的住宿事宜</h4>
     <div>客户留言:　<?php echo $plan['room_request']?></div>
     <dl>
         <dt>当前状态</dt>
@@ -816,17 +816,5 @@ $(document).ready(function(){
 
 
 <div id="payment_add_form" style="display:none">
-  <form method="post" action="plan.php?act=add-payment"><input type="hidden" name="payment[plan_id]" value="<?php echo $plan['id']?>" />
-    <dl>
-      <dt>金额</dt><dd><input type="text" name="payment[amount]" id="payment_amount" value="" /></dd>
-      <dt>支付方式</dt><dd><select name="payment[via]" id="payment_via">
-      <?php foreach($config['payment_vias'] as $via=>$text): /* @var Array $row */?>
-      <option value="<?php echo $via;?>" selected="selected"><?php echo $text;?></option>
-      <?php endforeach;?>
-      </select></dd>
-      <dt>备注</dt>
-      <dd><textarea name="payment[memo]" id="payment_memo" rows="3" cols="70"></textarea></dd>
-    </dl>
-    <input type="submit" value="提交" />
-  </form>
+<?php include('_payment_add_form.php');?>
 </div>
