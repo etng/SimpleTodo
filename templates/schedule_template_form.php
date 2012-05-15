@@ -27,7 +27,7 @@
 
       <label class="control-label" for="schedule_template_need_passport">边防证</label>
       <div class="controls">
-        <label class="checkbox inline"><input type="hidden" name="schedule_template[need_passport]" value="0" /><input type="checkbox" id="schedule_template_need_passport" name="schedule_template[need_passport]" value="1"<?php echo @$schedule_template['need_passport'] && print ' checked="true"'; ?> />需要边防证</label>
+        <label class="checkbox inline"><input type="hidden" name="schedule_template[need_passport]" value="0" /><input type="checkbox" id="schedule_template_need_passport" name="schedule_template[need_passport]" value="1"<?php  @$schedule_template['need_passport'] && print ' checked="true"'; ?> />需要边防证</label>
                 <span class="help-inline"></span>
         <p class="help-block"></p>
       </div>

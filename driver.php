@@ -56,9 +56,20 @@ switch(@$_GET['act'])
         $_GET['act']='list';
         checkPrivilege();
         $title_for_layout = "司机";
-        $where = array();
-        $s_where = $where?' where '.implode(' and ', $where):'';
-        $drivers = $db->fetchAll('select driver.*,destination.name as destination_name from driver left join destination on destination.id=driver.destination_id '.$s_where.' order by driver.id desc');
+
+        $query = new Et_Db_Select($db);
+        $query->from('driver')
+        ->clearField()
+        ->addField('driver.*')
+        ->addField('destination.name as destination_name')
+        ->leftJoin('driver', 'destination_id', 'destination', 'id')
+        ->order_by('driver.id', 'DESC')
+        ;
+        $total = $query->count();
+        $pager = makePager($total, current_staff('preference_perpage', 10));
+        $query->limit($pager['limit'], $pager['offset']);
+        $drivers = $query->execute();
+
         include('templates/driver_list.php');
         break;
 }

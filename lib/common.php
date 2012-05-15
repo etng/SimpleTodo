@@ -229,6 +229,19 @@ function todo_autoload($klass)
 function makePager($total, $limit=20, $side=3)
 {
     $pager = compact('total', 'limit', 'side');
+    $pager['url'] = $_SERVER['REQUEST_URI'];
+    $url_parts = parse_url($pager['url']);
+    $qsa = array();
+    if(!empty($url_parts['query']))
+    {
+        parse_str($url_parts['query'], $qsa);
+        unset($qsa['page']);
+    }
+    $pager['url']=$url_parts['path'] .'?';
+    if($qsa)
+    {
+        $pager['url'].=http_build_query($qsa).'&';
+    }
     $pager['total_page'] = max(1, ceil($pager['total']/$pager['limit']));
     $pager['cur_page'] = min(max(1, intval(@$_GET['page'])), $pager['total_page']);
     $pager['offset'] = ($pager['cur_page'] - 1) * $pager['limit'];

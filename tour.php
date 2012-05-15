@@ -62,9 +62,15 @@ switch(@$_GET['act'])
         $_GET['act']='list';
         checkPrivilege();
         $title_for_layout = "线路";
-        $where = array();
-        $s_where = $where?' where '.implode(' and ', $where):'';
-        $tours = $db->fetchAll('select * from tour '.$s_where.' order by id desc');
+
+        $query = new Et_Db_Select($db);
+        $query->from('tour')
+        ->order_by('tour.id', 'DESC')
+        ;
+        $total = $query->count();
+        $pager = makePager($total, current_staff('preference_perpage', 10));
+        $query->limit($pager['limit'], $pager['offset']);
+        $tours = $query->execute();
         include('templates/tour_list.php');
         break;
 }

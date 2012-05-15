@@ -8,7 +8,7 @@
 <?php
 
 foreach($valid_options as $valid_option=>$text):?>
-<a href="finance.php?act=list&v=<?php echo $valid_option;?>"<?php echo $valid_option===$is_valid && print ' class="active"';?>><?php echo $text;?></a>
+<a href="finance.php?act=list&v=<?php echo $valid_option;?>"<?php $valid_option===$is_valid && print ' class="active"';?>><?php echo $text;?></a>
 <?php endforeach;?>
 </div>
 </div>

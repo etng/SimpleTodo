@@ -1,5 +1,5 @@
 <?php
-$perpage_options = array(5,10,20,25,30,50);
+$perpage_options = array(2,5,10,20,25,30,50);
 $preference = empty($staff['preference'])?array():json_decode($staff['preference'], true);
 ?>
 <h3>修改个人偏好</h3>

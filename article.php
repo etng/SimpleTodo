@@ -48,9 +48,16 @@ switch(@$_GET['act'])
         $_GET['act']='list';
         checkPrivilege();
         $title_for_layout = "文章";
-        $where = array();
-        $s_where = $where?' where '.implode(' and ', $where):'';
-        $articles = $db->fetchAll('select * from article '.$s_where.' order by id desc');
+
+        $query = new Et_Db_Select($db);
+        $query->from('article')
+        ->order_by('article.id', 'DESC')
+        ;
+        $total = $query->count();
+        $pager = makePager($total, current_staff('preference_perpage', 10));
+        $query->limit($pager['limit'], $pager['offset']);
+        $articles = $query->execute();
+
         include('templates/article_list.php');
         break;
 }

@@ -8,8 +8,9 @@
 <a href="hotel.php?act=add" class="btn">添加酒店</a>
 </p>
 <div>
+<a href="hotel.php?act=list&did=all"<?php $did==='all' && print ' class="active"';?>>所有</a>
 <?php foreach($destination_options as $id=>$destination):?>
-<a href="hotel.php?act=list&did=<?php echo $id;?>"><?php echo $destination;?></a>
+<a href="hotel.php?act=list&did=<?php echo $id;?>"<?php $did===$id && print ' class="active"';?>><?php echo $destination;?></a>
 <?php endforeach;?>
 </div>
 <table class="table table-bordered table-striped table-list">

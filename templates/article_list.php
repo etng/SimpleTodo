@@ -36,3 +36,18 @@
 
     <?php endif;?></tbody>
 </table>
+
+<div class="row">
+    <div class="span2">
+        <div class="btn-group" style="margin: 9px 0;">
+          <button class="btn btn-select-all">全选</button>
+          <button class="btn btn-select-inverse">反选</button>
+          <button class="btn btn-select-none">不选</button>
+        </div>
+    </div>
+    <div class="span4"> &nbsp;
+    </div>
+    <div class="span6">
+        <?php include(dirname(__file__). '/_pager.php');?>
+    </div>
+</div>

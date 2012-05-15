@@ -79,15 +79,32 @@ switch(@$_GET['act'])
         $_GET['act']='list';
         checkPrivilege();
         $title_for_layout = "酒店";
-        $where = array();
+
+
+        $query = new Et_Db_Select($db);
+        $query->from('hotel')
+        ->clearField()
+        ->addField('hotel.*')
+        ->addField('destination.name as destination_name')
+        ->leftJoin('hotel', 'destination_id', 'destination', 'id')
+        ->order_by('hotel.priority', 'ASC')
+        ->order_by('hotel.id', 'DESC')
+        ;
+        $did ='all';
         if(!empty($_REQUEST['did']))
         {
-            $where[]='hotel.destination_id='.intval($_REQUEST['did']);
+            if(intval($_REQUEST['did']))
+            {
+                $query->where('hotel.destination_id='.intval($_REQUEST['did']));
+                $did = intval($_REQUEST['did']);
+            }
         }
-        $s_where = $where?' where '.implode(' and ', $where):'';
-        $total = $db->fetchOne('select count(1) as cnt from hotel ' . $s_where);
+
+        $total = $query->count();
         $pager = makePager($total, current_staff('preference_perpage', 10));
-        $hotels = $db->fetchAll("select hotel.*,destination.name as destination_name from hotel  left join destination on destination.id=hotel.destination_id  {$s_where} order by hotel.priority ASC, hotel.id desc  limit {$pager['offset']},{$pager['limit']}");
+        $query->limit($pager['limit'], $pager['offset']);
+        $hotels = $query->execute();
+
         include('templates/hotel_list.php');
         break;
 }

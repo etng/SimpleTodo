@@ -26,6 +26,7 @@ function generatePlanTours($plan)
     }
     $price=0;
     $db->delete('plan_tour', compact('plan_id'));
+    $schedule_days = count($plan_tours);
     foreach($plan_tours as $plan_tour)
     {
         $plan_tour['tourist_cnt'] = $plan['tourist_cnt'];
@@ -48,7 +49,7 @@ function generatePlanTours($plan)
     }
     $paid = 0;
     $balance = $paid-$price;
-    $db->update('plan', compact('price', 'paid', 'balance'), array('id'=>$plan_id));
+    $db->update('plan', compact('price', 'paid', 'balance', 'schedule_days'), array('id'=>$plan_id));
 }
 $tours = $db->fetchAll('select * from tour');
 switch(@$_GET['act'])
@@ -413,16 +414,34 @@ switch(@$_GET['act'])
         $_GET['act']='list';
         checkPrivilege();
         $title_for_layout = "我的计划";
-        $where = array();
+
+        $query = new Et_Db_Select($db);
+        $query->from('plan')
+        ->clearField()
+        ->addField('plan.*')
+        ->addField('contact.name as contact_name')
+        ->addField('schedule_template.name as schedule_template_name')
+        ->addField('contact.forum_uid')
+        ->leftJoin('plan', 'contact_id', 'contact', 'id')
+        ->leftJoin('plan', 'schedule_template_id', 'schedule_template',  'id')
+        ->order_by('plan.arrive_date', 'DESC')
+        ;
         if(!empty($_GET['st']) && isset($plan_statuss[$_GET['st']]))
         {
-            $where []='status="'.$_GET['st'] . '"';
+            $query->where('status="'.$_GET['st'] . '"');
         }
         $cur_status = @$_GET['st'];
-        $s_where = $where?' where '.implode(' and ', $where):'';
-        $plans = $db->fetchAll('select plan.*,contact.name as contact_name,contact.forum_uid from plan '.$s_where.' left join contact on contact.id=plan.contact_id order by plan.arrive_date desc');
+        if(!$cur_status)
+        {
+            $cur_status = 'all';
+        }
+        $total = $query->count();
+        $pager = makePager($total, current_staff('preference_perpage', 10));
+        $query->limit($pager['limit'], $pager['offset']);
+        $plans = $query->execute();
         include('templates/plan_list.php');
         break;
 }
 $content_for_layout = ob_get_clean();
 include('templates/default.layout.php');
+

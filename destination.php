@@ -52,9 +52,16 @@ switch(@$_GET['act'])
         $_GET['act']='list';
         checkPrivilege();
         $title_for_layout = "目的地";
-        $where = array();
-        $s_where = $where?' where '.implode(' and ', $where):'';
-        $destinations = $db->fetchAll('select * from destination '.$s_where.' order by id desc');
+
+        $query = new Et_Db_Select($db);
+        $query->from('destination')
+        ->order_by('destination.id', 'DESC')
+        ;
+        $total = $query->count();
+        $pager = makePager($total, current_staff('preference_perpage', 10));
+        $query->limit($pager['limit'], $pager['offset']);
+        $destinations = $query->execute();
+
         include('templates/destination_list.php');
         break;
 }
