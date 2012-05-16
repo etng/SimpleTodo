@@ -57,7 +57,7 @@
       <?php if($plan['schedule_status']=='locked'):?>
 
     <div class="tab-pane" id="tab_car_assignment">
- <h4>请<?php echo $car_staff_options[$plan['car_staff_id']];?> 安排 <?php echo $plan['tourist_cnt'];?> 人旅行司机及车辆</h4>
+ <h4>请<?php echo @$car_staff_options[$plan['car_staff_id']];?> 安排 <?php echo $plan['tourist_cnt'];?> 人旅行司机及车辆</h4>
     <div>客户留言:　<?php echo $plan['car_request']?></div>
     <dl>
         <dt>当前状态</dt>
@@ -239,15 +239,7 @@
     <div class="tab-pane" id="tab_request">
       <form method="post" action="?act=update-request" enctype="multipart/form-data">
       <input type="hidden" name="plan_id" value="<?php echo $plan['id']?>" />
-
-<dl>
-   <dt>车辆要求</dt>
-      <dd><textarea id="car_request" name="plan[car_request]" rows="3" cols="70"><?php echo $plan['car_request']?></textarea></dd>
-       <dt>房间要求</dt>
-      <dd><textarea id="room_request" name="plan[room_request]" rows="3" cols="70"><?php echo $plan['room_request']?></textarea></dd>
-       <dt>其他要求</dt>
-      <dd><textarea id="other_request" name="plan[other_request]" rows="3" cols="70"><?php echo $plan['other_request']?></textarea></dd>
-</dl>
+<?php include('_plan_request_form.php')?>
       <input type="submit" value="更新要求" class="btn btn-primary"  />
       </form>
     </div>
@@ -255,86 +247,8 @@
 <form method="post" action="plan.php?act=update-schedule" enctype="multipart/form-data">
       <input type="hidden" name="plan_id" value="<?php echo $plan['id']?>" />
 
-<div>
-<h4><label class="checkbox inline"><input type="hidden" name="plan[need_receive]" value="0" /><input type="checkbox" id="plan_need_receive" name="plan[need_receive]" value="1"<?php 1==@$plan['need_receive'] && print(' checked="true"');?> />需要接站</label></h4>
-<div id="receive_detail_container"<?php 0==@$plan['need_receive'] && print(' style="display:none;"');?>> <dl>
-             <dt>集合日期</dt><dd><input type="text" id="arrive_date" name="plan[arrive_date]" value="<?php echo $plan['arrive_date'];?>" size="10" /></dd>
-             <dt>集合地点</dt><dd>
-              <select id="arrive_destination" name="plan[arrive_destination]">
-        <?php foreach(explode(',', '拉萨,成都,西安') as $city):?>
-        <option value="<?php echo $city;?>"<?php  $city==@$plan['arrive_destination'] && print(' selected="true"');?>><?php echo $city;?></option>
-        <?php endforeach;?>
-    </select></dd>
-             <dt>集合方式</dt><dd><input type="text" id="arrive_method" name="plan[arrive_method]" value="<?php echo $plan['arrive_method'];?>" size="6" />
-              <select id="arrive_method_selector">
-        <option value="" selected="selected">自定义</option>
-        <?php foreach(explode(',', '火车,飞机,自驾,长途车') as $method):?>
-        <option value="<?php echo $method;?>"<?php $method==@$plan['arrive_method'] && print(' selected="true"');?>><?php echo $method;?></option>
-        <?php endforeach;?>
-    </select></dd>
-<dt>接站地点等信息</dt><dd>
-<textarea id="arrive_detail" name="plan[arrive_detail]" rows="3" cols="70" plcaceholder="班次、到达时间等信息"><?php echo $plan['arrive_detail'];?></textarea>
-</dd>
-</dl>
-</div>
-</div>
+          <?php include('_plan_schedule_form.php')?>
 
-<div>
-
-<h4><label class="checkbox inline"><input type="hidden" name="plan[need_seeoff]" value="0" /><input type="checkbox" id="plan_need_seeoff" name="plan[need_seeoff]" value="1"<?php  1==@$plan['need_seeoff'] && print(' checked="true"');?> />需要送站</label></h4>
-<div id="seeoff_detail_container"<?php 0==@$plan['need_seeoff'] && print(' style="display:none;"');?> > <dl>
-
-             <dt>遣散日期</dt><dd><input type="text" id="seeoff_date" name="plan[seeoff_date]" value="<?php echo $plan['seeoff_date'];?>" size="10" /></dd>
-             <dt>遣散地点</dt><dd>
-              <select id="seeoff_destination" name="plan[seeoff_destination]">
-        <?php foreach(explode(',', '拉萨,成都,西安') as $city):?>
-        <option value="<?php echo $city;?>"<?php  $city==@$plan['seeoff_destination'] && print(' selected="true"');?>><?php echo $city;?></option>
-        <?php endforeach;?>
-    </select></dd>
-             <dt>遣散方式</dt><dd><input type="text" id="seeoff_method" name="plan[seeoff_method]" value="<?php echo $plan['seeoff_method'];?>" size="6" />
-              <select id="seeoff_method_selector">
-        <option value="" selected="selected">自定义</option>
-        <?php foreach(explode(',', '火车,飞机,自驾,长途车') as $method):?>
-        <option value="<?php echo $method;?>"<?php  $method==@$plan['seeoff_method'] && print(' selected="true"');?>><?php echo $method;?></option>
-        <?php endforeach;?>
-    </select></dd>
-<dt>送站地点等信息</dt><dd>
-<textarea id="seeoff_detail" name="plan[seeoff_detail]" rows="3" cols="70" plcaceholder="班次、出发时间等信息"><?php echo $plan['seeoff_detail'];?></textarea>
-</dd>
-</dl>
-</div>
-</div>
-
-<div>
-    <dl>
-        <dt>主贴地址</dt>
-          <dd>
-          <input type="text" id="forum_url" name="plan[forum_url]" value="<?php echo $plan['forum_url'];?>" size="255" /><a href="<?php echo $plan['forum_url']?>" target="_blank">打开</a></dd>
-                <dt>出发日期</dt>
-                <dd><input type="text" id="start_date" name="plan[start_date]" value="<?php echo $plan['start_date'];?>" size="10" /></dd>
-                 <dt>日程安排</dt>
-                <dd>
-                <select id="schedule_template_selector" name="plan[schedule_template_id]">
-                    <option value="" selected="selected">--请选择--</option>
-                    <?php foreach($schedule_templates as $schedule_template):?>
-                    <option value="<?php echo $schedule_template['id'];?>"<?php  $schedule_template['id']==@$plan['schedule_template_id'] && print(' selected="true"');?>><?php echo $schedule_template['name'];?></option>
-                    <?php endforeach;?>
-                </select><br />
-                <textarea id="schedule_txt" name="plan[schedule_txt]" rows="8" cols="70"><?php echo $plan['schedule_txt'];?></textarea>
-                <div class="btn-group">
-                <input type="button" class="btn btn-reverse-schedule" value="倒排"/>
-                <input type="button" class="btn btn-preview-schedule" value="预览"/>
-                </div>
-                <label class="checkbox inline"><input type="hidden" name="plan[need_passport]" value="0" /><input type="checkbox" id="plan_need_passport" name="plan[need_passport]" value="1"<?php  1==@$plan['need_passport'] && print(' checked="true"');?> />办理边防证</label>
-                <label class="checkbox inline"><input type="hidden" name="plan[need_hotel]" value="0" /><input type="checkbox" id="plan_need_hotel" name="plan[need_hotel]" value="1"<?php  1==@$plan['need_hotel'] && print(' checked="true"');?> />需要安排住宿</label>
-                <input type="text" size="2" class="input-mini need_room_cnt"  id="plan_need_room_cnt" name="plan[need_room_cnt]" value="<?php echo $plan['need_room_cnt'];?>" />
-
-                <label class="checkbox inline"><input type="hidden" name="plan[need_car]" value="0" /><input type="checkbox" id="plan_need_car" name="plan[need_car]" value="1"<?php 1==@$plan['need_car'] && print(' checked="true"');?> />需要安排车辆</label>
-<input type="text" size="2" class="input-mini need_car_cnt"  id="plan_need_car_cnt" name="plan[need_car_cnt]" value="<?php echo $plan['need_car_cnt'];?>" />
-                <label class="checkbox inline"><input type="hidden" name="plan[need_insurance]" value="0" /><input type="checkbox" id="plan_need_insurance" name="plan[need_insurance]" value="1"<?php  1==@$plan['need_insurance'] && print(' checked="true"');?> />办理保险</label>
-                </dd>
-            </dl>
-</div>
       <input type="submit" value="更新日程" class="btn btn-primary"  />
 </form>
 
@@ -346,26 +260,69 @@
           <dt>日程安排</dt><dd>
           <table class="table table-bordered table-striped">
           <thead><tr>
+            <td>天数</td>
             <td>日期</td>
-            <td>线路</td>
+            <td>行程</td>
             <td>住宿</td>
-            <td>路程</td>
-            <td>金额</td>
-            <td>人数</td>
-            <td>需要车辆数</td>
-            <td>需要房间数</td>
-            <td>小计</td>
+            <td>酒店名称</td>
+            <td>间数</td>
+            <td>住宿费用</td>
+            <td>备注</td>
+            <td>车辆安排</td>
           </tr></thead>
-          <tbody><?php if(!empty($plan['tours'])):?>
-          <?php foreach($plan['tours'] as $i=>$plan_tour):?>
-          <tr>
+          <tbody><?php
+                    $room_price_sum=$car_price_sum=0;
+          $car_days=array();
+
+          if(!empty($plan['tours'])):?>
+          <?php $i=0;foreach($plan['tours'] as $id=>$plan_tour):$plan_tour['day'] = 'D' . (++$i);?>
+          <tr class="dest_<?php echo $plan_tour['destination_id'];?>">
+            <td><?php echo $plan_tour['day'];?></td>
             <td><?php echo $plan_tour['the_date'];?></td>
             <td><?php echo $plan_tour['name'];?></td>
             <td><?php echo $plan_tour['destination'];?></td>
-            <td><?php echo $plan_tour['distance'];?></td>
-            <td><?php echo $plan_tour['price'];?></td>
-            <td><?php echo $plan_tour['tourist_cnt'];?></td>
-            <td><input type="text" size="2" class="input-mini need_car_cnt"  id="plan_tour_<?php echo $i;?>_need_car_cnt" name="plan_tour[<?php echo $i;?>][need_car_cnt]" value="<?php echo $plan_tour['need_car_cnt'];?>" />
+            <td>            <?php
+            $current_hotel_id = $plan_tour['hotel_id'];
+            settype($hotel_options[$plan_tour['destination_id']], 'array');
+            if($current_hotel_id==0)
+            {
+                if(!empty($hotel_options[$plan_tour['destination_id']]))
+                {
+                    reset($hotel_options[$plan_tour['destination_id']]);
+                    $current_hotel_id=key($hotel_options[$plan_tour['destination_id']]);
+                }
+                else
+                {
+                    $current_hotel_id = -1;
+                }
+            }
+            ?>
+            <?php if(hasPrivilege('assignHotel')):?>
+
+
+            <select data-dest-id="<?php echo $plan_tour['destination_id'];?>" data-the_date="<?php echo $plan_tour['the_date'];?>" name="plan_tour[<?php echo $id;?>][hotel_id]" class="input-medium plan_tour_hotel_selector">
+            <option value="-1">自理</option>
+            <?php foreach($hotel_options[$plan_tour['destination_id']] as $hotel_id=>$hotel_name):?>
+            <option value="<?php echo $hotel_id;?>"<?php $hotel_id==@$current_hotel_id && print(' selected="true"');?>><?php echo $hotel_name;?></option>
+            <?php endforeach;?>
+            </select>
+
+            <input type="hidden"  name="plan_tour[<?php echo $id;?>][hotel_id]" value="<?php echo $plan_tour['hotel_id'];?>" />
+
+            <?php else:?>
+            <?php echo $current_hotel_id==-1?'自理':@$hotel_options[$plan_tour['destination_id']][$current_hotel_id];?>
+            <?php endif;?>
+            </td>
+            <td class="room_cnt"><?php echo $plan_tour['need_room_cnt'];?></td>
+            <td>
+            <?php if(!hasPrivilege('assignHotel')):?>
+            <span  class="room_price_sum"><?php echo $plan_tour['room_price_sum'];?></span>
+            <?php else:?>
+            <input type="text" name="plan_tour[<?php echo $id;?>][room_price_sum]" class="input-mini room_price_sum" value="<?php echo $plan_tour['room_price_sum'];?>" />
+            <?php endif;?>
+            </td>
+            <td><?php echo $plan_tour['memo'];?></td>
+            <td><input type="text" size="2" class="input-mini need_car_cnt"  id="plan_tour_<?php echo $id;?>_need_car_cnt" name="plan_tour[<?php echo $id;?>][need_car_cnt]" value="<?php echo $plan_tour['need_car_cnt'];?>" />
 
             <label class="checkbox"><input type="checkbox" class="do_not_need_car"<?php if(!$plan_tour['need_car_cnt']):?> checked="true"<?php endif;?> />无需车辆</label>
 
@@ -373,16 +330,16 @@
             <input data-plan_tour_id="<?php echo $plan_tour['id'];?>" type="button" value="安排" class="btn btn_assign_car"/>
             <?php endif;?>
             </td>
-            <td><input type="text" size="2" class="input-mini need_room_cnt"  id="plan_tour_<?php echo $i;?>_need_room_cnt" name="plan_tour[<?php echo $i;?>][need_room_cnt]" value="<?php echo $plan_tour['need_room_cnt'];?>" />
 
-            <label class="checkbox"><input type="checkbox" class="do_not_need_room"<?php if(!$plan_tour['need_room_cnt']):?> checked="true"<?php endif;?> />酒店自理</label>
-            <?php if($plan_tour['need_room_cnt'] && ($plan['room_status']=='assignning')):?>
-            <input data-plan_tour_id="<?php echo $plan_tour['id'];?>" type="button" value="安排" class="btn btn_assign_room"/>
-            <?php endif;?>
-            </td>
-            <td><?php echo $plan_tour['price_sum'];?>/<?php echo $plan_tour['market_price_sum'];?></td>
           </tr>
-          <?php endforeach;?>
+          <?php
+          $room_price_sum+=$plan_tour['room_price_sum'];
+          $car_price_sum+=$plan_tour['car_price_sum'];
+          if($plan_tour['need_car_cnt'])
+          {
+            $car_days[]=$plan_tour['day'];
+          }
+          endforeach;?>
           <?php else:?>
           <tr>
             <td colspan="100">咦，没有安排日程！</td>
@@ -392,10 +349,81 @@
         </dl>
          <input type="submit" value="更新日程细节" class="btn btn-primary"  />
 </form>
+<div class="row" id="plan_sum"><div class="span12">
+住宿费用小计： <span class="room_price_sum"><?php echo $room_price_sum;?></span><br />
+<?php if($car_days):?>
+包车费用小计：<span class=""><?php echo $car_price_sum;?></span>， 时间： <?php echo implode('-', $car_days)?>共计<?php echo count($car_days)?>天<br /><?php endif;?>
+</div>
+</div>
+<div class="row">
+  <div class="span12">
+  <h3>使用说明</h3>
+<ol>
+  <li>每日酒店默认为该目的地默认酒店，并提供酒店列表</li>
+  <li>点击每天日程中酒店名称位置后，跳出该住宿目的地可以安排的酒店列表，选择后自动更新酒店价格</li>
+</ol>
+  </div>
+</div>
+
 <style type="text/css">
     .need_room_cnt, .need_car_cnt{width: auto;}
 </style>
-
+<script type="text/javascript">
+<!--
+    function updateHotel($tr, hotel_id)
+    {
+        var $selector = $tr.find('.plan_tour_hotel_selector');
+        var the_date = $selector.data('the_date');
+        var $room_cnt = $('.room_cnt', $tr);
+        var room_cnt = $room_cnt.html();
+        if(hotel_id<1)
+        {
+            $('input.room_price_sum', $tr).val(0);
+        }
+        else
+        {
+            $.get('plan.php?act=hotel-daily-price&hotel_id='+hotel_id+'&the_date='+the_date, function(response)
+            {
+                console.log(response);
+                if(response.status)
+                {
+                    var room_price = response.price;
+                    $('input.room_price_sum', $tr).val(room_price*room_cnt);
+                }
+                else
+                {
+                    alert(response.message);
+                }
+            }, 'json');
+        }
+        $selector.val(hotel_id);
+    }
+    jQuery(function($){
+    $('.plan_tour_hotel_selector').change(function(){
+        var $selector = $(this);
+        var hotel_id = $selector.val();
+        var dest_id = $selector.data('dest-id');
+        $selector.closest('table').find('.plan_tour_hotel_selector').each(function(k, v){
+            $this = $(v);
+            if($this.data('dest-id')==dest_id)
+            {
+                updateHotel($this.closest('tr'), hotel_id);
+            }
+        });
+        var total_room_price =0;
+        $('input.room_price_sum').each(function(k, v){
+            var p = parseFloat($(v).val());
+            if(isNaN(p))
+            {
+                p=0;
+            }
+            total_room_price+=p;
+        });
+        $('#plan_sum .room_price_sum').html(total_room_price);
+    });
+    });
+//-->
+</script>
 
 
       </div>
@@ -439,41 +467,8 @@
         <h3>工作人员</h3>
         <form method="post" action="plan.php?act=update-staff" enctype="multipart/form-data">
       <input type="hidden" name="plan_id" value="<?php echo $plan['id']?>" />
-          <dl>
-            <dt>旅行顾问</dt>
-            <dd>
-                <select id="plan_consult_staff_id" name="plan[consult_staff_id]">
-                <?php foreach($consult_staff_options as $id=>$name):?>
-                <option value="<?php echo $id;?>"<?php $id==@$plan['consult_staff_id'] && print(' selected="true"');?>><?php echo $name;?></option>
-                <?php endforeach;?>
-                </select>
-            </dd>
+          <?php include('_plan_staff_form.php')?>
 
-            <dt>业务跟进</dt>
-            <dd>
-                <select id="plan_market_staff_id" name="plan[market_staff_id]">
-                <?php foreach($market_staff_options as $id=>$name):?>
-                <option value="<?php echo $id;?>"<?php $id==@$plan['market_staff_id'] && print(' selected="true"');?>><?php echo $name;?></option>
-                <?php endforeach;?>
-                </select>
-            </dd>
-
-            <dt>酒店跟进</dt>
-            <dd>
-                <select id="plan_room_staff_id" name="plan[room_staff_id]">
-                <?php foreach($room_staff_options as $id=>$name):?>
-                <option value="<?php echo $id;?>"<?php $id==@$plan['room_staff_id'] && print(' selected="true"');?>><?php echo $name;?></option>
-                <?php endforeach;?>
-                </select>
-            </dd><dt>车辆跟进</dt>
-            <dd>
-                <select id="plan_car_staff_id" name="plan[car_staff_id]">
-                <?php foreach($car_staff_options as $id=>$name):?>
-                <option value="<?php echo $id;?>"<?php $id==@$plan['car_staff_id'] && print(' selected="true"');?>><?php echo $name;?></option>
-                <?php endforeach;?>
-                </select>
-            </dd>
-          </dl>
          <input type="submit" value="更新人员安排" class="btn btn-primary"  />
 </form>
       </div>

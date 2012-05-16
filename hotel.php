@@ -61,13 +61,14 @@ switch(@$_GET['act'])
         checkPrivilege();
         $updated = now();
         $record = $_POST['price'];
+        $hotel_id = $record['hotel_id'];
         $the_date_ts = $start_date_ts = strtotime($_POST['start_date']);
         $end_date_ts = strtotime($_POST['end_date']);
         while($the_date_ts<=$end_date_ts)
         {
             $the_date = date('Y-m-d H:i:s', $the_date_ts);
             $room_type = $record['room_type'];
-            $db->delete('room_daily_price', compact('the_date', 'room_type'));
+            $db->delete('room_daily_price', compact('hotel_id', 'the_date', 'room_type'));
             $db->insert('room_daily_price', $record = array_merge($record, compact('the_date', 'updated')));
             $the_date_ts+=86400;
         }

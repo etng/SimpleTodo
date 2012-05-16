@@ -64,5 +64,27 @@
       </div>
     </div>
   </fieldset>
+
+
+  <fieldset>
+    <legend>订单相关</legend>
+
+        <div class="control-group">
+      <label class="control-label" for="setting_plan_start_date_delay">默认开始天数</label>
+      <div class="controls">
+      <input type="text" name="setting[plan_start_date_delay]" id="setting_plan_start_date_delay" value="<?php echo @$setting['plan_start_date_delay'];?>" size="10" />
+        <p class="help-block"></p>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label" for="setting_plan_arrive_date_delay">默认到达天数</label>
+      <div class="controls">
+      <input type="text" name="setting[plan_arrive_date_delay]" id="setting_plan_arrive_date_delay" value="<?php echo @$setting['plan_arrive_date_delay'];?>" size="10" />
+        <p class="help-block"></p>
+      </div>
+    </div>
+
+  </fieldset>
    <button type="submit" class="btn btn-primary">保存</button>
 </form>

@@ -162,6 +162,11 @@ function current_staff($field="name", $default=null)
     }
     return empty($_SESSION['staff'][$field])?$default:$_SESSION['staff'][$field];
 }
+function hasPrivilege()
+{
+//    return false;
+    return true;
+}
 function checkPrivilege($controller=null, $action=null)
 {
     global $config;
@@ -268,4 +273,24 @@ function url_for($controller, $action, $params=array())
         $url .= '?' . http_build_query($params);
     }
     return $url;
+}
+function getDefaultHotel($destination_id)
+{
+    global $db;
+    return $db->fetchOne("select id from hotel where destination_id={$destination_id} order by priority desc limit 1");
+}
+function getPlanTourRooms($plan_tour_id)
+{
+  global $db;
+  return $db->fetchAll('select plan_tour_room.*,hotel.name as hotel_name from plan_tour_room left join hotel on plan_tour_room.hotel_id=hotel.id where plan_tour_room.plan_tour_id=' . $plan_tour_id);
+}
+function getPlanTourCars($plan_tour_id)
+{
+  global $db;
+  return $db->fetchAll('select plan_tour_car.*,driver.name as driver_name from plan_tour_car left join driver on plan_tour_car.driver_id=driver.id where plan_tour_car.plan_tour_id=' . $plan_tour_id);
+}
+function getHotelStdPrice($hotel_id, $the_date)
+{
+    global $db;
+    return $db->fetchOne('select default_price from room_daily_price where the_date="'.$the_date.'" and hotel_id="'.$hotel_id.'" and room_type="std"');
 }

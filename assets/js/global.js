@@ -38,4 +38,16 @@ $(document).ready(function(){
 //        });
 //    });
 
+
+
+$('a[data-toggle="tab"]').on('shown', function (e) {
+    $.cookie(location.href.substr(location.origin.length), $(e.target).attr('href'));
+})
+var last_tab;
+if(last_tab=$.cookie(location.href.substr(location.origin.length)))
+{
+    console.log('restore tab to ' + last_tab);
+    $('a[data-toggle="tab"][href="'+last_tab+'"]').tab('show');
+}
+
 });

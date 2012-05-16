@@ -11,6 +11,7 @@
     <thead><tr>
         <th>编号</th>
         <th>名称</th>
+        <th>主要看点</th>
         <th>住宿地</th>
         <th>公里数</th>
         <th>市场价</th>
@@ -22,6 +23,7 @@
     <tr>
         <td><?php echo $tour['id'];?></td>
         <td><?php echo $tour['name'];?></td>
+        <td><?php echo $tour['attractions'];?></td>
         <td><?php echo $destination_options[$tour['destination_id']];?></td>
         <td><?php echo $tour['distance'];?></td>
         <td><?php echo $tour['market_price'];?></td>

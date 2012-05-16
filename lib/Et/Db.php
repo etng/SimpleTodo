@@ -211,7 +211,7 @@ class Et_Db
             {
                 continue;
             }
-            if(!in_array($table_meta['fields'][$k]->data_type, array('char', 'varchar', 'text', 'datetime')) && in_array($v{0}, array('*','+','-','/')))
+            if(!in_array($table_meta['fields'][$k]->data_type, array('char', 'varchar', 'text', 'datetime')) && ($v && in_array($v{0}, array('*','+','-','/'))))
             {
                 $set_fields[] = sprintf('`%s`=`%s`%s"%s"', $k, $k, $v{0}, intval(substr($v, 1)));
             }

@@ -3,6 +3,11 @@ require "lib/common.php";
 $schedule_templates = $db->fetchAll('select * from schedule_template', 'id');
 ob_start();
 $created = $updated = now();
+$hotel_options = array();
+foreach($db->fetchAll('select * from hotel') as $row)
+{
+    $hotel_options[$row['destination_id']][$row['id']] = $row['name'];
+}
 function generatePlanSn($type, $ts)
 {
    return $type . date('Ymd',$ts).str_pad(countDailyPlan($ts)+1, 6, 0, STR_PAD_LEFT);
@@ -22,28 +27,42 @@ function generatePlanTours($plan)
   global $tour_sep,$db;
     $plan_id = $plan['id'];
     $start_date = strtotime($plan['start_date']);
-    $i=0;
-    foreach(explode("\n", $plan['schedule_txt']) as $line)
+    $lines = preg_split('/[\r\n]/', $plan['schedule_txt'], -1, PREG_SPLIT_NO_EMPTY);
+    for($i=0,$m=count($lines),$tours=array();$i<$m;$i++)
     {
-      $line = trim($line);
+      $line = trim($lines[$i]);
       if(!empty($line))
       {
-        list($dummy, $name) = preg_split("/\s*[,]+\s*/sim", str_replace('，', ',', $line));
+        if($line{0}=='D')
+        {
+            list($dummy, $name) = preg_split("/\s*[,]+\s*/sim", str_replace('，', ',', $line));
+            $next_line = trim(@$lines[$i+1]);
+            if($next_line && ($next_line{0}!='D'))
+            {
+                list($dummy, $attractions) = explode(':', str_replace('：', ':', $next_line), 2);
+                $i++;
+            }
+        }
         $destinations = explode($tour_sep, $name);
         $name = implode($tour_sep, $destinations);
         $destination = end($destinations);
         $destination_id = $db->getOrCreate('destination', array('name'=>$destination, 'slug'=>$destination), compact('created', 'updated'));
-        $tour_id = $db->getOrCreate('tour', $values=compact('name', 'destination', 'destination_id'),  compact('created', 'updated'));
-        $the_date = date('Y-m-d', $start_date+$i++*86400);
-        $plan_tours[]=compact('tour_id', 'the_date');
+        $tour_id = $db->getOrCreate('tour', $values=compact('name', 'destination', 'destination_id', 'attractions'),  compact('created', 'updated'));
+        $tours[]=$tour_id;
       }
     }
     $price=0;
     $db->delete('plan_tour', compact('plan_id'));
-    $schedule_days = count($plan_tours);
-    foreach($plan_tours as $plan_tour)
+    $schedule_days = count($tours);
+    foreach($tours as $i=>$tour_id)
     {
+        $plan_tour = array();
+        $plan_tour['the_date'] = date('Y-m-d', $start_date+$i*86400);
         $plan_tour['tourist_cnt'] = $plan['tourist_cnt'];
+        $plan_tour['need_room_cnt'] = $plan['need_room_cnt'];
+        $plan_tour['need_car_cnt'] = $plan['need_car_cnt'];
+        $plan_tour['tour_id'] = $tour_id;
+        $plan_tour['plan_id'] = $plan_id;
         if(!empty($plan_tour['need_car']))
         {
             $plan_tour['car_tourist_cnt'] = $plan_tour['tourist_cnt'];
@@ -59,7 +78,13 @@ function generatePlanTours($plan)
         $plan_tour['market_price_sum'] =  $tour['market_price'] * $plan_tour['tourist_cnt'];
         $price += $plan_tour['price_sum'];
         $plan_tour['destination'] = $tour['destination'];
-        $db->insert('plan_tour', $plan_tour = array_merge($plan_tour, compact('plan_id')));
+        $plan_tour['hotel_id'] = -1;
+        if($hotel_id = getDefaultHotel($tour['destination_id']))
+        {
+            $plan_tour['hotel_id'] = $hotel_id;
+            $plan_tour['room_price_sum'] = $plan_tour['need_room_cnt'] * getHotelStdPrice($plan_tour['hotel_id'], $plan_tour['the_date']);
+        }
+        $db->insert('plan_tour', $plan_tour);
     }
     $paid = 0;
     $balance = $paid-$price;
@@ -72,6 +97,17 @@ switch(@$_GET['act'])
         checkPrivilege();
         $title_for_layout = "添加计划";
         $tours = $db->fetchAll('select * from tour');
+        $plan = array(
+        'start_date'=>date('Y-m-d', strtotime('+'.current_staff('preference_plan_start_date_delay', 15).' day')),
+        'arrive_date'=>date('Y-m-d', strtotime('+'.current_staff('preference_plan_arrive_date_delay', 14).' day')),
+        'need_insurance'=>0,
+        'need_passport'=>0,
+        'need_car'=>1,
+        'need_hotel'=>1,
+        'need_car_cnt'=>1,
+        'need_room_cnt'=>2,
+        'need_insurance'=>0,
+        );
         if($_SERVER['REQUEST_METHOD']=='POST')
         {
             if($files = Attachment::fromUpload('tourist_card_photo_file', APP_ROOT . $card_photo_base_url, $allowed_types, $thumb_config))
@@ -352,6 +388,23 @@ switch(@$_GET['act'])
         echo json_encode($db->fetchRow($sql='select * from room_daily_price where the_date="'.$the_date.'" and hotel_id="'.$hotel_id.'" and room_type="'.$room_type.'"'));
         die();
         break;
+    case 'hotel-daily-price':
+        checkPrivilege();
+        $hotel_id = intval($_GET['hotel_id']);
+        $the_date = $_GET['the_date'];
+        if($price = getHotelStdPrice($hotel_id, $the_date))
+        {
+            $status = true;
+        }
+        else
+        {
+            $status = false;
+            $message = '暂无报价' . $the_date;
+        }
+        $price = intval($price);
+        echo json_encode(compact('status', 'message', 'price'));
+        die();
+        break;
     case 'add-car':
         checkPrivilege();
         $plan_id = intval($_POST['car']['plan_id']);
@@ -449,6 +502,7 @@ switch(@$_GET['act'])
         ->leftJoin('plan', 'contact_id', 'contact', 'id')
         ->leftJoin('plan', 'schedule_template_id', 'schedule_template',  'id')
         ->order_by('plan.arrive_date', 'DESC')
+        ->order_by('plan.id', 'DESC')
         ;
         if(!empty($_GET['st']) && isset($plan_statuss[$_GET['st']]))
         {
@@ -470,13 +524,3 @@ $content_for_layout = ob_get_clean();
 include('templates/default.layout.php');
 
 
-function getPlanTourRooms($plan_tour_id)
-{
-  global $db;
-  return $db->fetchAll('select plan_tour_room.*,hotel.name as hotel_name from plan_tour_room left join hotel on plan_tour_room.hotel_id=hotel.id where plan_tour_room.plan_tour_id=' . $plan_tour_id);
-}
-function getPlanTourCars($plan_tour_id)
-{
-  global $db;
-  return $db->fetchAll('select plan_tour_car.*,driver.name as driver_name from plan_tour_car left join driver on plan_tour_car.driver_id=driver.id where plan_tour_car.plan_tour_id=' . $plan_tour_id);
-}

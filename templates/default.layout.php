@@ -63,6 +63,7 @@
 <script type="text/javascript" src="assets/js/jquery.bgiframe-2.1.3-pre.js"></script>
 <script type="text/javascript" src="assets/js/enhance.min.js"></script>
 <script type="text/javascript" src="assets/js/fileinput.jquery.js"></script>
+<script type="text/javascript" src="assets/js/jquery.cookie.js"></script>
 <script type="text/javascript" src="assets/js/global.js"></script>
 <title><?php echo $title_for_layout;?> - <?php echo $config['site']['name'];?></title>
 
