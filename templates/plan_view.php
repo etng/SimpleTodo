@@ -8,47 +8,35 @@
   }
 
 </style>
-<?php
-function getPlanTourRooms($plan_tour_id)
-{
-  global $db;
-  return $db->fetchAll('select plan_tour_room.*,hotel.name as hotel_name from plan_tour_room left join hotel on plan_tour_room.hotel_id=hotel.id where plan_tour_room.plan_tour_id=' . $plan_tour_id);
-}
-function getPlanTourCars($plan_tour_id)
-{
-  global $db;
-  return $db->fetchAll('select plan_tour_car.*,driver.name as driver_name from plan_tour_car left join driver on plan_tour_car.driver_id=driver.id where plan_tour_car.plan_tour_id=' . $plan_tour_id);
-}
-?>
 <ul class="breadcrumb">
   <li><a href="/">首页</a> <span class="divider">/</span></li>
   <li><a href="plan.php?act=list">计划</a> <span class="divider">/</span></li>
   <li class="active">查看 #<?php echo $plan['id']?></li>
 </ul>
-<?php $plan['contact'] = $contact;?>
-<dl>
-<dt>旅行顾问</dt>
-          <dd>
-          <?php echo $consult_staff_options[$plan['consult_staff_id']];?>
-           </dd>
-<dt>业务跟进</dt>
-          <dd>
-          <?php echo @$market_staff_options[$plan['market_staff_id']];?>
-           </dd>
-        <dt>当前状态</dt>
-          <dd>
-          <?php echo $plan_statuss[$plan['status']]['text'];?>
-           </dd>
-        <?php if($next_statuss = $plan_statuss[$plan['status']]['next']):?>
-          <dt>操作</dt>
-          <dd>
-           <?php foreach(explode(',', $next_statuss) as $next_status):$next_status_info = $plan_statuss[$next_status];?>
-          <a class="btn" href="plan.php?act=set-status&status=<?php echo $next_status;?>&id=<?php echo $plan['id']?>"><?php echo $next_status_info['action_text']?></a>
-          <?php endforeach;?>
+<h3>
+[<?php echo $plan['sn'];?>]<?php echo date('Y-n-j', strtotime($plan['arrive_date']));?>&nbsp;
+<?php echo $plan['contact']['name'];?>一行<?php echo $plan['contact']['forum_uid'];?><?php echo $plan['tourist_cnt'];?>人&nbsp;
+&nbsp;- <?php echo $plan['schedule_template']['name'];?>(<?php echo $plan['schedule_days'];?>天)
+&nbsp;- 酒店列表&nbsp;
+&nbsp;- 司机列表&nbsp;
+<br />
+顾问：<?php echo $consult_staff_options[$plan['consult_staff_id']];?>&nbsp;,
+跟单：<?php echo @$market_staff_options[$plan['market_staff_id']];?>
+&nbsp;<?php echo $plan_statuss[$plan['status']]['text'];?>
+</h3>
 
-          </dd>
-        <?php endif;?>
-        </dl>
+  <div class="row">
+  <?php if($next_statuss = $plan_statuss[$plan['status']]['next']):?>
+ <?php foreach(explode(',', $next_statuss) as $next_status):$next_status_info = $plan_statuss[$next_status];?>
+  <a class="btn" href="plan.php?act=set-status&status=<?php echo $next_status;?>&id=<?php echo $plan['id']?>"><?php echo $next_status_info['action_text']?></a>
+ <?php endforeach;?>
+ <?php endif;?>
+<a class="btn" href="plan.php?act=print_contract&id=<?php echo $plan['id']?>">打印合同</a>
+<a class="btn" href="plan.php?act=print_schedule&id=<?php echo $plan['id']?>">打印行程单</a>
+<a class="btn" href="plan.php?act=print_map&id=<?php echo $plan['id']?>">打印司机发车单</a>
+</div>
+
+
  <div class="tabbable tabs-top">
   <ul class="nav nav-tabs">
     <li><a href="#tab_contact" data-toggle="tab">联系人</a></li>
@@ -62,6 +50,7 @@ function getPlanTourCars($plan_tour_id)
     <li><a href="#tab_payment" data-toggle="tab">财务</a></li>
     <li><a href="#tab_note" data-toggle="tab">备忘</a></li>
     <li><a href="#tab_history" data-toggle="tab">日志</a></li>
+    <li><a href="#tab_staff" data-toggle="tab">工作人员</a></li>
   </ul>
 
   <div class="tab-content">
@@ -218,10 +207,10 @@ function getPlanTourCars($plan_tour_id)
 
     <div class="tab-pane" id="tab_contact">
       <dl>
-        <dt>姓名</dt><dd><?php echo $contact['name'];?></dd>
-        <dt>电话</dt><dd><?php echo $contact['phone'];?></dd>
-        <dt>Email</dt><dd><?php echo $contact['email'];?></dd>
-        <dt>论坛帐号</dt><dd><?php echo $contact['forum_uid'];?></dd>
+        <dt>姓名</dt><dd><?php echo $plan['contact']['name'];?></dd>
+        <dt>电话</dt><dd><?php echo $plan['contact']['phone'];?></dd>
+        <dt>Email</dt><dd><?php echo $plan['contact']['email'];?></dd>
+        <dt>论坛帐号</dt><dd><?php echo $plan['contact']['forum_uid'];?></dd>
       </dl>
       <input type="button" value="更新联系人信息" class="btn btn_update_contact"/>
     </div>
@@ -340,7 +329,7 @@ function getPlanTourCars($plan_tour_id)
                 <label class="checkbox inline"><input type="hidden" name="plan[need_hotel]" value="0" /><input type="checkbox" id="plan_need_hotel" name="plan[need_hotel]" value="1"<?php  1==@$plan['need_hotel'] && print(' checked="true"');?> />需要安排住宿</label>
                 <input type="text" size="2" class="input-mini need_room_cnt"  id="plan_need_room_cnt" name="plan[need_room_cnt]" value="<?php echo $plan['need_room_cnt'];?>" />
 
-                <label class="checkbox inline"><input type="hidden" name="plan[need_car]" value="0" /><input type="checkbox" id="plan_need_car" name="plan[need_car]" value="1"<?php echo1==@$plan['need_car'] && print(' checked="true"');?> />需要安排车辆</label>
+                <label class="checkbox inline"><input type="hidden" name="plan[need_car]" value="0" /><input type="checkbox" id="plan_need_car" name="plan[need_car]" value="1"<?php 1==@$plan['need_car'] && print(' checked="true"');?> />需要安排车辆</label>
 <input type="text" size="2" class="input-mini need_car_cnt"  id="plan_need_car_cnt" name="plan[need_car_cnt]" value="<?php echo $plan['need_car_cnt'];?>" />
                 <label class="checkbox inline"><input type="hidden" name="plan[need_insurance]" value="0" /><input type="checkbox" id="plan_need_insurance" name="plan[need_insurance]" value="1"<?php  1==@$plan['need_insurance'] && print(' checked="true"');?> />办理保险</label>
                 </dd>
@@ -445,6 +434,48 @@ function getPlanTourCars($plan_tour_id)
           <?php endforeach;?></tbody>
         </table>
         <input type="button" value="添加备忘" class="btn btn_add_note"/>
+      </div>
+            <div class="tab-pane" id="tab_staff">
+        <h3>工作人员</h3>
+        <form method="post" action="plan.php?act=update-staff" enctype="multipart/form-data">
+      <input type="hidden" name="plan_id" value="<?php echo $plan['id']?>" />
+          <dl>
+            <dt>旅行顾问</dt>
+            <dd>
+                <select id="plan_consult_staff_id" name="plan[consult_staff_id]">
+                <?php foreach($consult_staff_options as $id=>$name):?>
+                <option value="<?php echo $id;?>"<?php $id==@$plan['consult_staff_id'] && print(' selected="true"');?>><?php echo $name;?></option>
+                <?php endforeach;?>
+                </select>
+            </dd>
+
+            <dt>业务跟进</dt>
+            <dd>
+                <select id="plan_market_staff_id" name="plan[market_staff_id]">
+                <?php foreach($market_staff_options as $id=>$name):?>
+                <option value="<?php echo $id;?>"<?php $id==@$plan['market_staff_id'] && print(' selected="true"');?>><?php echo $name;?></option>
+                <?php endforeach;?>
+                </select>
+            </dd>
+
+            <dt>酒店跟进</dt>
+            <dd>
+                <select id="plan_room_staff_id" name="plan[room_staff_id]">
+                <?php foreach($room_staff_options as $id=>$name):?>
+                <option value="<?php echo $id;?>"<?php $id==@$plan['room_staff_id'] && print(' selected="true"');?>><?php echo $name;?></option>
+                <?php endforeach;?>
+                </select>
+            </dd><dt>车辆跟进</dt>
+            <dd>
+                <select id="plan_car_staff_id" name="plan[car_staff_id]">
+                <?php foreach($car_staff_options as $id=>$name):?>
+                <option value="<?php echo $id;?>"<?php $id==@$plan['car_staff_id'] && print(' selected="true"');?>><?php echo $name;?></option>
+                <?php endforeach;?>
+                </select>
+            </dd>
+          </dl>
+         <input type="submit" value="更新人员安排" class="btn btn-primary"  />
+</form>
       </div>
       <div class="tab-pane" id="tab_payment">
 

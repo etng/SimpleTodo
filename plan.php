@@ -3,6 +3,20 @@ require "lib/common.php";
 $schedule_templates = $db->fetchAll('select * from schedule_template', 'id');
 ob_start();
 $created = $updated = now();
+function generatePlanSn($type, $ts)
+{
+   return $type . date('Ymd',$ts).str_pad(countDailyPlan($ts)+1, 6, 0, STR_PAD_LEFT);
+}
+function countDailyPlan($ts)
+{
+    global $db;
+    $query = new Et_Db_Select($db);
+    $query->from('plan')
+    ->where('date(created)="'.date('Y-m-d', $ts).'"')
+    ->where('created<"'.date('Y-m-d H:i:s', $ts).'"');
+
+    return $query->count();
+}
 function generatePlanTours($plan)
 {
   global $tour_sep,$db;
@@ -118,12 +132,18 @@ switch(@$_GET['act'])
         $title_for_layout = "计划详情";
         $id = intval($_GET['id']);
         $plan = $db->find('plan', $id);
-        $contact = $db->find('contact', $plan['contact_id']);
+        $plan['contact'] = $db->find('contact', $plan['contact_id']);
+        $plan['schedule_template'] = $db->find('schedule_template', $plan['schedule_template_id']);
         $plan['tourists'] = $db->fetchAll('select * from tourist where id in (select tourist_id from plan_tourist where plan_id=' . $plan['id'] . ')', 'id');
         $plan['notes'] = $db->fetchAll('select plan_note.*,staff.name as staff_name from plan_note left join staff on staff.id=plan_note.staff_id where plan_id=' . $plan['id'] . ' order by plan_note.created desc', 'id');
         $plan['tours'] = $db->fetchAll('select *,plan_tour.id as id from plan_tour left join tour on tour.id=plan_tour.tour_id where plan_tour.plan_id=' . $plan['id'], 'id');
         $plan['history'] = $db->fetchAll('select * from plan_history where plan_id=' . $plan['id'] . ' order by created desc', 'id');
         $plan['payments'] = $db->fetchAll('select * from plan_payment where plan_id=' . $plan['id'] . ' order by created desc', 'id');
+        if(empty($plan['sn']))
+        {
+            $sn=$plan['sn'] = generatePlanSn($plan['type'], strtotime($plan['created']));
+            $db->update('plan', compact('sn'), compact('id'));
+        }
         include('templates/plan_view.php');
         break;
     case 'edit':
@@ -141,12 +161,16 @@ switch(@$_GET['act'])
         include('templates/plan_edit.php');
         break;
     case 'update-request':
+    case 'update-staff':
     case 'update-schedule':
         checkPrivilege();
         $plan_id = intval($_POST['plan_id']);
         $db->update('plan', $_POST['plan'], array('id'=>$plan_id));
         $plan = $db->find('plan', $plan_id);
-        generatePlanTours($plan);
+        if(@$_GET['act']=='update-schedule')
+        {
+            generatePlanTours($plan);
+        }
          header('location:plan.php?act=view&id='.$plan_id);
          die();
         break;
@@ -445,3 +469,14 @@ switch(@$_GET['act'])
 $content_for_layout = ob_get_clean();
 include('templates/default.layout.php');
 
+
+function getPlanTourRooms($plan_tour_id)
+{
+  global $db;
+  return $db->fetchAll('select plan_tour_room.*,hotel.name as hotel_name from plan_tour_room left join hotel on plan_tour_room.hotel_id=hotel.id where plan_tour_room.plan_tour_id=' . $plan_tour_id);
+}
+function getPlanTourCars($plan_tour_id)
+{
+  global $db;
+  return $db->fetchAll('select plan_tour_car.*,driver.name as driver_name from plan_tour_car left join driver on plan_tour_car.driver_id=driver.id where plan_tour_car.plan_tour_id=' . $plan_tour_id);
+}
