@@ -11,7 +11,9 @@
 foreach($plan_statuss as $plan_status=>$plan_status_config):?>
 <a href="plan.php?act=list&st=<?php echo $plan_status;?>"<?php $plan_status===$cur_status && print ' class="active"';?>><?php echo $plan_status_config['text'];?></a>
 <?php endforeach;?>
+
 </div>
+<?php $qsa=$_GET;?>
 
 <div class="row">
 <div class="span12">
@@ -31,12 +33,12 @@ foreach($plan_statuss as $plan_status=>$plan_status_config):?>
 
     <?php foreach($plans as $plan):?>
     <tr>
-        <td><?php echo date('Y-n-j', strtotime($plan['arrive_date']));?></td>
-        <td><?php echo $plan['contact_name'];?>(<?php echo $plan['forum_uid'];?>)</td>
+        <td><a href="plan.php?<?php echo http_update_query("arrive_date={$plan['arrive_date']}");?>"><?php echo date('Y-n-j', strtotime($plan['arrive_date']));?></a></td>
+        <td><a href="plan.php?act=view&id=<?php echo $plan['id'];?>"><?php echo $plan['contact_name'];?>(<?php echo $plan['forum_uid'];?>)</a></td>
         <td><?php echo $plan['tourist_cnt'];?>人</td>
-        <td><?php echo $consult_staff_options[$plan['consult_staff_id']];?></td>
-        <td><?php echo @$market_staff_options[$plan['market_staff_id']];?></td>
-        <td><?php echo $plan['schedule_template_name'];?>(<?php echo $plan['schedule_days'];?>天)</td>
+        <td><a href="plan.php?<?php echo http_update_query("consult_staff_id={$plan['consult_staff_id']}");?>"><?php echo $consult_staff_options[$plan['consult_staff_id']];?></a></td>
+        <td><a href="plan.php?<?php echo http_update_query("market_staff_id={$plan['market_staff_id']}");?>"><?php echo @$market_staff_options[$plan['market_staff_id']];?></a></td>
+        <td><a href="plan.php?act=view&id=<?php echo $plan['id'];?>"><?php echo $plan['schedule_template_name'];?>(<?php echo $plan['schedule_days'];?>天)</a></td>
         <td><?php echo $plan_statuss[$plan['status']]['text'];?></td>
 
         <td><?php echo @$car_staff_options[$plan['car_staff_id']];?><?php echo $car_statuss[$plan['car_status']]['text'];?></td>

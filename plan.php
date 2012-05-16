@@ -22,6 +22,10 @@ function countDailyPlan($ts)
 
     return $query->count();
 }
+function isTourLine($line)
+{
+    return (strpos($line, '，')!==false) || (strpos($line, ',')!==false);
+}
 function generatePlanTours($plan)
 {
   global $tour_sep,$db;
@@ -33,22 +37,22 @@ function generatePlanTours($plan)
       $line = trim($lines[$i]);
       if(!empty($line))
       {
-        if($line{0}=='D')
+        if(isTourLine($line))
         {
             list($dummy, $name) = preg_split("/\s*[,]+\s*/sim", str_replace('，', ',', $line));
             $next_line = trim(@$lines[$i+1]);
-            if($next_line && ($next_line{0}!='D'))
+            if($next_line && !isTourLine($next_line))
             {
                 list($dummy, $attractions) = explode(':', str_replace('：', ':', $next_line), 2);
                 $i++;
             }
+            $destinations = explode($tour_sep, $name);
+            $name = implode($tour_sep, $destinations);
+            $destination = end($destinations);
+            $destination_id = $db->getOrCreate('destination', array('name'=>$destination, 'slug'=>$destination), compact('created', 'updated'));
+            $tour_id = $db->getOrCreate('tour', $values=compact('name', 'destination', 'destination_id', 'attractions'),  compact('created', 'updated'));
+            $tours[]=$tour_id;
         }
-        $destinations = explode($tour_sep, $name);
-        $name = implode($tour_sep, $destinations);
-        $destination = end($destinations);
-        $destination_id = $db->getOrCreate('destination', array('name'=>$destination, 'slug'=>$destination), compact('created', 'updated'));
-        $tour_id = $db->getOrCreate('tour', $values=compact('name', 'destination', 'destination_id', 'attractions'),  compact('created', 'updated'));
-        $tours[]=$tour_id;
       }
     }
     $price=0;
@@ -507,6 +511,18 @@ switch(@$_GET['act'])
         if(!empty($_GET['st']) && isset($plan_statuss[$_GET['st']]))
         {
             $query->where('status="'.$_GET['st'] . '"');
+        }
+        if(@$_GET['consult_staff_id'])
+        {
+            $query->where('consult_staff_id="'.intval($_GET['consult_staff_id']) . '"');
+        }
+        if(@$_GET['market_staff_id'])
+        {
+            $query->where('market_staff_id="'.intval($_GET['market_staff_id']) . '"');
+        }
+        if(@$_GET['arrive_date'])
+        {
+            $query->where('arrive_date="'.$_GET['arrive_date'] . '"');
         }
         $cur_status = @$_GET['st'];
         if(!$cur_status)

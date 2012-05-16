@@ -60,7 +60,10 @@
                     <?php foreach($schedule_templates as $schedule_template):?>
                     <option value="<?php echo $schedule_template['id'];?>"<?php  $schedule_template['id']==@$plan['schedule_template_id'] && print(' selected="true"');?>><?php echo $schedule_template['name'];?></option>
                     <?php endforeach;?>
-                </select><br />
+                </select>
+                <span><input type="text" name="plan[schedule_name]" id="plan_schedule_name" value="<?php echo @$plan['schedule_name'];?>" /></span>
+
+                <br />
                 <textarea id="schedule_txt" name="plan[schedule_txt]" rows="8" cols="70"><?php echo @$plan['schedule_txt'];?></textarea>
                 <div class="btn-group">
                 <input type="button" class="btn btn-reverse-schedule" value="倒排"/>

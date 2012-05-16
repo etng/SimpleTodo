@@ -20,7 +20,14 @@ switch(@$_GET['act'])
             $is_valid = intval($payment['is_valid']);
             $db->update('plan_payment', compact('valid_by', 'valid_at', 'is_valid'), compact('id'));
         }
-        header('location:finance.php?v='.$is_valid);
+        if($return_url = @$_REQUEST['return_url'])
+        {
+            header('location:'.$return_url);
+        }
+        else
+        {
+            header('location:finance.php?v='.$is_valid);
+        }
         break;
     case 'list':
     default:
@@ -42,7 +49,7 @@ switch(@$_GET['act'])
             }
         }
         $s_where = $where?' where '.implode(' and ', $where):'';
-        $plan_payments = $db->fetchAll('select plan_payment.*,staff.name as valid_by_name from plan_payment
+        $plan_payments = $db->fetchAll('select plan_payment.*,staff.name as valid_by_name,plan.sn as plan_name from plan_payment
         left join plan on plan.id=plan_payment.plan_id
         left join staff on staff.id=plan_payment.valid_by
         '.$s_where.' order by plan_payment.created desc', 'id');

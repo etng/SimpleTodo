@@ -5,6 +5,7 @@ $('#schedule_template_selector').change(function(){
     {
         var template = schedule_templates[template_id];
         $('#schedule_txt').val('').val(template['content']);
+        $('#plan_schedule_name').val('').val(template['name']);
         $('#plan_need_passport').attr('checked', template['need_passport']==1);
     }
 });

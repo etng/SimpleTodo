@@ -103,3 +103,13 @@ function loadCSV($filename, $first_row_as_header=true)
     @unlink($tmp_file);
     return $rows;
 }
+
+function http_update_query($qsa)
+{
+    if(is_string($qsa))
+    {
+        $qs =$qsa;
+        parse_str($qs, $qsa);
+    }
+    return http_build_query(array_merge($_GET, $qsa));
+}

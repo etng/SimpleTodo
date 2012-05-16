@@ -16,9 +16,9 @@
 <h3>
 [<?php echo $plan['sn'];?>]<?php echo date('Y-n-j', strtotime($plan['arrive_date']));?>&nbsp;
 <?php echo $plan['contact']['name'];?>一行<?php echo $plan['contact']['forum_uid'];?><?php echo $plan['tourist_cnt'];?>人&nbsp;
-&nbsp;- <?php echo $plan['schedule_template']['name'];?>(<?php echo $plan['schedule_days'];?>天)
-&nbsp;- 酒店列表&nbsp;
-&nbsp;- 司机列表&nbsp;
+&nbsp;- <?php echo $plan['schedule_name'];?>(<?php echo $plan['schedule_days'];?>天)
+&nbsp;- 酒店：<?php echo $room_statuss[$plan['room_status']]['text'];?>&nbsp;
+&nbsp;- 司机：<?php echo $car_statuss[$plan['car_status']]['text'];?>&nbsp;
 <br />
 顾问：<?php echo $consult_staff_options[$plan['consult_staff_id']];?>&nbsp;,
 跟单：<?php echo @$market_staff_options[$plan['market_staff_id']];?>
@@ -244,13 +244,7 @@
       </form>
     </div>
     <div class="tab-pane active" id="tab_schedule">
-<form method="post" action="plan.php?act=update-schedule" enctype="multipart/form-data">
-      <input type="hidden" name="plan_id" value="<?php echo $plan['id']?>" />
 
-          <?php include('_plan_schedule_form.php')?>
-
-      <input type="submit" value="更新日程" class="btn btn-primary"  />
-</form>
 
 <form method="post" action="plan.php?act=update-detail-schedule" enctype="multipart/form-data">
       <input type="hidden" name="plan_id" value="<?php echo $plan['id']?>" />
@@ -321,7 +315,11 @@
             <input type="text" name="plan_tour[<?php echo $id;?>][room_price_sum]" class="input-mini room_price_sum" value="<?php echo $plan_tour['room_price_sum'];?>" />
             <?php endif;?>
             </td>
-            <td><?php echo $plan_tour['memo'];?></td>
+            <td>
+            <?php if(hasPrivilege('assignHotel')):?><textarea  name="plan_tour[<?php echo $id;?>][memo]" class="input-small" rows="3" cols="20"><?php echo $plan_tour['memo'];?></textarea>
+            <?php else:?>
+            <?php echo $plan_tour['memo'];?>
+            <?php endif;?></td>
             <td><input type="text" size="2" class="input-mini need_car_cnt"  id="plan_tour_<?php echo $id;?>_need_car_cnt" name="plan_tour[<?php echo $id;?>][need_car_cnt]" value="<?php echo $plan_tour['need_car_cnt'];?>" />
 
             <label class="checkbox"><input type="checkbox" class="do_not_need_car"<?php if(!$plan_tour['need_car_cnt']):?> checked="true"<?php endif;?> />无需车辆</label>
@@ -423,7 +421,13 @@
     });
 //-->
 </script>
+<form method="post" action="plan.php?act=update-schedule" enctype="multipart/form-data">
+      <input type="hidden" name="plan_id" value="<?php echo $plan['id']?>" />
 
+          <?php include('_plan_schedule_form.php')?>
+
+      <input type="submit" value="更新日程" class="btn btn-primary"  />
+</form>
 
       </div>
 
@@ -472,33 +476,14 @@
 </form>
       </div>
       <div class="tab-pane" id="tab_payment">
-
     <dl>
     <dt>应付费用</dt><dd><?php echo $plan['price']?></dd>
     <dt>已付费用</dt><dd><?php echo $plan['paid']?></dd>
     <dt>余额</dt><dd><?php echo $plan['balance']?><?php if($plan['balance']!=0 || true):?><input type="button" value="添加支付记录" class="btn btn_add_payment"/><?php endif;?></dd>
-    <dt>支付记录</dt><dd><table class="table table-bordered table-striped">
-          <thead><tr>
-            <th>时间</th>
-            <th>操作人</th>
-            <th>金额</th>
-            <th>备注</th>
-          </tr></thead>
-            <tbody><?php if(!empty($plan['payments'])):?>
-          <?php foreach($plan['payments'] as $i=>$plan_payment):?>
-          <tr>
-            <td><?php echo $plan_payment['created'];?></td>
-            <td><?php echo $plan_payment['operator'];?></td>
-            <td><?php echo $plan_payment['amount'];?></td>
-            <td><?php echo $plan_payment['memo'];?></td>
-          </tr>
-          <?php endforeach;?>
-           <?php else:?>
-          <tr>
-            <td colspan="100">还没有预付款，请暂时不要做任何安排</td>
-          </tr>
-          <?php endif;?></tbody>
-        </table></dd>
+    <dt>支付记录</dt><dd>
+    <?php $show_plan=false;$plan_payments=$plan['payments'];include('_plan_payment_list.php');?>
+
+    </dd>
     </dl>
 </div>
 

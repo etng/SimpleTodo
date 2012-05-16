@@ -39,12 +39,12 @@ $(document).ready(function(){
 //    });
 
 
-
+var request_uri=location.pathname+"?"+location.search;
 $('a[data-toggle="tab"]').on('shown', function (e) {
-    $.cookie(location.href.substr(location.origin.length), $(e.target).attr('href'));
+    $.cookie(request_uri, $(e.target).attr('href'));
 })
 var last_tab;
-if(last_tab=$.cookie(location.href.substr(location.origin.length)))
+if(last_tab=$.cookie(request_uri))
 {
     $('a[data-toggle="tab"][href="'+last_tab+'"]').tab('show');
 }
