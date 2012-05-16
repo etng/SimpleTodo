@@ -46,7 +46,6 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
 var last_tab;
 if(last_tab=$.cookie(location.href.substr(location.origin.length)))
 {
-    console.log('restore tab to ' + last_tab);
     $('a[data-toggle="tab"][href="'+last_tab+'"]').tab('show');
 }
 

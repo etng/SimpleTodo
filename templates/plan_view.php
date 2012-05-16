@@ -384,7 +384,6 @@
         {
             $.get('plan.php?act=hotel-daily-price&hotel_id='+hotel_id+'&the_date='+the_date, function(response)
             {
-                console.log(response);
                 if(response.status)
                 {
                     var room_price = response.price;
@@ -611,7 +610,6 @@ $(document).ready(function(){
      jQuery.facebox({ div: '#update_tourist_form' });
      var cur_tourist = plan_tourists[$(this).closest('div').data('tourist_id')];
     $.each(cur_tourist, function(k, v){
-      console.log($( "#facebox #update_tourist_"+k));
       if(k=='card_photo')
       {
         $( "#facebox #update_tourist_"+k+'_url').val(v);
@@ -644,7 +642,6 @@ $(document).ready(function(){
         tourist_capacity+=parseInt(row.tourist_cnt);
         data[idx]['type_name']=car_types[row.type];
       });
-      console.log(data, $("#planTourCarTemplate").tmpl(data));
       $('#facebox table.plan_tour_cars tbody').empty().append($("#planTourCarTemplate").tmpl(data));
       $('#facebox table.plan_tour_cars tfoot td.sum_price').html(sum_price);
       $('#facebox table.plan_tour_cars tfoot td.tourist_capacity').html(tourist_capacity);
