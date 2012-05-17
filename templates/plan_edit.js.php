@@ -43,7 +43,7 @@ $('.btn-preview-schedule').click(function(){
         cur_date = new Date(start_date.getTime()+86400000*i);
         tours_text.push(['D'+(i+1), $.datepicker.formatDate('yy-mm-dd', cur_date) ,tour[1]].join('  '));
     });
-    jQuery.facebox(tours_text.join("<br>"));
+    jQuery.facebox(tours_text.join('<br>'));
 });
 $('#arrive_method_selector').change(function(){
   $('#arrive_method').val($(this).val());

@@ -178,7 +178,7 @@ switch(@$_GET['act'])
         checkPrivilege();
         $title_for_layout = "员工";
 
-        $db->select()->from('staff')
+        $query = $db->select()->from('staff')
         ->clearField()
         ->addField('staff.*')
         ->addField('staff_group.name as group_name')

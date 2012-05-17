@@ -7,3 +7,4 @@ data/*.local.ini
 .settings/
 sitemap*.xml.gz
 Thumbs.db
+*.swp

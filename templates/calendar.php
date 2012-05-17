@@ -1,8 +1,12 @@
 <div id="calendar"></div>
 <h3>默认颜色</h3>
 <div>
-<label>前景色：<input type="color" id="text_color" value="ff9900"/></label>
-<label>背景色：<input type="color" id="background_color" value="99ff00"/></label>
+  <label>前景色：
+    <input type="color" id="text_color" value="ff9900"/>
+  </label>
+  <label>背景色：
+    <input type="color" id="background_color" value="99ff00"/>
+  </label>
 </div>
 <script type='text/javascript'>
 

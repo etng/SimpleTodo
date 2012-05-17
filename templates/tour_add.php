@@ -1,10 +1,9 @@
 <ul class="breadcrumb">
-<li><a href="/">首页</a> <span class="divider">/</span></li>
-<li><a href="tour.php?act=list">线路</a> <span class="divider">/</span></li>
-<li class="active">添加</li>
+  <li><a href="/">首页</a> <span class="divider">/</span></li>
+  <li><a href="tour.php?act=list">线路</a> <span class="divider">/</span></li>
+  <li class="active">添加</li>
 </ul>
-
 <form method="post" action="">
-<?php include('_tour_form.php');?>
-<input type="submit" class="btn btn-primary" />
+  <?php include('_tour_form.php');?>
+  <input type="submit" class="btn btn-primary" />
 </form>
