@@ -5,7 +5,7 @@ switch(@$_GET['act'])
 {
     case 'save':
         checkPrivilege();
-        if($_SERVER['REQUEST_METHOD']=='POST')
+        if(isHttpPost())
         {
             foreach($_POST['setting'] as $var=>$val)
             {

@@ -6,7 +6,7 @@ switch(@$_GET['act'])
     case 'add':
         checkPrivilege();
         $title_for_layout = "添加文章";
-        if($_SERVER['REQUEST_METHOD']=='POST')
+        if(isHttpPost())
         {
             $updated=$created = now();
             $id = $db->insert('article', array_merge($_POST['article'], compact('created', 'updated')));
@@ -20,7 +20,7 @@ switch(@$_GET['act'])
         $title_for_layout = "编辑文章";
         $id = intval($_GET['id']);
         $article = $db->find('article', $id);
-        if($_SERVER['REQUEST_METHOD']=='POST')
+        if(isHttpPost())
         {
             $updated= now();
             $db->update('article', array_merge($_POST['article'], compact('updated')), compact('id'));
@@ -49,8 +49,7 @@ switch(@$_GET['act'])
         checkPrivilege();
         $title_for_layout = "文章";
 
-        $query = new Et_Db_Select($db);
-        $query->from('article')
+        $db->select()->from('article')
         ->order_by('article.id', 'DESC')
         ;
         $total = $query->count();

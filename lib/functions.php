@@ -113,3 +113,7 @@ function http_update_query($qsa)
     }
     return http_build_query(array_merge($_GET, $qsa));
 }
+function isHttpPost()
+{
+    return $_SERVER['REQUEST_METHOD'] == 'POST';
+}

@@ -8,7 +8,7 @@ switch(@$_GET['act'])
     case 'add':
         checkPrivilege();
         $title_for_layout = "添加日程模版";
-        if($_SERVER['REQUEST_METHOD']=='POST')
+        if(isHttpPost())
         {
             $updated=$created = now();
             $id = $db->insert('schedule_template', array_merge($_POST['schedule_template'], compact('created', 'updated')));
@@ -22,7 +22,7 @@ switch(@$_GET['act'])
         $title_for_layout = "编辑日程模版";
         $id = intval($_GET['id']);
         $schedule_template = $db->find('schedule_template', $id);
-        if($_SERVER['REQUEST_METHOD']=='POST')
+        if(isHttpPost())
         {
             $updated= now();
             $db->update('schedule_template', array_merge($_POST['schedule_template'], compact('updated')), compact('id'));

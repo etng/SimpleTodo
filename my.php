@@ -15,7 +15,7 @@ switch(@$_GET['act'])
         $_GET['act']='edit-pass';
         checkPrivilege();
         $title_for_layout = "修改密码";
-        if($_SERVER['REQUEST_METHOD']=='POST')
+        if(isHttpPost())
         {
             $data = $_POST['staff'];
             try{
@@ -47,7 +47,7 @@ switch(@$_GET['act'])
      case 'edit-preference':
         checkPrivilege();
         $title_for_layout = "修改个人偏好";
-        if($_SERVER['REQUEST_METHOD']=='POST')
+        if(isHttpPost())
         {
             $data = $_POST['staff'];
             $preference = json_encode($data['preference']);
@@ -63,7 +63,7 @@ switch(@$_GET['act'])
         $_GET['act']='edit-profile';
         checkPrivilege();
         $title_for_layout = "修改个人资料";
-        if($_SERVER['REQUEST_METHOD']=='POST')
+        if(isHttpPost())
         {
             $data = $_POST['staff'];
             $db->update('staff', $data, compact('id'));

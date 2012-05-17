@@ -7,7 +7,7 @@ switch(@$_GET['act'])
     case 'add':
         checkPrivilege();
         $title_for_layout = "添加员工";
-        if($_SERVER['REQUEST_METHOD']=='POST')
+        if(isHttpPost())
         {
             $created = now();
             $_POST['staff']['privileges'] = implode(',', $_POST['staff']['privilege']);
@@ -22,7 +22,7 @@ switch(@$_GET['act'])
     case 'group_add':
         checkPrivilege();
         $title_for_layout = "添加部门";
-        if($_SERVER['REQUEST_METHOD']=='POST')
+        if(isHttpPost())
         {
             $created = now();
             $_POST['staff_group']['privileges'] = implode(',', $_POST['staff_group']['privilege']);
@@ -63,7 +63,7 @@ switch(@$_GET['act'])
         $title_for_layout = "修改员工资料";
         $id = intval($_GET['id']);
         $staff = $db->find('staff', $id);
-        if($_SERVER['REQUEST_METHOD']=='POST')
+        if(isHttpPost())
         {
             $new_staff = $_POST['staff'];
             $new_staff['privileges'] = implode(',', $_POST['staff']['privilege']);
@@ -85,7 +85,7 @@ switch(@$_GET['act'])
     case 'import':
         checkPrivilege();
         $title_for_layout = "导入员工资料";
-        if($_SERVER['REQUEST_METHOD']=='POST')
+        if(isHttpPost())
         {
             try{
                 $files = Attachment::fromUpload('staff_list_csv', APP_ROOT . '/files/import', array());
@@ -153,7 +153,7 @@ switch(@$_GET['act'])
         $title_for_layout = "修改部门";
         $id = intval($_GET['id']);
         $staff_group = $db->find('staff_group', $id);
-        if($_SERVER['REQUEST_METHOD']=='POST')
+        if(isHttpPost())
         {
             $new_staff_group = $_POST['staff_group'];
             $new_staff_group['privileges'] = implode(',', $_POST['staff_group']['privilege']);
@@ -178,8 +178,7 @@ switch(@$_GET['act'])
         checkPrivilege();
         $title_for_layout = "员工";
 
-        $query = new Et_Db_Select($db);
-        $query->from('staff')
+        $db->select()->from('staff')
         ->clearField()
         ->addField('staff.*')
         ->addField('staff_group.name as group_name')

@@ -11,7 +11,7 @@ switch(@$_GET['act'])
 {
     case 'save':
         checkPrivilege();
-        if($_SERVER['REQUEST_METHOD']=='POST')
+        if(isHttpPost())
         {
             $valid_by = current_staff('id');
             $valid_at = now();

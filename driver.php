@@ -6,7 +6,7 @@ switch(@$_GET['act'])
     case 'add':
         checkPrivilege();
         $title_for_layout = "添加司机";
-        if($_SERVER['REQUEST_METHOD']=='POST')
+        if(isHttpPost())
         {
             $created = now();
             if(empty($_POST['driver']['age']))
@@ -31,7 +31,7 @@ switch(@$_GET['act'])
         $title_for_layout = "编辑司机";
         $id = intval($_GET['id']);
         $driver = $db->find('driver', $id);
-        if($_SERVER['REQUEST_METHOD']=='POST')
+        if(isHttpPost())
         {
             if(empty($_POST['driver']['age']))
             {
@@ -57,8 +57,7 @@ switch(@$_GET['act'])
         checkPrivilege();
         $title_for_layout = "司机";
 
-        $query = new Et_Db_Select($db);
-        $query->from('driver')
+        $db->select()->from('driver')
         ->clearField()
         ->addField('driver.*')
         ->addField('destination.name as destination_name')

@@ -6,7 +6,7 @@ switch(@$_GET['act'])
     case 'add':
         checkPrivilege();
         $title_for_layout = "添加酒店";
-        if($_SERVER['REQUEST_METHOD']=='POST')
+        if(isHttpPost())
         {
             $created = now();
             $_POST['hotel']['priority'] = 100-intval($_POST['hotel']['priority']);
@@ -41,7 +41,7 @@ switch(@$_GET['act'])
         $title_for_layout = "编辑酒店";
         $id = intval($_GET['id']);
         $hotel = $db->find('hotel', $id);
-        if($_SERVER['REQUEST_METHOD']=='POST')
+        if(isHttpPost())
         {
             $updated= now();
             $db->update('hotel', array_merge($_POST['hotel'], compact('updated')), compact('id'));
@@ -82,8 +82,7 @@ switch(@$_GET['act'])
         $title_for_layout = "酒店";
 
 
-        $query = new Et_Db_Select($db);
-        $query->from('hotel')
+        $db->select()->from('hotel')
         ->clearField()
         ->addField('hotel.*')
         ->addField('destination.name as destination_name')

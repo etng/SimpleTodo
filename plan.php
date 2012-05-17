@@ -112,7 +112,7 @@ switch(@$_GET['act'])
         'need_room_cnt'=>2,
         'need_insurance'=>0,
         );
-        if($_SERVER['REQUEST_METHOD']=='POST')
+        if(isHttpPost())
         {
             if($files = Attachment::fromUpload('tourist_card_photo_file', APP_ROOT . $card_photo_base_url, $allowed_types, $thumb_config))
             {
@@ -191,7 +191,7 @@ switch(@$_GET['act'])
         $title_for_layout = "修改计划";
         $id = intval($_GET['id']);
         $plan = $db->find('plan', $id);
-        if($_SERVER['REQUEST_METHOD']=='POST')
+        if(isHttpPost())
         {
             $updated= now();
             $db->update('plan', array_merge($_POST['plan'], compact('updated')), compact('id'));
@@ -496,8 +496,7 @@ switch(@$_GET['act'])
         checkPrivilege();
         $title_for_layout = "我的计划";
 
-        $query = new Et_Db_Select($db);
-        $query->from('plan')
+        $db->select()->from('plan')
         ->clearField()
         ->addField('plan.*')
         ->addField('contact.name as contact_name')

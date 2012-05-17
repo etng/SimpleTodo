@@ -18,7 +18,7 @@ switch(@$_GET['act'])
     case 'add':
         checkPrivilege();
         $title_for_layout = "添加线路";
-        if($_SERVER['REQUEST_METHOD']=='POST')
+        if(isHttpPost())
         {
             $updated=$created = now();
             parseTour($_POST['tour']['name']);
@@ -33,7 +33,7 @@ switch(@$_GET['act'])
         $title_for_layout = "编辑线路";
         $id = intval($_GET['id']);
         $tour = $db->find('tour', $id);
-        if($_SERVER['REQUEST_METHOD']=='POST')
+        if(isHttpPost())
         {
             $updated= now();
             parseTour($_POST['tour']['name']);
@@ -63,8 +63,7 @@ switch(@$_GET['act'])
         checkPrivilege();
         $title_for_layout = "线路";
 
-        $query = new Et_Db_Select($db);
-        $query->from('tour')
+        $db->select()->from('tour')
         ->order_by('tour.id', 'DESC')
         ;
         $total = $query->count();

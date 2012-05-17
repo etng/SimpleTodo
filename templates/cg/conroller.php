@@ -6,7 +6,7 @@ switch(@$_GET['act'])
     case 'add':
         checkPrivilege();
         $title_for_layout = "添加<?php echo $table['comment'];?>";
-        if($_SERVER['REQUEST_METHOD']=='POST')
+        if(isHttpPost())
         {
             $updated=$created = now();
             $id = $db->insert('<?php echo $table['name'];?>', array_merge($_POST['<?php echo $table['name'];?>'], compact('created', 'updated')));
@@ -21,7 +21,7 @@ switch(@$_GET['act'])
         $title_for_layout = "编辑<?php echo $table['comment'];?>";
         $id = intval($_GET['id']);
         $<?php echo $table['name'];?> = $db->find('<?php echo $table['name'];?>', $id);
-        if($_SERVER['REQUEST_METHOD']=='POST')
+        if(isHttpPost())
         {
             $updated= now();
             $db->update('<?php echo $table['name'];?>', array_merge($_POST['<?php echo $table['name'];?>'], compact('updated')), compact('id'));

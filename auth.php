@@ -9,7 +9,7 @@ switch(@$_GET['act'])
    case 'login':
    default:
        $_GET['act']='login';
-       if($_SERVER['REQUEST_METHOD']=='POST')
+       if(isHttpPost())
         {
             $name = $_POST['staff']['name'];
             $staff = $db->fetchRow('select * from staff where username="'.$name.'"');

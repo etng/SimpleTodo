@@ -384,6 +384,10 @@ class Et_Db
         @mysql_close($this->conn);
         $this->conn = null;
     }
+    function select()
+    {
+        return new Et_Db_Select($this);
+    }
 
     /**
      * 提示SQL错误信息
