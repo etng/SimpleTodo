@@ -49,6 +49,10 @@ function generatePlanTours($plan)
                 $destinations = explode($tour_sep, $name);
                 $name = implode($tour_sep, $destinations);
                 $destination = end($destinations);
+                if(substr($destination, 0,strlen('到达'))=='到达')
+                {
+                    $destination = substr($destination, strlen('到达'));
+                }
                 $destination_id = $db->getOrCreate('destination', array('name'=>$destination, 'slug'=>$destination), compact('created', 'updated'));
                 $tour_record = compact('name', 'destination', 'destination_id', 'attractions');
                 $tour_id = $db->getOrCreate('tour', $tour_record, compact('created', 'updated'));

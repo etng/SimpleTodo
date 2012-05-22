@@ -9,7 +9,7 @@ $('#schedule_template_selector').change(function(){
         $('#plan_need_passport').attr('checked', template['need_passport']==1);
     }
 });
-$( "#seeoff_date,#arrive_date,#start_date" ).datepicker({
+$( "#start_date" ).datepicker({
     minDate: "+1W",
     maxDate: "+1Y"
 });
@@ -45,6 +45,11 @@ $('.btn-preview-schedule').click(function(){
     });
     jQuery.facebox(tours_text.join('<br>'));
 });
+<?php if(!empty($setting['receive_and_seeoff_detail'])):?>
+$( "#seeoff_date,#arrive_date" ).datepicker({
+    minDate: "+1W",
+    maxDate: "+1Y"
+});
 $('#arrive_method_selector').change(function(){
   $('#arrive_method').val($(this).val());
 });
@@ -57,3 +62,4 @@ $('#plan_need_receive').change(function(){
 $('#plan_need_seeoff').change(function(){
   $('#seeoff_detail_container').toggle($(this).attr('checked'));
 });
+<?php endif;?>

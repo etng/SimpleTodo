@@ -42,79 +42,10 @@ div.tourist_detail {
 <div class="tab-content">
 <?php if($plan['schedule_status']=='locked'):?>
 <div class="tab-pane" id="tab_car_assignment">
-  <h4>请<?php echo @$car_staff_options[$plan['car_staff_id']];?> 安排 <?php echo $plan['tourist_cnt'];?> 人旅行司机及车辆</h4>
-  <div>客户留言:　<?php echo $plan['car_request']?></div>
-  <dl>
-    <dt>当前状态</dt>
-    <dd> <?php echo $car_statuss[$plan['car_status']]['text'];?> </dd>
-    <?php if($next_car_statuss = $car_statuss[$plan['car_status']]['next']):?>
-    <dt>操作</dt>
-    <dd>
-      <?php foreach(explode(',', $next_car_statuss) as $next_car_status):$next_car_status_info = $car_statuss[$next_car_status];?>
-      <a class="btn" href="plan.php?act=set-car-status&status=<?php echo $next_car_status;?>&id=<?php echo $plan['id']?>"><?php echo $next_car_status_info['action_text']?></a>
-      <?php endforeach;?>
-    </dd>
-    <?php endif;?>
-  </dl>
-  <table class="table table-bordered table-striped">
-    <thead>
-      <tr>
-        <td>日期</td>
-        <td>线路</td>
-        <td>安排情况</td>
-      </tr>
-    </thead>
-    <tbody>
-      <?php if(!empty($plan['tours'])):?>
-      <?php foreach($plan['tours'] as $i=>$plan_tour):?>
-      <tr>
-        <td><?php echo $plan_tour['the_date'];?></td>
-        <td><?php echo $plan_tour['name'];?></td>
-        <td><table class="plan_tour_cars table table-bordered table-striped">
-            <thead>
-              <tr>
-                <td>司机</td>
-                <td>车型</td>
-                <td>容纳人数</td>
-                <td>价格</td>
-                <td>备注</td>
-              </tr>
-            </thead>
-            <tbody>
-              <?php $tourist_capacity=0;
-              $sum_price=0;
-              foreach(getPlanTourCars($plan_tour['id']) as $plan_tour_car):
-              $tourist_capacity+=$plan_tour_car['tourist_cnt'];
-              $sum_price+=$plan_tour_car['price'];
-              ?>
-              <tr>
-                <td><a href="driver.php?act=view&id=<?php echo $plan_tour_car['driver_id'];?> "><?php echo $plan_tour_car['driver_name'];?></a></td>
-                <td class="car_type_<?php echo $plan_tour_car['type'];?>"><?php echo $config['car_types'][$plan_tour_car['type']];?></td>
-                <td><?php echo $plan_tour_car['tourist_cnt'];?></td>
-                <td><?php echo $plan_tour_car['price'];?></td>
-                <td><?php echo $plan_tour_car['memo'];?></td>
-              </tr>
-              <?php endforeach;?>
-            </tbody>
-            <tfoot>
-            <td colspan="2">合计</td>
-              <td class="tourist_capacity"><?php echo $tourist_capacity;?></td>
-              <td class="sum_price"><?php echo $sum_price;?></td>
-              <td></td>
-                </tfoot>
-          </table>
-          <?php if($plan['car_status']=='assignning'):?>
-          <input data-plan_tour_id="<?php echo $plan_tour['id'];?>" type="button" value="安排" class="btn btn_assign_car"/>
-          <?php endif;?></td>
-      </tr>
-      <?php endforeach;?>
-      <?php else:?>
-      <tr>
-        <td colspan="100">咦，没有安排日程！</td>
-      </tr>
-      <?php endif;?>
-    </tbody>
-  </table>
+
+<?php include('_plan_view_tab_car.php')?>
+
+
 </div>
 <div class="tab-pane" id="tab_hotel_assignment">
   <h4>请<?php echo @$room_staff_options[$plan['room_staff_id']];?> 安排 <?php echo $plan['tourist_cnt'];?> 人的住宿事宜</h4>
@@ -131,65 +62,7 @@ div.tourist_detail {
     </dd>
     <?php endif;?>
   </dl>
-  <table class="table table-bordered table-striped">
-    <thead>
-      <tr>
-        <td>日期</td>
-        <td>住宿地</td>
-        <td>安排情况</td>
-      </tr>
-    </thead>
-    <tbody>
-      <?php if(!empty($plan['tours'])):?>
-      <?php foreach($plan['tours'] as $i=>$plan_tour):?>
-      <tr>
-        <td><?php echo $plan_tour['the_date'];?></td>
-        <td><?php echo $plan_tour['destination'];?></td>
-        <td><table class="plan_tour_rooms table table-bordered table-striped">
-            <thead>
-              <tr>
-                <td>酒店</td>
-                <td>房型</td>
-                <td>容纳人数</td>
-                <td>价格</td>
-                <td>备注</td>
-              </tr>
-            </thead>
-            <tbody>
-              <?php $tourist_capacity=0;
-              $sum_price=0;
-              foreach(getPlanTourRooms($plan_tour['id']) as $plan_tour_room):
-              $tourist_capacity+=$plan_tour_room['tourist_cnt'];
-              $sum_price+=$plan_tour_room['price'];
-              ?>
-              <tr>
-                <td><a href="hotel.php?act=view&id=<?php echo $plan_tour_room['hotel_id'];?>"><?php echo $plan_tour_room['hotel_name'];?></a></td>
-                <td class="room_type_<?php echo $plan_tour_room['type'];?>"><?php echo $config['room_types'][$plan_tour_room['type']];?></td>
-                <td><?php echo $plan_tour_room['tourist_cnt'];?></td>
-                <td><?php echo $plan_tour_room['price'];?></td>
-                <td><?php echo $plan_tour_room['memo'];?></td>
-              </tr>
-              <?php endforeach;?>
-            </tbody>
-            <tfoot>
-            <td colspan="2">合计</td>
-              <td class="tourist_capacity"><?php echo $tourist_capacity;?></td>
-              <td class="sum_price"><?php echo $sum_price;?></td>
-              <td></td>
-                </tfoot>
-          </table>
-          <?php if($plan['room_status']=='assignning'):?>
-          <input data-plan_tour_id="<?php echo $plan_tour['id'];?>" type="button" value="安排" class="btn btn_assign_room"/>
-          <?php endif;?></td>
-      </tr>
-      <?php endforeach;?>
-      <?php else:?>
-      <tr>
-        <td colspan="100">咦，没有安排日程！</td>
-      </tr>
-      <?php endif;?>
-    </tbody>
-  </table>
+  <?php include(dirname(__file__) . '/_plan_view_room_list.php')?>
 </div>
 <?php endif;?>
 <div class="tab-pane" id="tab_contact">
@@ -437,26 +310,7 @@ div.tourist_detail {
   </table>
 </div>
 <div class="tab-pane" id="tab_note">
-  <h3>备忘</h3>
-  <table class="table table-bordered table-striped">
-    <thead>
-      <tr>
-        <th>时间</th>
-        <th>留言人</th>
-        <th>内容</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php foreach($plan['notes'] as $i=>$plan_note):?>
-      <tr>
-        <td><?php echo $plan_note['created'];?></td>
-        <td><?php echo $plan_note['staff_name'];?></td>
-        <td><?php echo $plan_note['content'];?></td>
-      </tr>
-      <?php endforeach;?>
-    </tbody>
-  </table>
-  <input type="button" value="添加备忘" class="btn btn_add_note"/>
+<?php include(dirname(__file__) .'/_plan_view_tab_note.php');?>
 </div>
 <div class="tab-pane" id="tab_staff">
   <h3>工作人员</h3>
@@ -467,22 +321,7 @@ div.tourist_detail {
   </form>
 </div>
 <div class="tab-pane" id="tab_payment">
-  <dl>
-    <dt>应付费用</dt>
-    <dd><?php echo $plan['price']?></dd>
-    <dt>已付费用</dt>
-    <dd><?php echo $plan['paid']?></dd>
-    <dt>余额</dt>
-    <dd><?php echo $plan['balance']?>
-      <?php if($plan['balance']!=0 || true):?>
-      <input type="button" value="添加支付记录" class="btn btn_add_payment"/>
-      <?php endif;?>
-    </dd>
-    <dt>支付记录</dt>
-    <dd>
-      <?php $show_plan=false;$plan_payments=$plan['payments'];include('_plan_payment_list.php');?>
-    </dd>
-  </dl>
+<?php include('_plan_view_tab_payment.php')?>
 </div>
 <script type='text/javascript'>
 function refreshCarPrice(plan_tour_id, driver_id, car_type)
@@ -490,7 +329,7 @@ function refreshCarPrice(plan_tour_id, driver_id, car_type)
   //@todo ajax get room price on that day
   return parseInt(Math.random(1)*10)*20;
 }
-$(document).ready(function(){
+jQuery(function($){
 
     <?php include(dirname(__file__) .'/plan_edit.js.php');?>
 
@@ -582,9 +421,7 @@ $(document).ready(function(){
       }, 'json');
     });
   });
-  $('input.btn_add_note').click(function(){
-     jQuery.facebox({ div: '#add_note_form' });
-  });
+
   $('input.btn_add_tourist').click(function(){
      jQuery.facebox({ div: '#add_tourist_form' });
   });
@@ -604,44 +441,6 @@ $(document).ready(function(){
   });
   $('input.btn_update_contact').click(function(){
      jQuery.facebox({ div: '#update_contact_form' });
-  });
-  $('input.btn_add_payment').live('click', function(){
-  jQuery.facebox({ div: '#payment_add_form' });
-});
-  $('input.btn_assign_car').live('click', function(){
-    jQuery.facebox({ div: '#car_assign_form' });
-    var ts=+new Date();
-    $.each(['car_plan_tour_id', 'car_driver_id', 'car_type', 'tourist_cnt', 'car_price', 'car_memo'], function(i, id){
-      $( "#facebox #"+id).attr('id', id+'_'+ts);
-    });
-    var plan_tour_id = $(this).data('plan_tour_id');
-    $('#room_plan_tour_id'+'_'+ts).val(plan_tour_id);
-    $.get('plan.php?act=get-plan-tour_cars&plan_tour_id='+plan_tour_id, function(data){
-      var tourist_capacity = 0;
-      var sum_price = 0;
-      $.each(data, function(idx, row){
-        sum_price+=parseInt(row.price);
-        tourist_capacity+=parseInt(row.tourist_cnt);
-        data[idx]['type_name']=car_types[row.type];
-      });
-      $('#facebox table.plan_tour_cars tbody').empty().append($("#planTourCarTemplate").tmpl(data));
-      $('#facebox table.plan_tour_cars tfoot td.sum_price').html(sum_price);
-      $('#facebox table.plan_tour_cars tfoot td.tourist_capacity').html(tourist_capacity);
-    }, 'json');
-     $.get('plan.php?act=get-destination-drivers&plan_tour_id='+plan_tour_id, function(drivers){
-      var driver_selector = $('#car_driver_id'+'_'+ts);
-      driver_selector.empty();
-      $.each(drivers, function(i, driver){
-        driver_selector.append(new Option(driver.name, driver.id));
-      });
-    }, 'json');
-    $('#car_plan_tour_id'+'_'+ts).val($(this).data('plan_tour_id'));
-    $('#car_driver_id'+'_'+ts+', #car_type'+'_'+ts).change(function(){
-      var driver_id = $('#car_driver_id'+'_'+ts).val();
-      var car_type = $('#car_type'+'_'+ts).val();
-      var price = refreshCarPrice(plan_tour_id, driver_id, car_type);
-      $('#car_price'+'_'+ts).val(price);
-    });
   });
 
 });
@@ -755,21 +554,8 @@ $(document).ready(function(){
     <input type="submit" value="提交" class="btn" />
   </form>
 </div>
-<div id="add_note_form" style="display:none">
-  <h4>请留下你想说的话</h4>
-  <div class="close">&times;</div>
-  <form method="post" action="plan.php?act=add-note">
-    <input type="hidden" name="note[plan_id]" value="<?php echo $plan['id']?>" />
-    <dl>
-      <dt>内容</dt>
-      <dd>
-        <textarea name="note[content]" id="note_content" rows="3" cols="70"></textarea>
-      </dd>
-    </dl>
-    <input type="submit" value="提交" class="btn" />
-  </form>
-</div>
-<div id="room_assign_form" style="display:none"> 
+
+<div id="room_assign_form" style="display:none">
   <!-- <h4>已安排酒店情况</h4>
  <table class="plan_tour_rooms table table-bordered table-striped">
    <thead><tr>
@@ -823,7 +609,7 @@ $(document).ready(function(){
     <input type="submit" value="提交" class="btn"  />
   </form>
 </div>
-<div id="car_assign_form" style="display:none"> 
+<div id="car_assign_form" style="display:none">
   <!-- <h4>已安排车辆情况</h4>
  <table class="plan_tour_cars table table-bordered table-striped">
    <thead><tr>
@@ -885,7 +671,7 @@ $(document).ready(function(){
     <td>${price}</td>
     <td>${memo}</td>
   </tr>
-</script> 
+</script>
 <script id="planTourRoomTemplate" type="text/x-jquery-tmpl">
   <tr>
     <td><a href="hotel.php?act=view&id=${hotel_id}">${hotel_name}</a></td>
@@ -895,6 +681,3 @@ $(document).ready(function(){
     <td>${memo}</td>
   </tr>
 </script>
-<div id="payment_add_form" style="display:none">
-  <?php include('_payment_add_form.php');?>
-</div>
