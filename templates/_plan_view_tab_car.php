@@ -4,7 +4,7 @@
 <div>司机底价：<?php echo $plan['cost_per_car'];?>x<?php echo $plan['need_car_cnt']?></div>
 
 
-  <table class="table table-bordered table-striped">
+  <table class="table table-bordered table-striped" id="table_cars_assigned">
     <thead>
       <tr>
         <td>司机</td>
@@ -19,7 +19,7 @@
     <tbody>
       <?php if(!empty($plan['need_car_cnt'])):?>
       <?php foreach(range(1, $plan['need_car_cnt']) as $i):?>
-      <tr>
+      <tr id="plan_car_<?php echo $i;?>">
 
         <td><?php echo @$driver['name'];?></td>
         <td><?php echo @$config['car_types'][$driver['car_type']];?></td>
@@ -30,9 +30,9 @@
       <td><?php echo @$driver['phone'];?></td>
 
         <td>
-          <input type="button" value="选择司机" class="btn btn_browse_car"/>
-          已安排
-          <input type="button" value="取消" class="btn btn_cancel_car"/>
+          <span class="trigger"><input type="button" value="选择司机" class="btn btn_browse_car"/></span>
+          <span class="status" style="display;none">已安排
+          <input type="button" value="取消" class="btn btn_cancel_car"/></span>
         </td>
       </tr>
       <?php endforeach;?>
@@ -43,7 +43,12 @@
       <?php endif;?>
     </tbody>
   </table>
+    <?php if($next_car_statuss = $car_statuss[$plan['car_status']]['next']):?>
 
+      <?php foreach(explode(',', $next_car_statuss) as $next_car_status):$next_car_status_info = $car_statuss[$next_car_status];?>
+      <a class="btn" href="plan.php?act=set-car-status&status=<?php echo $next_car_status;?>&id=<?php echo $plan['id']?>"><?php echo $next_car_status_info['action_text']?></a>
+      <?php endforeach;?>    </dd>
+    <?php endif;?>
 <?php
 $query = $db->select()->from('driver')
         ->clearField()
@@ -55,7 +60,7 @@ $query = $db->select()->from('driver')
     $drivers = $query->execute();
 $nationalities = $db->fetchCol('select distinct nationality from driver ');
 ?>
-<div id="table_browse_car">
+<div id="table_browse_car" style="display:none">
     <div class="row">
   <div class="span4"><h4>过滤</h4></div>
   <div class="span8"></div>
@@ -88,7 +93,7 @@ $nationalities = $db->fetchCol('select distinct nationality from driver ');
 
       <?php if(!empty($drivers)):?><tbody>
       <?php foreach($drivers as $driver):?>
-      <tr data-car_type="<?php echo $driver['car_type'];?>" data-nationality="<?php echo $driver['nationality'];?>" id="driver_tr_<?php echo @$driver['id'];?>">
+      <tr data-car_type="<?php echo $driver['car_type'];?>" data-nationality="<?php echo $driver['nationality'];?>" id="driver_tr_<?php echo @$driver['id'];?>" data-driver_id="<?php echo @$driver['id'];?>">
 
         <td><?php echo @$driver['name'];?></td>
         <td><?php echo @$config['car_types'][$driver['car_type']];?></td>
@@ -100,10 +105,10 @@ $nationalities = $db->fetchCol('select distinct nationality from driver ');
 
         <td>
 
-          <span class="chooser"><input type="button" value="选择安排" class="btn btn_select_car"/></span>
+          <span class="trigger"><input type="button" value="选择安排" class="btn btn_select_car"/></span>
 
-          <span class="cancler">已安排
-          <input type="button" value="取消" class="btn btn_cancel_car"/></span>
+          <span class="status" style="display;none">已安排
+          <input type="button" value="取消" class="btn btn_revoke_car"/></span>
         </td>
       </tr>
 
@@ -119,51 +124,79 @@ $nationalities = $db->fetchCol('select distinct nationality from driver ');
   </div>
   <script type="text/javascript">
   <!--
-    jQuery(function($){
-
-          $('input.btn_browse_car').live('click', function(){
-              jQuery.facebox({ div: '#table_browse_car' });
-
-        $facebox = $('#facebox');
-         $('input.btn_select_car', $facebox).live('click', function(){
-             $tr = $(this).closest('tr');
-             console.log($tr, $tr.attr('id'));
- });
-        $trs = $('table.table-filter-car', $facebox).find('tbody tr');
-      filters={'car_type':'', 'nationality':''};
-      $.each(filters, function(k, v){
-        $('.filter-'+k+' a', $facebox).click(function(e){
-            $a = $(this);
-            $a.parent().find('a').removeClass('active');
-            $a.addClass('active');
-            filters[k]=$a.attr('href').substr(1);
-            doTableFilter();
-            e.preventDefault();
-        });
-      });
-      function doTableFilter()
-      {
-          $trs.show();
-            $trs.each(function(i, tr){
-                $tr = $(tr);
-                var flag=true;
-
-                $.each(filters, function(k, v){
-                    if(flag && v.length)
-                    {
-                        if($tr.data(k)!=v)
-                        {
-                            flag=false;
-                        }
-                    }
-                });
-                console.log(filters, $tr, flag);
-                $tr.toggle(flag);
-            });
-      }
-            });
-
-
+jQuery(function($){
+    chosen_cars=[];
+    $('input.btn_cancel_car').live('click', function(){
+        $target_tr=$(this).closest('tr');
+        cancel_car($target_tr);
     });
+    $('input.btn_revoke_car').live('click', function(){
+        $src_tr=$(this).closest('tr');
+        $src_tr.find('td:last span.trigger').show();
+        $src_tr.find('td:last span.status').hide();
+        var driver_id = $src_tr.data('driver_id');
+        cancel_car($('#table_cars_assigned tr').filter(function(){
+            return $(this).data('driver_id')==driver_id;
+        }));
+    });
+    function cancel_car($target_tr)
+    {
+        $target_tr.find('td:last span.trigger').show();
+        $target_tr.find('td:last span.status').hide();
+        $target_tr.find('td:not(:last)').html('&nbsp;');
+        chosen_cars = _.without(chosen_cars, $target_tr.data('driver_id'));
+        $target_tr.data('driver_id', 0);
+    }
+    $('input.btn_browse_car').live('click', function(){
+        $target_tr=$(this).closest('tr');
+        jQuery.facebox({ div: '#table_browse_car' });
+        $facebox = $('#facebox');
+        $('input.btn_select_car', $facebox).click(function(){
+            $tr = $(this).closest('tr');
+            $tr.find('td:not(:last)').each(function(i, td){
+                $target_tr.find('td:not(:last)').eq(i).html($(td).html())
+            });
+            $target_tr.find('td:last span.trigger').hide();
+            $target_tr.find('td:last span.status').show();
+            var driver_id = $tr.data('driver_id');
+            $target_tr.data('driver_id', driver_id);
+            chosen_cars.push(driver_id);
+            jQuery(document).trigger('close.facebox');
+        });
+        $trs = $('table.table-filter-car', $facebox).find('tbody tr');
+        $trs.each(function(idx, tr){
+            $tr = $(tr);
+            if(_.indexOf(chosen_cars, $tr.data('driver_id'))>-1)
+            {
+                $tr.find('td:last span.trigger').hide();
+                $tr.find('td:last span.status').show();
+            }
+        });
+        filters={'car_type':'', 'nationality':''};
+        $.each(filters, function(k, v){
+            $('.filter-'+k+' a', $facebox).click(function(e){
+                $a = $(this);
+                $a.parent().find('a').removeClass('active');
+                $a.addClass('active');
+                filters[k]=$a.attr('href').substr(1);
+                $trs.show().filter(function() {
+                   $tr = $(this);
+                    var flag=true;
+                    $.each(filters, function(k, v){
+                        if(flag && v.length)
+                        {
+                            if($tr.data(k)!=v)
+                            {
+                                flag=false;
+                            }
+                        }
+                    });
+                    return !flag;
+                }).hide();
+                e.preventDefault();
+            });
+        });
+    });
+});
   //-->
   </script>

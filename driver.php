@@ -51,6 +51,11 @@ case 'delete':
     header('location:driver.php');
     die();
     break;
+case 'schedule':
+    checkPrivilege();
+    $title_for_layout = "所有车辆安排";
+    include('templates/driver_schedule.php');
+    break;
 case 'list':
 default:
     $_GET['act']='list';

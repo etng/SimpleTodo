@@ -533,6 +533,27 @@ case 'set-room-status':
     header('location:plan.php?act=view&id='.$plan_id);
     die();
     break;
+case 'list_need_driver':
+    checkPrivilege();
+    $title_for_layout = "所有未安排订单";
+
+    $query = $db->select()->from('plan')
+        ->clearField()
+        ->addField('plan.*')
+        ->addField('contact.name as contact_name')
+        ->addField('schedule_template.name as schedule_template_name')
+        ->addField('contact.forum_uid')
+        ->leftJoin('plan', 'contact_id', 'contact', 'id')
+        ->leftJoin('plan', 'schedule_template_id', 'schedule_template',  'id')
+        ->order_by('plan.arrive_date', 'DESC')
+        ->order_by('plan.id', 'DESC')
+        ;
+    $total = $query->count();
+    $pager = makePager($total, current_staff('preference_perpage', 10));
+    $query->limit($pager['limit'], $pager['offset']);
+    $plans = $query->execute();
+    include('templates/plan_need_driver.php');
+    break;
 case 'list':
 default:
     $_GET['act']='list';

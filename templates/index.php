@@ -27,18 +27,7 @@ $(document).ready(function(){
   <div class="span6"></div>
   <div class="span6"></div>
 </div>
-<div class="row">
-  <div class="span12">
-    <h3>使用说明</h3>
-    <ol>
-      <li>请先到系统设置->组织架构添加用户组，并为不同的用户组设定不同的权限和主要职能</li>
-      <li>产品管理->行程模版分类、行程模版添加常用行程，方便使用</li>
-      <li>产品管理->目的地添加常用目的地</li>
-      <li>系统设置>默认值设定常用默认值如司机的默认归属地等</li>
-      <li>最后添加日程等</li>
-    </ol>
-  </div>
-</div>
+
 <div class="row">
   <div class="span6">
     <h3>最新订单</h3>
@@ -100,6 +89,18 @@ $(document).ready(function(){
         </tr>
       </tbody>
     </table>
+  </div>
+</div>
+<div class="row">
+  <div class="span12">
+    <h3>使用说明</h3>
+    <ol>
+      <li>请先到系统设置->组织架构添加用户组，并为不同的用户组设定不同的权限和主要职能</li>
+      <li>产品管理->行程模版分类、行程模版添加常用行程，方便使用</li>
+      <li>产品管理->目的地添加常用目的地</li>
+      <li>系统设置>默认值设定常用默认值如司机的默认归属地等</li>
+      <li>最后添加日程等</li>
+    </ol>
   </div>
 </div>
 <?php endif;?>

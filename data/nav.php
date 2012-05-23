@@ -7,8 +7,8 @@ $nav = array(
     )),
 
     array('u'=>array('c'=>'driver', 'a'=>'list'), 'title'=>'车辆管理', 'children'=>array(
-    array('u'=>array('c'=>'driver', 'a'=>'list'), 'title'=>'所有车辆安排'),
-    array('u'=>array('c'=>'driver', 'a'=>'list'), 'title'=>'未完车辆安排'),
+    array('u'=>array('c'=>'driver', 'a'=>'schedule'), 'title'=>'所有车辆安排'),
+    array('u'=>array('c'=>'plan', 'a'=>'list_need_driver'), 'title'=>'所有未安排订单'),
     array('u'=>array('c'=>'driver', 'a'=>'list'), 'title'=>'已完成车辆安排'),
     'divider',
     array('u'=>array('c'=>'driver', 'a'=>'list'), 'title'=>'司机列表'),
