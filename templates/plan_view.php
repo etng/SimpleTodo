@@ -42,7 +42,18 @@ div.tourist_detail {
 <div class="tab-content">
 <?php if($plan['schedule_status']=='locked'):?>
 <div class="tab-pane" id="tab_car_assignment">
-
+  <dl>
+    <dt>当前状态</dt>
+    <dd> <?php echo $room_statuss[$plan['room_status']]['text'];?> </dd>
+    <?php if($next_room_statuss = $room_statuss[$plan['room_status']]['next']):?>
+    <dt>操作</dt>
+    <dd>
+      <?php foreach(explode(',', $next_room_statuss) as $next_room_status):$next_room_status_info = $room_statuss[$next_room_status];?>
+      <a class="btn" href="plan.php?act=set-room-status&status=<?php echo $next_room_status;?>&id=<?php echo $plan['id']?>"><?php echo $next_room_status_info['action_text']?></a>
+      <?php endforeach;?>
+    </dd>
+    <?php endif;?>
+  </dl>
 <?php include('_plan_view_tab_car.php')?>
 
 

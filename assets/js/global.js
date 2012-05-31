@@ -39,14 +39,33 @@ $(document).ready(function(){
 //    });
 
 
-var request_uri=location.pathname+"?"+location.search;
-$('a[data-toggle="tab"]').on('shown', function (e) {
-    $.cookie(request_uri, $(e.target).attr('href'));
-})
-var last_tab;
-if(last_tab=$.cookie(request_uri))
-{
-    $('a[data-toggle="tab"][href="'+last_tab+'"]').tab('show');
-}
+    var request_uri=location.pathname+"?"+location.search;
+    $('a[data-toggle="tab"]').on('shown', function (e) {
+        $.cookie(request_uri, $(e.target).attr('href'));
+    })
+    var last_tab;
+    if(location.hash && $('#'+location.hash.substr(1)).length)
+    {
+        last_tab = location.hash;
+    }
+    else
+    {
+        last_tab=$.cookie(request_uri)
+    }
+    if(last_tab)
+    {
+        $('a[data-toggle="tab"][href="'+last_tab+'"]').tab('show');
+    }
 
+    $("a[rel=popover]")
+      .popover()
+      .click(function(e) {
+        e.preventDefault()
+        var href = $(e.currentTarget).attr('href');
+        if(href)
+        {
+            location.href = href;
+        }
+
+      })
 });

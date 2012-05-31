@@ -196,7 +196,7 @@ class Et_Db
     }
     function delete($table, $where=array())
     {
-        $cases = $this->buildWhere($where);
+        $cases = $this->buildWhere((array)$where);
         $sql = sprintf('DELETE FROM %s WHERE %s', $table, implode(' AND ', $cases));
         return $this->execute($sql);
     }

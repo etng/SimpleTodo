@@ -252,6 +252,21 @@ case 'update-detail-schedule':
     header('location:plan.php?act=view&id='.$plan_id);
     die();
     break;
+case 'update_chosen_cars':
+    checkPrivilege();
+    $plan_id = intval($_POST['plan_id']);
+    $db->delete('plan_tour_car', 'plan_id='.$plan_id);
+    foreach($db->fetchCol('select id from plan_tour where plan_id=' .$plan_id. ' and need_car_cnt>0') as $plan_tour_id)
+    {
+        foreach(explode(',', $_POST['chosen_cars']) as $driver_id)
+        {
+            $db->insert('plan_tour_car', compact('plan_id', 'plan_tour_id', 'driver_id'));
+        }
+    }
+    echo json_encode('ok');
+//    header('location:plan.php?act=view&id='.$plan_id);
+    die();
+    break;
 case 'delete':
     checkPrivilege();
     $id = intval($_GET['id']);

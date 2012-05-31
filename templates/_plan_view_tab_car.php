@@ -2,7 +2,14 @@
 <div>车型及数量:　<?php echo @$config['car_types'][$plan['need_car_type']];?>*<?php echo $plan['need_car_cnt']?></div>
  <div>包车报价：<?php echo $plan['price_per_car'];?>x<?php echo $plan['need_car_cnt']?></div>
 <div>司机底价：<?php echo $plan['cost_per_car'];?>x<?php echo $plan['need_car_cnt']?></div>
-
+<?php
+$driver_ids = $db->fetchCol('select distinct driver_id from plan_tour_car where plan_id=' . $plan['id']);
+$driver_ids = array_map('intval', $driver_ids);
+if(!empty($driver_ids))
+{
+    $assigned_drivers = $db->fetchAll($sql = 'select * from driver where id in('.implode(',', $driver_ids).')');
+}
+?>
 
   <table class="table table-bordered table-striped" id="table_cars_assigned">
     <thead>
@@ -18,8 +25,8 @@
     </thead>
     <tbody>
       <?php if(!empty($plan['need_car_cnt'])):?>
-      <?php foreach(range(1, $plan['need_car_cnt']) as $i):?>
-      <tr id="plan_car_<?php echo $i;?>">
+      <?php foreach(range(0, $plan['need_car_cnt']-1) as $i):$driver=@$assigned_drivers[$i];?>
+      <tr id="plan_car_<?php echo $i+1;?>" data-driver_id="<?php echo @$driver['id'];?>">
 
         <td><?php echo @$driver['name'];?></td>
         <td><?php echo @$config['car_types'][$driver['car_type']];?></td>
@@ -30,9 +37,12 @@
       <td><?php echo @$driver['phone'];?></td>
 
         <td>
+        <?php if(!@$driver['id']):?>
           <span class="trigger"><input type="button" value="选择司机" class="btn btn_browse_car"/></span>
+        <?php else:?>
           <span class="status" style="display;none">已安排
           <input type="button" value="取消" class="btn btn_cancel_car"/></span>
+          <?php endif;?>
         </td>
       </tr>
       <?php endforeach;?>
@@ -77,7 +87,6 @@ $nationalities = $db->fetchCol('select distinct nationality from driver ');
   <a href="#<?php echo $nationality;?>"><?php echo $nationality;?></a>
   <?php endforeach;?></div>
 </div>
-
   <table class="table table-bordered table-striped table-filter-car">
     <thead>
       <tr>
@@ -125,7 +134,16 @@ $nationalities = $db->fetchCol('select distinct nationality from driver ');
   <script type="text/javascript">
   <!--
 jQuery(function($){
-    chosen_cars=[];
+    chosen_cars=<?php echo json_encode($driver_ids);?>;
+    plan_id=<?php echo $plan['id'];?>;
+    function update_chosen_cars()
+    {
+        console.log(chosen_cars);
+        $.post("plan.php?act=update_chosen_cars", {'plan_id': plan_id, 'chosen_cars': chosen_cars.join(',') },
+         function(response){
+           console.log(response);
+         }, "json");
+    }
     $('input.btn_cancel_car').live('click', function(){
         $target_tr=$(this).closest('tr');
         cancel_car($target_tr);
@@ -144,7 +162,10 @@ jQuery(function($){
         $target_tr.find('td:last span.trigger').show();
         $target_tr.find('td:last span.status').hide();
         $target_tr.find('td:not(:last)').html('&nbsp;');
+        console.log(chosen_cars, $target_tr.data('driver_id'));
         chosen_cars = _.without(chosen_cars, $target_tr.data('driver_id'));
+        console.log(chosen_cars, $target_tr.data('driver_id'));
+        update_chosen_cars();
         $target_tr.data('driver_id', 0);
     }
     $('input.btn_browse_car').live('click', function(){
@@ -161,6 +182,7 @@ jQuery(function($){
             var driver_id = $tr.data('driver_id');
             $target_tr.data('driver_id', driver_id);
             chosen_cars.push(driver_id);
+            update_chosen_cars();
             jQuery(document).trigger('close.facebox');
         });
         $trs = $('table.table-filter-car', $facebox).find('tbody tr');

@@ -32,7 +32,7 @@
           <td><?php echo $plan['price_per_car'];?>x<?php echo $plan['need_car_cnt']?></td>
           <td><?php echo $plan['cost_per_car'];?>x<?php echo $plan['need_car_cnt']?></td>
           <td><?php echo $plan['car_request'];?></td>
-          <td><a href="plan.php?act=view&id=<?php echo $plan['id'];?>">选择司机</a></td>
+          <td><a href="plan.php?act=view&id=<?php echo $plan['id'];?>#tab_car_assignment">选择司机</a></td>
         </tr>
         <?php endforeach;?>
         <?php else:?>
