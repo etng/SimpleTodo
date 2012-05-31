@@ -134,44 +134,11 @@ foreach($plan_tours as $plan_tour)
     </ol>
   </div>
 </div>
-<style type="text/css">
-    .schedule_days{background-color:#300;}
-    .scheduled_plan_bar span{
-        display:block;float:left;
-    }
-    .scheduled_plan_bar{
-        clear:both;
-    }
-</style>
-<!-- <?php foreach($plans_in_this_month as $plan): /* @var Type $row */?>
-<div class="scheduled_plan_bar" data-ref_obj=".date_<?php echo date('j', strtotime($plan['start_date']));?>.driver_<?php echo rand(1,3);?>">
-    <span class="arrvived_at"><i class="icon-play"></i></span>
-    <span class="schedule_days" data-days="<?php echo rand(3, 10);?>">
-    <a href="plan.php?act=view&id=<?php echo $plan['id'];?>" ><?php echo $plan['contact_name'];?>(<?php echo $plan['forum_uid'];?>)<?php echo $plan['need_car_cnt'];?>车</a>
-    </span>
-    <span class="leaved_at"><i class="icon-stop"></i></span>
-</div>
- -->
+
 <?php endforeach;?>
 <script type="text/javascript">
   <!--
 jQuery(function($){
-//    var ref_obj = $('.driver_1.date_1');
-//    var unit_width = ref_obj.outerWidth();
-//    var unit_height = ref_obj.outerHeight();
-//    var offset=ref_obj.offset();
-//    $('.scheduled_plan_bar').height(unit_height+'px');
-//    $('.scheduled_plan_bar').each(function(){
-//        var $bar = $(this);
-//        var offset=$($bar.data('ref_obj')).offset();
-//        $bar.css({position:'absolute', left: offset.left+'px', top: offset.top+'px'})
-//    });
-//    $('.scheduled_plan_bar .arrvived_at, .scheduled_plan_bar .leaved_at')
-//        .width(unit_width+'px');
-//    $('.scheduled_plan_bar .schedule_days').each(function(){
-//        $span = $(this);
-//        $span.width(($span.data('days')*unit_width)+'px');
-//    });
         $trs = $('table.table-filter-car').find('tbody tr');
         filters={'car_type':'', 'nationality':''};
         $.each(filters, function(k, v){
