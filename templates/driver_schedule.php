@@ -135,7 +135,6 @@ foreach($plan_tours as $plan_tour)
   </div>
 </div>
 
-<?php endforeach;?>
 <script type="text/javascript">
   <!--
 jQuery(function($){
