@@ -129,3 +129,15 @@ function getClientIp($checkProxy = true)
 
     return $ip;
 }
+
+function writeLog($log_file, $line)
+{
+    if(func_num_args()>2)
+    {
+         $args = func_get_args();
+         array_shift($args);
+         array_unshift($args, date('Y-m-d H:i:s'));
+         $line = implode("\t", $args);
+    }
+    file_put_contents($log_file, $line . PHP_EOL, FILE_APPEND|LOCK_EX);
+}
