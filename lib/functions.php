@@ -141,3 +141,25 @@ function writeLog($log_file, $line)
     }
     file_put_contents($log_file, $line . PHP_EOL, FILE_APPEND|LOCK_EX);
 }
+
+function do404($title, $content='')
+{
+    global $config,$base_url;
+    $title_for_layout = $title;
+    include('templates/404.php');
+    $content_for_layout = ob_get_clean();
+    include('templates/default.layout.php');
+    die();
+}
+
+function saveFile($filename, $content)
+{
+    if(is_dir($d=dirname($filename)) || mkdir($d, 0777, true))
+    {
+        file_put_contents($filename, $content);
+    }
+    else
+    {
+        throw new Exception('Can not write file ' . $filename);
+    }
+}

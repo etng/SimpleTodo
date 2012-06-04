@@ -146,7 +146,7 @@ class Et_Db
                 'schema_name'      => null, // @todo
                 'table_name'       => $table,
                 'name'              => $row[$field],
-                'comment'              => $row[$comment],
+                'comment'           => $row[$comment],
                 'column_name'      => $row[$field],
                 'column_position'  => $i,
                 'data_type'        => $row[$type],

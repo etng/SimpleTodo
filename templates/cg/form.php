@@ -3,9 +3,7 @@
     <legend></legend>
     <div class="control-group">
       <?php foreach($table['fields'] as $field):?>
-      <?php
-if($field->primary && $field->name=='id')continue;
-?>
+      <?php if($field->primary && $field->name=='id')continue;?>
       <label class="control-label" for="<?php echo $table['name'];?>_<?php echo $field->name;?>"><?php echo $field->comment;?></label>
       <div class="controls">
         <?php if($field->data_type=='text'):?>

@@ -3,4 +3,4 @@
   <li><a href="<?php echo $table['name'];?>.php?act=list"><?php echo $table['comment'];?></a> <span class="divider">/</span></li>
   <li class="active">修改 #[?php echo $<?php echo $table['name'];?>['id'];?]</li>
 </ul>
-[?php include dirname(__file__) . '/<?php echo $table['name'];?>_form.php';?]
+[?php include dirname(__file__) . '/form.php';?]

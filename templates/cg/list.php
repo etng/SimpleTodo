@@ -22,7 +22,7 @@
       </tr>
     </thead>
     <tbody>
-    
+
     [?php if(!empty($<?php echo $table['name'];?>s)):?]
     [?php foreach($<?php echo $table['name'];?>s as $<?php echo $table['name'];?>):?]
     <tr>
@@ -45,7 +45,7 @@
     </tr>
     [?php endif;?]
       </tbody>
-    
+
   </table>
   <div class="row">
     <div class="span2">
@@ -56,15 +56,15 @@
       </div>
     </div>
     <div class="span4">
-      <input type="hidden" name="act" value="" />
+      <input type="hidden" name="bact" value="" />
       <div class="btn-group" style="margin: 9px 0;">
         <?php foreach($actions['batch'] as $act=>$act_config):?>
         [?php if(checkPrivilege('<?php echo $table['name'];?>', '<?php echo $act; ?>')):?]
-        <button onclick="this.form.bact.value='<?php echo $act; ?>;this.form.submit();' class="btn <?php echo $act_config['class']; ?>"><?php echo $act_config['label']; ?></button>
+        <button onclick="this.form.bact.value='<?php echo $act; ?>';this.form.submit();" class="btn <?php echo $act_config['class']; ?>"><?php echo $act_config['label']; ?></button>
         [?php endif;?]
         <?php endforeach;?>
       </div>
     </div>
-    <div class="span6"> [?php include(dirname(__file__). '/_pager.php');?] </div>
+    <div class="span6"> [?php include(dirname(__file__). '/../_pager.php');?] </div>
   </div>
 </form>

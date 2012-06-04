@@ -26,13 +26,13 @@ foreach(array('list', 'form', 'add', 'edit', 'view') as $part)
     include "templates/cg/{$part}.php";
     $content = ob_get_clean();
     $content = str_replace(array('[?php', '?]'), array('<?php', '?>'), $content);
-    file_put_contents("templates/{$table_name}/{$part}.php", $content);
+    saveFile("templates/{$table_name}/{$part}.php", $content);
 }
 
 ob_start();
 include "templates/cg/conroller.php";
 $content = ob_get_clean();
 $content = str_replace(array('[?php', '?]'), array('<?php', '?>'), $content);
-file_put_contents("{$table_name}.php", $content);
+saveFile("{$table_name}.php", $content);
 
 echo "done". PHP_EOL;

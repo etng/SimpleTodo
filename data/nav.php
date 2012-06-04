@@ -52,6 +52,7 @@ $nav = array(
       array('u'=>array('c'=>'staff', 'a'=>'group_add'), 'title'=>'添加部门'),
     )),
 );
+global $plan_statuss;
 $nav['plan']['children'][]=array('u'=>array('c'=>'plan', 'a'=>'list', 'st'=>'all'), 'title'=>'所有');
 foreach($plan_statuss as $status=>$status_info){
 
