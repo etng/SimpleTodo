@@ -13,7 +13,6 @@ if(isset($_GET['ym']))
 $next_date = $start_date = strtotime(date('Y-m-01', $current_date));
 $end_date = strtotime(date('Y-m-t', $current_date));
 $month_days = array();
-//var_dump();
 if($prefix=date('w', $start_date))
 {
     $start_date = strtotime(sprintf('-%d days', $prefix), $start_date);
@@ -28,6 +27,7 @@ while($next_date<$end_date)
     $month_days []= $next_date;
     $next_date+=86400;
 }
+//当前月份的项目安排
 $plans = $db->fetchAll(sprintf('
 select *,contact.name as contact_name
 from plan
