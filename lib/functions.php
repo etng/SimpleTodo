@@ -117,3 +117,15 @@ function isHttpPost()
 {
     return $_SERVER['REQUEST_METHOD'] == 'POST';
 }
+function getClientIp($checkProxy = true)
+{
+    if ($checkProxy && @$_SERVER['HTTP_CLIENT_IP'] != null) {
+        $ip = $_SERVER['HTTP_CLIENT_IP'];
+    } else if ($checkProxy && @$_SERVER['HTTP_X_FORWARDED_FOR'] != null) {
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } else {
+        $ip = @$_SERVER['REMOTE_ADDR'];
+    }
+
+    return $ip;
+}
